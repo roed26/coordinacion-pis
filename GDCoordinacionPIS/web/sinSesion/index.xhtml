@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        
+        <h:outputStylesheet name="./css/iniciosesion.css"/>
+
+        <title>Gestor documental Coordinación PIS</title>
+        <center>
+            <p:panelGrid styleClass="panelgrid" style="background: transparent">
+                <p:row>
+                    <p:column>
+                        <p:graphicImage library="img" name="logo-unicauca.png"/>            
+                    </p:column>
+                    <p:column style="vertical-align: middle">
+                        <p:outputLabel style="color: #ffffff; font-weight: bold; font-size: 18px" value="Gestor documental"/>
+                        <br/>
+                        <p:outputLabel style="color: #ffffff; font-weight: bold; font-size: 18px" value="Coordinación"/>
+                        <br/>
+                        <p:outputLabel style="color: #ffffff; font-weight: bold; font-size: 18px" value="Ingeniería de Sistemas"/>                        
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </center>
+    </h:head>
+
+    <h:body>
+        <div id="antorcha"></div>
+        <div id="bandera"></div>
+        <div id="centrar">
+            <h:form>
+                <header>Iniciar sesión</header>
+                <p:panelGrid style="text-align: left" styleClass="panelgrid" class="transparentBackground" >
+                    <p:row >
+                        <p:column >
+                            <p:outputLabel style="font-weight: bold;" value="Nombre de Usuario" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="nombreUsuario"  label="NombreUsuario" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column >
+                            <p:outputLabel style="font-weight: bold;" value="Contraseña" />
+                        </p:column>
+                        <p:column>
+                            <p:password id="contrasena"  
+                                        label="contraseña" rendered="true" requiredMessage="Ingrese una contraseña">
+                            </p:password>                          
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="3" style="text-align: center; ">
+                            <br/>                            
+                        </p:column>                        
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="3" style="text-align: center; ">
+                            <p:commandButton style="background: gainsboro; width: 150px; color:#000000; font-weight: bold; "
+                                             value="Iniciar sesión" action="#{sessionController.login()}"
+                                             ajax="false"
+                                             />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
+        </div>
+        <div id="footersesion">
+                <p:panelGrid styleClass="panelgrid" style="background: transparent">
+                    <p:row>
+                        <p:column >
+                            <p:outputLabel style="color: #ffffff;  " value="Programa Ingeniería de Sistemas"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column >
+                            <p:outputLabel style="color: #ffffff;  " value="Facultad de Ingeniería Electrónica y Telecomunicaciones"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel style="color: #ffffff;  " value="Sector Tulcán frente al Centro Deportivo Universitario (CDU)"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>    
+        </div>
+
+
+    </h:body>
+
+
+
+</html>
+
+

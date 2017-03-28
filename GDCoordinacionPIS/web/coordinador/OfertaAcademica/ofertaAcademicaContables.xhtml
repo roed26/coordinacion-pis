@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:body>
+        <p:panelGrid styleClass="panelgrid" id="panelMetadatosContables"
+                     rendered="#{registroOfertaAcademicaController.exitoSubirArchivo}">
+            <p:row>
+                <p:column colspan="3" style="text-align: center; background: #C8CDD6; font-weight: bold;">
+                    <p:outputLabel value="Facultad de ciencias contables" style="font-weight: bold; color: #000000"/>
+                </p:column>                    
+            </p:row>
+            <p:row>
+                <p:column style="background: #C8CDD6">
+                    <p:outputLabel value="Asignatura" style="font-weight: bold; color: #000000"/>
+                </p:column>
+                <p:column style="background: #C8CDD6">
+                    <p:outputLabel value="Número aprox. de estudiantes" style="font-weight: bold; color: #000000"/>
+                    <p:outputLabel value="*" style="color: #ff5252"/>
+                </p:column>
+                <p:column style="background: #C8CDD6">
+                    <p:outputLabel value="Numero de cursos solicitados" style="font-weight: bold; color: #000000"/>
+                    <p:outputLabel value="*" style="color: #ff5252"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel value="Investigación de operaciones" style="font-weight: bold; color: #000000"/>
+
+                </p:column>
+                <p:column>
+                    <p:inputText id="estudiantesInvOp" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesInvoper}">
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+                <p:column>
+                    <p:inputText id="solicitadosInvOp" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosInvoper}" >
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel value="Fundamentos de economía" style="font-weight: bold; color: #000000"/>
+
+                </p:column>
+                <p:column>
+                    <p:inputText id="estuciantesFunE" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesFundamentos}">
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+                <p:column>
+                    <p:inputText id="solicitadosFunE" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosFundamentos}" >
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel value="Gestión Empresarial" style="font-weight: bold; color: #000000"/>
+
+                </p:column>
+                <p:column>
+                    <p:inputText id="estuciantesGestEmp" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesGestion}">
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+                <p:column>
+                    <p:inputText id="solicitadosGestEmp" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosGestion}" >
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+            </p:row>
+        </p:panelGrid>
+    </h:body>
+</html>
+

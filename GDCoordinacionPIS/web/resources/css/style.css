@@ -1,0 +1,233 @@
+/*-------LOGIN STARTS HERE -------*/
+
+/* Login Container (default to float:right) */
+#loginContainer {
+    position:relative;
+    float:right;
+    font-size:13px;
+}
+
+/* Login Button */
+#loginButton { 
+    display:inline-block;
+    float:right;
+    right:15px;
+    background: gainsboro; 
+    border:2px solid #339cdf; 
+    border-radius:3px;
+    -moz-border-radius:4px;
+    position:relative;
+    z-index:40;
+    cursor:pointer;
+}
+
+/* Login Button Text */
+#loginButton span {
+    color: #000000; 
+    font-size:15px; 
+    font-weight:bold; 
+    padding:7px 29px 9px 10px;
+    background:url(../img/loginArrow.png) no-repeat 130px 7px;
+    display:block
+}
+
+#loginButton:hover {
+     border:2px solid white; 
+     -moz-border-radius:3px;
+    
+}
+
+/* Login Box */
+#loginBox {
+    position:absolute;
+    top:34px;
+    right:15px;
+    display:none;
+    z-index:40;
+}
+
+/* If the Login Button has been clicked */    
+#loginButton.active {
+    border-radius:4px 4px 0 0;
+}
+
+#loginButton.active span {
+    background-position:53px -76px;
+}
+
+/* A Line added to overlap the border */
+#loginButton.active em {
+    position:absolute;
+    width:100%;
+    height:1px;
+    background:#d2e0ea;
+    bottom:-1px;
+}
+
+/* Login Form */
+#loginForm {
+    width:390px; 
+    height: 180px;
+    border:1px solid #899caa;
+    border-radius:4px 0 4px 4px;
+    -moz-border-radius:3px 0 3px 3px;
+    margin-top:-1px;
+    background:gainsboro;
+    padding:6px;
+}
+
+#loginForm fieldset {
+    margin:0 0 12px 0;
+    display:block;
+    border:0;
+    padding:0;
+}
+
+fieldset#body {
+    background:#fff;
+    border-radius:3px;
+    -moz-border-radius:3px;
+    padding:10px 13px;
+    margin:0;
+}
+
+#loginForm #checkbox {
+    width:auto;
+    margin:1px 9px 0 0;
+    float:left;
+    padding:0;
+    border:0;
+    *margin:-3px 9px 0 0; /* IE7 Fix */
+}
+
+#body label {
+    color:#3a454d;
+    margin:9px 0 0 0;
+    display:block;
+    float:left;
+}
+
+#loginForm #body fieldset label {
+    display:block;
+    float:none;
+    margin:0 0 6px 0;
+}
+
+/* Default Input */
+#loginForm input {
+    width:92%;
+    border:1px solid #899caa;
+    border-radius:3px;
+    -moz-border-radius:3px;
+    color:#3a454d;
+    font-weight:bold;
+    padding:8px 8px;
+    box-shadow:inset 0px 1px 3px #bbb;
+    -webkit-box-shadow:inset 0px 1px 3px #bbb;
+    -moz-box-shadow:inset 0px 1px 3px #bbb;
+    font-size:14px;
+}
+
+/* Sign In Button */
+#loginForm #login {
+    width:auto;
+    float:left;
+    background:#339cdf url(../img/loginbuttonbg.png) repeat-x;
+    color:#fff;
+    padding:7px 10px 8px 10px;
+    text-shadow:0px -1px #278db8;
+    border:1px solid #339cdf;
+    box-shadow:none;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+    margin:0 12px 0 0;
+    cursor:pointer;
+    *padding:7px 2px 8px 2px; /* IE7 Fix */
+}
+
+/* Forgot your password */
+#loginForm span {
+    text-align:center;
+    display:block;
+    padding:7px 0 4px 0;
+}
+
+#loginForm span a {
+    color:#3a454d;
+    text-shadow:1px 1px #fff;
+    font-size:12px;
+}
+
+input:focus {
+    outline:none;
+}
+
+.CuadroDeBotonesSesion
+{
+
+    
+    position: absolute;
+    padding: 5px;
+    color: #FFFFFF;
+    text-align: center;
+    border: 3px  solid #ffffff;
+    border-style: none none solid;
+    right: 20px;
+    top: 10px;
+    border-radius: 20px; 
+    
+}
+.CuadroLogo
+{
+
+    padding: 5px;
+    text-align: center;
+    
+}
+
+.CuadroDeBotonesSesion .botonSesion
+{
+    background: #092169;
+    font-size: 15px;
+    padding: 5px 5px 5px 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+
+#mainFooter {
+
+}	
+#mainFooter .contenedor {
+    width: auto;
+    margin: auto;
+    background: url(../img/footer/bkg-footer.jpg) repeat-x 0% 41px; 
+    background-color: #FFFFFF;
+    padding: 0px;
+}
+#mainFooter .contenedor .separador {
+    background: url(../img/footer/foot-bkg.gif) no-repeat;
+    width: auto;
+    height: auto;
+}
+#mainFooter .contenedor .pie {
+    background: url(../img/footer/bkg-cabecera-rojo.png) repeat-y;
+    width: auto;
+    border-top: 5px solid #092169;
+}
+#mainFooter .contenedor .pie .decoracion {
+    width: 132px;
+    height: 59px;
+}
+#mainFooter .contenedor .pie .decoracion.izq {
+    background: url(../img/footer/fon-izq-footer-inf.gif) no-repeat;
+    float: left;
+}
+#mainFooter .contenedor .pie .decoracion.der {
+    background: url(../img/footer/fon-der-footer-inf.gif) no-repeat;
+    float: right;
+}
+
+.clear {
+    clear: both;
+}

@@ -1,0 +1,289 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <p:dialog widgetVar="dlgRegistroOfertaAcedemica" modal="true" width="900" height="500"  position="260,50"  
+              closable="false" header="Registro de oferta académica"> 
+
+        <h:form id="formSeleccionarArchivo" rendered="false">
+            <p:outputLabel rendered="#{!registroOfertaAcademicaController.exitoSubirArchivo}" 
+                           value="Seleccione el archivo pdf para la oferta academica" 
+                           style="font-weight: bold; color: #000000"/>
+            <br/>
+            <p:fileUpload rendered="#{!registroOfertaAcademicaController.exitoSubirArchivo}" mode="advanced" 
+                          label="Seleccionar"  invalidFileMessage="Solo se permiten archivos PDF" fileLimit="1"
+                          fileLimitMessage="Solo se permite seleccionar un archivo"
+                          dragDropSupport="true" update="messages" uploadLabel="Aceptar" cancelLabel="Cancelar"  
+                          allowTypes="/(\.|\/)(pdf)$/"  fileUploadListener="#{registroOfertaAcademicaController.seleccionarArchivo}"/>
+
+            <p:growl id="messages" showDetail="true" />
+        </h:form>
+        <h:form id="formArchivoSelecionado" rendered="false">
+            <p:panelGrid styleClass="panelgrid" 
+                         rendered="#{registroOfertaAcademicaController.exitoSubirArchivo}">
+                <p:row>
+                    <p:column colspan="4">
+                        <p:outputLabel style="font-weight: bold; color: #000000" value="Nombre del archivo seleccionado: "/>
+                        <p:outputLabel style="font-weight: bold; color: #ff5252" value="#{registroOfertaAcademicaController.nombreArchivo}  "/>
+                        <p:commandButton value="Cambiar archivo"  action="#{registroOfertaAcademicaController.cambiarArchivo}"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </h:form>
+        <h:form id="formMetadatosOfertaAcademica">
+            <p:panelGrid styleClass="panelgrid" 
+                         rendered="#{registroOfertaAcademicaController.exitoSubirArchivo}">
+                <p:row>
+                    <p:column colspan="2">
+                        <p:outputLabel style="font-weight: bold; color: #000000" 
+                                       value="Diligencie el siguiente formulario, tenga en cuenta los campos obligatorios ("/>
+                        <p:outputLabel value="*" style="color: #ff5252"/>
+                        <p:outputLabel style="font-weight: bold; color: #000000" value=")"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Semestre" style="font-weight: bold; color: #000000"/>
+                        <p:outputLabel value="*" style="color: #ff5252"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputText id="periodoAcademico" required="true" requiredMessage="Campo obligatorio"
+                                     value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.periodoAcademico}">
+                        </p:inputText>
+                    </p:column>
+
+                </p:row>
+            </p:panelGrid>
+            <p:wizard widgetVar="OfertaAcademica" showNavBar="true" nextLabel="Siguiente" backLabel="Anterior">
+                <p:tab title="Depto. Matemáticas">
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column style="width: 150px;background: #C8CDD6">
+                                <p:outputLabel value="Asignatura" style="font-weight: bold; color: #000000"/>
+                            </p:column>
+                            <p:column style="background: #C8CDD6">
+                                <p:outputLabel value="Número aprox. de estudiantes" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                            <p:column style="background: #C8CDD6">
+                                <p:outputLabel value="Numero de cursos solicitados" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    <p:dataGrid value="#{cursoController.itemsAvailableSelectOne}" columns="1" var="curso">
+                        <p:panelGrid styleClass="panelgrid">
+                            <p:row>
+                                <p:column style="width: 150px;">
+                                    <p:outputLabel value="#{curso.nombre}" style="font-weight: bold; color: #000000"/>
+                                    <p:outputLabel value="*" style="color: #ff5252"/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="estudiantesCalI" required="true" requiredMessage="Campo obligatorio"
+                                                 value="#{curso.numeroEstudiantes}">
+                                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                    </p:inputText>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="solicitadosCalI" required="true" requiredMessage="Campo obligatorio"
+                                                 value="#{curso.numeroSolicitados}" >
+                                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dataGrid>
+                    <p:panelGrid styleClass="panelgrid" id="panelMetadatos"
+                                 rendered="#{registroOfertaAcademicaController.exitoSubirArchivo}">
+                        <p:row>
+                            <p:column colspan="3" style="text-align: center; background: #C8CDD6; font-weight: bold;">
+                                <p:outputLabel value="Departamento de Matemáticas" style="font-weight: bold; color: #000000"/>
+                            </p:column>                    
+                        </p:row>
+
+                        <p:row>
+                            <p:column style="background: #C8CDD6">
+                                <p:outputLabel value="Asignatura" style="font-weight: bold; color: #000000"/>
+                            </p:column>
+                            <p:column style="background: #C8CDD6">
+                                <p:outputLabel value="Número aprox. de estudiantes" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                            <p:column style="background: #C8CDD6">
+                                <p:outputLabel value="Numero de cursos solicitados" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Cálculo I" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="estudiantesCalI" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesCalculoI}">
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="solicitadosCalI" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosCalculoI}" >
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Cálculo II" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="estuciantesCalII" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesCalculoII}">
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="solicitadosCalII" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosCalculoII}" >
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Cálculo III" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="estuciantesCalIII" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesCalculoIII}">
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="solicitadosCalIII" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosCalculoIII}" >
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Álgebra Lineal" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="estuciantesLineal" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesLineal}">
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="solicitadosLineal" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosLineal}" >
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Ecuaciones diferenciales" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="estuciantesEcuaciones" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesEcuaciones}">
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="solicitadosEcuaciones" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosEcuaciones}" >
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Estadística" style="font-weight: bold; color: #000000"/>
+                                <p:outputLabel value="*" style="color: #ff5252"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="estuciantesEstadistica" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesEstadistica}">
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="solicitadosEstadistica" required="true" requiredMessage="Campo obligatorio"
+                                             value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosEstadistica}" >
+                                    <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                </p:inputText>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+
+                </p:tab>
+                <p:tab title="Depto. Física">
+                    <ui:include src="ofertaAcademicaDeptoFisica.xhtml" />
+                </p:tab>
+                <p:tab title="Humanidades">
+                    <ui:include src="ofertaAcademicaHumanidades.xhtml" />
+                </p:tab>
+                <p:tab title="contables">
+                    <ui:include src="ofertaAcademicaContables.xhtml" />
+                </p:tab>
+                <p:tab title="Derecho">
+                    <ui:include src="ofertaAcademicaDerecho.xhtml" />
+                </p:tab>
+                <p:tab title="Sistemas">
+                    <p:commandButton value="Registrar información" update="panelMetadatos" action="#{registroOfertaAcademicaController.aceptarRegistroDeOferta()}" 
+                                     onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()"
+                                     />
+                </p:tab >
+            </p:wizard>
+
+            <p:growl id="messagesGuardar" showDetail="true" />
+
+        </h:form>
+        <h:form>
+            <p:commandButton value="Cancelar registro" action="#{registroOfertaAcademicaController.cancelarRegistroDeOferta()}"/>
+        </h:form>
+
+    </p:dialog>
+    <p:dialog header="Información" modal="true" position="center" widgetVar="mensajeRegistroExitoso" closable="false">
+        <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
+        <h:form>
+            <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                              onclick="PF('mensajeRegistroExitoso').hide()"/>
+        </h:form>
+    </p:dialog>
+
+    <p:dialog header="Error" modal="true" position="center" widgetVar="mensajeError" closable="false">
+        <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
+        <h:form>
+            <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                              onclick="PF('mensajeError').hide()" />
+        </h:form>
+    </p:dialog>
+
+</html>
+

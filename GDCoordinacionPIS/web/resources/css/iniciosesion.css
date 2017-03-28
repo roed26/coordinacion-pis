@@ -1,0 +1,352 @@
+body {
+    /*background: url(../img/body-bkg.png) repeat-x scroll 0% 0% #C8CDD6;*/
+    background: rgb(9,33,103);
+    line-height: 1;
+    font-size: 12px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    width: 98.5%;
+}
+#header{
+    height: 170px;
+    background-color: rgb(9,33,103);
+    box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.5);
+    margin-bottom: 5px;
+}
+
+#header .con_escudo_titulo {
+    position: relative;
+    top: 40px;
+    padding-left: 25px;
+    background: linear-gradient(to right,rgb(34,65,154)0%,rgb(34,65,154)51%,rgb(6,32,106)100%);
+    box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.5);
+    height: 85px;
+}
+
+#header .con_escudo_titulo .borde-redondo {
+    position: absolute;
+    margin-top: -20px;
+    width: 125px;
+    height: 125px;
+    border-radius: 60px;
+    background-color: rgb(34,65,154);
+}
+
+#header .con_escudo_titulo .logo {
+    position: relative;
+    z-index: 1;
+    float: left;
+    margin-top: 8px;
+    margin-left: 13px;
+}
+#header .con_escudo_titulo .logo a {
+    width: 110px;
+    margin-top: -20px;
+    height: 110px;
+    display: block;
+    background: url(../img/logo-unicauca.png) no-repeat;
+}
+
+#header .bottom{
+    height: 85px;
+    background: linear-gradient(to right,rgb(119,0,0)0%,rgb(203,0,0)51%,rgb(119,0,0)100%);
+}
+
+#menu {
+    background-color: rgba(194,223,239,0.5);
+}
+
+#tituloMenu{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba(194,223,239,0.5);
+}
+
+#content{
+    background-color: #dddddd;
+    padding: 4px;
+    font-size: 12px !important;
+}
+
+.ui-widget .ui-widget{
+    font-size: 13px !important;
+}
+
+.ui-datatable th{
+    font-size: 13px !important;
+}
+.ui-menu{
+    min-width: 100px !important;
+}
+
+.recaudoTable td{
+    text-align: center !important;
+    font-size: 12px !important;
+    color: #000000;
+}
+
+.ui-button-text{
+    font-size: 10px !important;
+}
+
+.fechaRed{
+    background-color: rgba(255,0,0,0.35) !important;
+}
+
+.ui-panel-titlebar{
+    padding-bottom: 0px !important;
+}
+
+.CampoLabelObligatorios
+{
+    font-style: italic;
+    font-size: 15px;    
+}
+.CampoLabelEspecificacion
+{
+    font-style: italic;
+    font-size: 10px;
+}
+.panelgrid , .panelgrid tr , .panelgrid td
+{
+    border-style: none !important
+
+}
+
+.BotonesSesion
+{
+    position: absolute;
+    padding: 5px;
+    color: #FFFFFF;
+    text-align: center;
+    border: 2px  solid #ffffff;
+    border-style: dashed;
+    right: 30px;
+    top: 10px;
+    border-radius: 10px;    
+}
+
+.ui-progressbar.ui-widget-content {
+    background-color:#dddddd;
+    background-image:none;    
+}
+
+.ui-progressbar.ui-widget.ui-widget-content.ui-corner-all{
+    width: 60px;
+    height: 20px;
+    margin: -3px;
+    padding: 0px;
+}
+
+.cursor{
+    cursor:pointer
+}
+
+.ui-tabs {
+    font-size:0.5em;
+} 
+
+.ui-panelgrid .ui-panelgrid-cell{
+    vertical-align: top;
+
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    font-size: 13px;
+}
+
+
+.ui-datatable .ui-paginator {
+    background:  transparent;
+    border:0;
+}
+
+.panelgrid , .panelgrid tr , .panelgrid td
+{
+    border-style: none !important
+
+
+}
+
+.ui-confirm-dialog{
+    top: 30% !important;
+    left: 40% !important;
+}
+
+.ui-widget-content {
+    background: transparent;
+
+}
+
+form {
+    background: white;
+    box-shadow: 8px 7px 72px 18px #0b2672;
+    font-family: lato;
+    position: relative;
+    color: #333;
+    border-radius: 32px;
+    width: 34%;
+    height: 300px;
+}
+form header {
+    padding: 35px 15px;
+    color: black;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 13px 13px 0 0;
+    text-align: center;
+
+}
+form label {
+    margin-left: 20px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 15px;
+
+}
+
+form button {
+    margin-top: 35px;
+    margin-bottom: 30px;
+    font-size: 17px !important;
+    font-weight: 400;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(51, 51, 51, 0.4);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+form button:hover {
+    background: #ff5252;
+}
+form .help {
+    margin-left: 60px;
+    font-size: 0.9em;
+    color: #777;
+    font-family: cursive;
+}
+#centrar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px; 
+    padding-top: 50px;
+
+
+}
+form {
+    background: white;
+    box-shadow: 2px 6px 101px 34px rgb(31, 35, 84);
+    font-family: lato;
+    position: relative;
+    color: #333;
+    border-radius: 32px;
+    width: 385px;
+    height: 280px;
+}
+form header {
+    padding: 35px 15px;
+    color: black;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 13px 13px 0 0;
+    text-align: center;
+
+}
+form label {
+    margin-left: 20px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 15px;
+
+}
+
+form button {
+    margin-top: 35px;
+    margin-bottom: 30px;
+    font-size: 17px !important;
+    font-weight: 400;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(51, 51, 51, 0.4);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+form button:hover {
+    background: #ff5252;
+}
+form .help {
+    margin-left: 60px;
+    font-size: 0.9em;
+    color: #777;
+    font-family: cursive;
+}
+
+
+.transparentBackground tr,
+.transparentBackground td { 
+    background: transparent !important; 
+    border: 0 !important;
+}
+
+.ui-widget {
+    font-size: 12px !important;
+}
+.ui-layout-north {
+    z-index: 20 !important;
+    overflow: visible !important;;
+}
+.ui-layout-north .ui-layout-unit-content {
+    overflow: visible !important;
+}
+.ui-widget-header {
+    text-align: center;
+    text-transform: uppercase;
+}
+.ui-button {
+    margin-top: 10px !important;
+}
+
+#footersesion {
+    position: fixed;
+    margin:50px auto;
+    width:100%;
+    left:  36%;
+    text-align:center;
+    align-content: center;
+    height:80px;
+}
+#footersesion p {padding:10px;color:#8f887e}
+#footersesion a {color:white}
+#footersesion a:hover {color:#a90341}
+
+#antorcha {
+    position: fixed;
+    z-index: -1;
+    background: url(../img/antorcha.png) no-repeat;
+    height: 592px;
+    right: 15%;
+    top: 0;
+    width: 251px;
+}
+#bandera {
+    position: fixed;
+    z-index: -1;
+    background: url(../img/bandera.png) no-repeat;
+    height: 412px;
+    right: 10%;
+    bottom: -179px;
+    width: 1284px;
+}
+
+.ui-button {
+    display: inline-block;
+    position: relative;
+    padding: 5px;
+    margin-right: .1em;
+    text-decoration: none !important;
+    cursor: pointer;
+    text-align: center;
+    zoom: 1;
+    overflow: visible;
+}
+

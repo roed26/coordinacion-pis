@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:body>
+        <p:panelGrid styleClass="panelgrid" id="panelMetadatosHumanidades"
+                     rendered="#{registroOfertaAcademicaController.exitoSubirArchivo}">
+            <p:row>
+                <p:column colspan="3" style="text-align: center; background: #C8CDD6; font-weight: bold;">
+                    <p:outputLabel value="Humanidades" style="font-weight: bold; color: #000000"/>
+                </p:column>                    
+            </p:row>
+            <p:row>
+                <p:column style="background: #C8CDD6">
+                    <p:outputLabel value="Asignatura" style="font-weight: bold; color: #000000"/>
+                </p:column>
+                <p:column style="background: #C8CDD6">
+                    <p:outputLabel value="Número aprox. de estudiantes" style="font-weight: bold; color: #000000"/>
+                    <p:outputLabel value="*" style="color: #ff5252"/>
+                </p:column>
+                <p:column style="background: #C8CDD6">
+                    <p:outputLabel value="Numero de cursos solicitados" style="font-weight: bold; color: #000000"/>
+                    <p:outputLabel value="*" style="color: #ff5252"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel value="Lectura y escritura" style="font-weight: bold; color: #000000"/>
+                    
+                </p:column>
+                <p:column>
+                    <p:inputText id="estudiantesLE" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesLecto}">
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+                <p:column>
+                    <p:inputText id="solicitadosLE" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosLecto}" >
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel value="Electva FISH I" style="font-weight: bold; color: #000000"/>
+                    
+                </p:column>
+                <p:column>
+                    <p:inputText id="estuciantesElecFI" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesFishI}">
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+                <p:column>
+                    <p:inputText id="solicitadosElecFI" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosFishI}" >
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel value="Electiva FISH II" style="font-weight: bold; color: #000000"/>
+                    
+                </p:column>
+                <p:column>
+                    <p:inputText id="estuciantesElecFII" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesFishII}">
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+                <p:column>
+                    <p:inputText id="solicitadosElecFII" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosFishII}" >
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel value="Electiva FISH III" style="font-weight: bold; color: #000000"/>
+                    
+                </p:column>
+                <p:column>
+                    <p:inputText id="estuciantesElecFIII" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesFishIII}">
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+                <p:column>
+                    <p:inputText id="solicitadosElecFIII" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosFishIII}" >
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel value="Ética" style="font-weight: bold; color: #000000"/>
+                    
+                </p:column>
+                <p:column>
+                    <p:inputText id="estuciantesEtica" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.estudiantesEtica}">
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+                <p:column>
+                    <p:inputText id="solicitadosEtica" required="true" requiredMessage="Campo obligatorio"
+                                 value="#{registroOfertaAcademicaController.metadatosOfertaAcademica.solicitadosEtica}" >
+                        <f:validator validatorId="ValidarCampoNumerico"/>
+
+                    </p:inputText>
+                </p:column>
+            </p:row>
+            
+            
+        </p:panelGrid>
+    </h:body>
+</html>
+
