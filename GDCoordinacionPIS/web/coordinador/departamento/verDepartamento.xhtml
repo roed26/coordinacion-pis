@@ -8,16 +8,16 @@
 
     <ui:composition>
 
-        <p:dialog id="DepartamentoViewDlg" widgetVar="DepartamentoViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewDepartamentoTitle}">
+        <p:dialog id="DepartamentoViewDlg" widgetVar="DepartamentoViewDialog" modal="true" resizable="false" appendTo="@(body)" header="Ver Información Departamento">
             <h:form id="DepartamentoViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{departamentoController.selected != null}">
-                        <h:outputText value="#{bundle.ViewDepartamentoLabel_idDepartamento}"/>
+                    <p:panelGrid styleClass="panelgrid" columns="2" rendered="#{departamentoController.selected != null}">
+                        <h:outputText style="font-weight: bold; color: #000000" value="Identificación:"/>
                         <h:outputText value="#{departamentoController.selected.idDepartamento}" title="#{bundle.ViewDepartamentoTitle_idDepartamento}"/>
-                        <h:outputText value="#{bundle.ViewDepartamentoLabel_nombre}"/>
+                        <h:outputText style="font-weight: bold; color: #000000" value="Nombre:"/>
                         <h:outputText value="#{departamentoController.selected.nombre}" title="#{bundle.ViewDepartamentoTitle_nombre}"/>
                     </p:panelGrid>
-                    <p:commandButton value="#{bundle.Close}" onclick="DepartamentoViewDialog.hide()"/>
+                    <center><p:commandButton  value="Cerrar" onclick="DepartamentoViewDialog.hide()"/></center>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

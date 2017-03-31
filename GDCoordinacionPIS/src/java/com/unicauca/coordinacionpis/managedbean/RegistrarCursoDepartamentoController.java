@@ -52,7 +52,5 @@ public class RegistrarCursoDepartamentoController implements Serializable {
     
     }
     
-    public void registrarDepartamento(){
-    
-    }
+   
 }

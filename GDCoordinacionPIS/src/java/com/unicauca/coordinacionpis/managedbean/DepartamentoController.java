@@ -18,6 +18,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.context.RequestContext;
 
 @Named("departamentoController")
 @SessionScoped
@@ -26,17 +27,18 @@ public class DepartamentoController implements Serializable {
     @EJB
     private com.unicauca.coordinacionpis.sessionbean.DepartamentoFacade ejbFacade;
     private List<Departamento> items = null;
-    private Departamento selected;
+    private Departamento departamento;
 
     public DepartamentoController() {
+        departamento = new Departamento();
     }
 
     public Departamento getSelected() {
-        return selected;
+        return departamento;
     }
 
     public void setSelected(Departamento selected) {
-        this.selected = selected;
+        this.departamento = selected;
     }
 
     protected void setEmbeddableKeys() {
@@ -50,9 +52,9 @@ public class DepartamentoController implements Serializable {
     }
 
     public Departamento prepareCreate() {
-        selected = new Departamento();
+        departamento = new Departamento();
         initializeEmbeddableKey();
-        return selected;
+        return departamento;
     }
 
     public void create() {
@@ -69,7 +71,7 @@ public class DepartamentoController implements Serializable {
     public void destroy() {
         persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("DepartamentoDeleted"));
         if (!JsfUtil.isValidationFailed()) {
-            selected = null; // Remove selection
+            departamento = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
@@ -82,13 +84,13 @@ public class DepartamentoController implements Serializable {
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
-        if (selected != null) {
+        if (departamento != null) {
             setEmbeddableKeys();
             try {
                 if (persistAction != PersistAction.DELETE) {
-                    getFacade().edit(selected);
+                    getFacade().edit(departamento);
                 } else {
-                    getFacade().remove(selected);
+                    getFacade().remove(departamento);
                 }
                 JsfUtil.addSuccessMessage(successMessage);
             } catch (EJBException ex) {
@@ -159,7 +161,18 @@ public class DepartamentoController implements Serializable {
                 return null;
             }
         }
+        
 
+    }
+    
+    public void registrarDepartamento(){
+        
+        ejbFacade.create(departamento);
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("PF('DepartamentoCreateDialog').hide()");
+        items = ejbFacade.findAll();
+        departamento = new Departamento();
+    
     }
 
 }

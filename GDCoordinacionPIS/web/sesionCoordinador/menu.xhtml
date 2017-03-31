@@ -11,13 +11,12 @@
         <div id="contenidoMenu">
             <h:form id="formMenu">
                 <p:menubar>
-                    <p:submenu label="Oferta academica">
-                        <p:menuitem value="Gestion de ofertas academicas" action="#{cargarFormulariosController.cargarGestionOfertaAcademica()}" ajax="false"/>
+                    <p:submenu label="Oferta académica">
+                        <p:menuitem value="Gestion de ofertas académicas" action="#{cargarFormulariosController.cargarGestionOfertaAcademica()}" ajax="false"/>
                         <p:menuitem value="Registrar curso" action="#{cargarFormulariosController.cargarRegistrarCurso()}" ajax="false"/>
+                        <p:menuitem value="Agregar departamento" action="#{cargarFormulariosController.cargarRegistrarDepartamento()}" ajax="false"/>
                     </p:submenu>                 
-                    <p:submenu label="Otra academica">
-                        <p:menuitem value="Gestion de ofertas academicas"  ajax="false"/>
-                    </p:submenu>
+                
                     
                 </p:menubar>
             </h:form>
