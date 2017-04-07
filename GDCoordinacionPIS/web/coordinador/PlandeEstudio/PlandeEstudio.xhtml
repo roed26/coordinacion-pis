@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:commandButton value="Agregar Plan de estudio" onclick="PF('dlgRegistroPlandeEstudio').show()"/>
+        </h:form>
+        <h:form>
+            <br/>
+            <p:outputLabel value="Buscar documento: " style="font-weight: bold; color: #000000"/>
+            <p:inputText style="width: 300px" placeholder="Nombre del documento">
+                <p:ajax update="lstPlanesEstudio" event="keyup"/>
+            </p:inputText>
+            <p:dataTable value="#{registroPlandeEstudioController.listaDocs}"
+                         id="lstPlanesEstudio" paginator="true"
+                         rowKey="#{item.id}" paginatorPosition="top"
+                         rows="10" emptyMessage="Sin documentos "
+                         rowsPerPageTemplate="10,20,30,40,50"
+                         var="dato">
+                <p:column>
+                    <f:facet name="header">
+                        Nombre del archivo
+                    </f:facet>
+                    <p:outputLabel value="#{dato.document.path}"/>
+                </p:column>
+                <!--                <p:column>
+                                    <f:facet name="header">
+                                        Fecha de creación
+                                    </f:facet>
+                                    <p:outputLabel value="to-do"/>
+                                </p:column>-->
+                <p:column style="text-align: center; background: #C8CDD6; width: 140px">
+                    <f:facet name="header">
+                        Acciones
+                    </f:facet>
+                    <p:commandButton value="Descargar" disabled="true" icon="ui-icon-arrowthickstop-1-s" title="Descargar" />
+                    <p:commandButton value="Ver" disabled="true" icon="ui-icon-search" title="Ver"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <ui:include src="RegistrarPlandeEstudio.xhtml"/>
+    </h:body>
+</html>
