@@ -14,35 +14,26 @@ and open the template in the editor.
     <h:head>
         <title>TODO supply a title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <!--<meta http-equiv="refresh" content="3"/>-->
     </h:head>
     <h:body>
         <h:form>
-            <p:commandButton value="Agregar Plan de estudio" onclick="PF('dlgRegistroPlandeEstudio').show()"/>
+            <p:commandButton value="Agregar Plan de estudio" onclick="PF('dlgRegistroPlandeEstudio').show()" />
         </h:form>
-        <h:form>
-            <br/>
-            <p:outputLabel value="Buscar documento: " style="font-weight: bold; color: #000000"/>
-            <p:inputText style="width: 300px" placeholder="Nombre del documento">
-                <p:ajax update="lstPlanesEstudio" event="keyup"/>
-            </p:inputText>
+        <h:form id="formPlanesdeEstudio">
+
             <p:dataTable value="#{registroPlandeEstudioController.listaDocs}"
                          id="lstPlanesEstudio" paginator="true"
                          rowKey="#{item.id}" paginatorPosition="top"
-                         rows="10" emptyMessage="Sin documentos "
-                         rowsPerPageTemplate="10,20,30,40,50"
+                         rows="10" emptyMessage="Sin documentos "                        
                          var="dato">
                 <p:column>
                     <f:facet name="header">
                         Nombre del archivo
                     </f:facet>
-                    <p:outputLabel value="#{dato.document.path}"/>
+                    <p:outputLabel value="#{dato.document.path.substring(28)}"/>
                 </p:column>
-                <!--                <p:column>
-                                    <f:facet name="header">
-                                        Fecha de creación
-                                    </f:facet>
-                                    <p:outputLabel value="to-do"/>
-                                </p:column>-->
+               
                 <p:column style="text-align: center; background: #C8CDD6; width: 140px">
                     <f:facet name="header">
                         Acciones
