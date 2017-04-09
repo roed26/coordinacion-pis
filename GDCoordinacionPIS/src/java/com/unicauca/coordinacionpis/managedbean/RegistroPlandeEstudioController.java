@@ -26,6 +26,7 @@ import com.openkm.sdk4j.exception.WebserviceException;
 import com.unicauca.coordinacionpis.classMetadatos.MetadatosPlanEstudio;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -58,6 +59,7 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     public RegistroPlandeEstudioController() {
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
+        documentosPlanEstudio = new ArrayList<>();
     }
 
     public String getDatos() {
@@ -86,6 +88,9 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     public void cancelarRegistroPlanEstudio() {
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
+        limpiarVariables();
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.update("formMetadatosPlanEstudio");
     }
 
     public void seleccionarArchivo(FileUploadEvent event) {
@@ -165,9 +170,11 @@ public class RegistroPlandeEstudioController implements Serializable {
         }
     }
 
-    public List<QueryResult> getListaDocs() {
+    public void listaDocs() {
         try {
+            documentosPlanEstudio.clear();
             documentosPlanEstudio = okm.findByName(datos);
+            System.out.println("cantidad recuperada: " + documentosPlanEstudio.size());
         } catch (IOException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RepositoryException ex) {
@@ -181,8 +188,6 @@ public class RegistroPlandeEstudioController implements Serializable {
         } catch (ParseException ex) {
             Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return documentosPlanEstudio;
     }
 
     public Date fechaActual() {

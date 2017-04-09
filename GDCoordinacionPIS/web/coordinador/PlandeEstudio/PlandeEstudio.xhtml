@@ -21,8 +21,8 @@ and open the template in the editor.
             <p:commandButton value="Agregar Plan de estudio" onclick="PF('dlgRegistroPlandeEstudio').show()" />
         </h:form>
         <h:form id="formPlanesdeEstudio">
-
-            <p:dataTable value="#{registroPlandeEstudioController.listaDocs}"
+            <div onclick="#{registroPlandeEstudioController.listaDocs()}"/>
+            <p:dataTable value="#{registroPlandeEstudioController.documentosPlanEstudio}"
                          id="lstPlanesEstudio" paginator="true"
                          rowKey="#{item.id}" paginatorPosition="top"
                          rows="10" emptyMessage="Sin documentos "                        

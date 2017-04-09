@@ -14,12 +14,14 @@ and open the template in the editor.
 
     <p:dialog widgetVar="dlgRegistroPlandeEstudio" modal="true" width="560" height="340" position="425,50" 
               closable="false" header="Registro de Plan de Estudio">
+        <h:outputStylesheet library="css" name="uploadFile.css"/>
+
         <p:row>
             <p:column colspan="2" style="text-align: center; background: #C8CDD6; font-weight: bold;">
                 <p:outputLabel  value="Documento Plan de Estudio" style="font-weight: bold; color: #000000"/>                   
             </p:column>  
         </p:row>
-        
+
         <p:row>
             <p:column colspan="2">
                 <h:form>
@@ -67,8 +69,9 @@ and open the template in the editor.
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>
-                        <p:inputText id="numPlanEstudio" type="number"  value="#{registroPlandeEstudioController.metadatosPlandeEstudio.numero}" required="true" requiredMessage="Campo obligatorio" >
-                            <f:ajax event="keyup" render="msgNumPlan" />   
+                        <p:inputText id="numPlanEstudio" type="number"  maxlength="3" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.numero}" required="true" requiredMessage="Campo Número Plan de Estudio obligatorio" >
+                            <f:ajax event="change" render="msgNumPlan" /> 
+                            <f:ajax event="keyup" render="msgNumPlan" /> 
                             <f:validator validatorId="validarCampoNumeroPlanEstudio" rendered="msgNumPlan"/>
                         </p:inputText>
                     </p:column>                   
@@ -80,11 +83,11 @@ and open the template in the editor.
                 </p:row>
                 <p:row>
                     <p:column>
-                        <p:outputLabel value="Acuerdo Plan Estudio" style="font-weight: bold; color: #000000"/>
+                        <p:outputLabel value="Acuerdo Plan de Estudio" style="font-weight: bold; color: #000000"/>
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>
-                        <p:inputText id="acPlanEstudio" maxlength="30" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.acuerdo}" required="true" requiredMessage="Campo obligatorio" validatorMessage="Longitud m&#237;n: 5 caracteres, m&#225;x 30 caracteres. ">
+                        <p:inputText id="acPlanEstudio" maxlength="30" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.acuerdo}" required="true" requiredMessage="Campo Acuerdo Plan de Estudio obligatorio" validatorMessage="Longitud m&#237;n: 5 caracteres, m&#225;x 30 caracteres. ">
                             <f:ajax event="keyup" render="msgAcPlan"/>
                             <f:validateLength minimum="5"/>
                         </p:inputText>
@@ -97,11 +100,11 @@ and open the template in the editor.
                 </p:row>
                 <p:row>
                     <p:column>
-                        <p:outputLabel value="Vigencia Plan Estudio" style="font-weight: bold; color: #000000"/>
+                        <p:outputLabel value="Vigencia Plan de Estudio" style="font-weight: bold; color: #000000"/>
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>                        
-                        <p:calendar  value="#{registroPlandeEstudioController.metadatosPlandeEstudio.vigencia}" id="vigPlanEstudio" onkeypress="return false"  navigator="true" pattern="dd-MM-yyyy" required="true" requiredMessage="Campo obligatorio" placeholder="dd/mm/aaaa" mindate="#{registroPlandeEstudioController.fechaActual()}"/>
+                        <p:calendar  value="#{registroPlandeEstudioController.metadatosPlandeEstudio.vigencia}" id="vigPlanEstudio" onkeypress="return false"  navigator="true" pattern="dd-MM-yyyy" required="true" requiredMessage="Campo Vigencia Plan de Estudio obligatorio" placeholder="dd/mm/aaaa" mindate="#{registroPlandeEstudioController.fechaActual()}"/>
                     </p:column>                   
                 </p:row>
                 <p:row>
@@ -111,7 +114,7 @@ and open the template in the editor.
                 </p:row>  
                 <p:row>
                     <p:column colspan="2">
-                        
+
                     </p:column>
                 </p:row>
                 <p:row>
