@@ -12,7 +12,7 @@
         <h:form>
             <p:commandButton value="Agregar oferta academica" onclick="PF('dlgRegistroOfertaAcedemica').show()"/>
         </h:form>
-        <h:form>  
+        <h:form id="formListaDocumentos">  
             <br/>
             <p:outputLabel value="Buscar documento: " style="font-weight: bold; color: #000000"/>
 
@@ -27,7 +27,7 @@
                          var="dato">
                 <p:column>
                     <f:facet name="header">
-                        Nombre del Archivo
+                        <p:outputLabel value="Nombre del documento"/>
                     </f:facet>
                     <p:outputLabel value="#{registroOfertaAcademicaController.nombreDelArchivo(dato.document.getPath())}"/>
                 </p:column>
@@ -41,8 +41,10 @@
                     <f:facet name="header">
                         Acciones
                     </f:facet>
-                    <p:commandButton value="Descargar" disabled="true" icon="ui-icon-arrowthickstop-1-s" title="Descargar" />
-                    <p:commandButton value="Ver" disabled="true" icon="ui-icon-search" title="Ver"/>
+                    <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" value="Descargar" icon="ui-icon-arrowthickstop-1-s" title="Descargar" >
+                        <p:fileDownload value="#{registroOfertaAcademicaController.descargarDocumento(dato)}" />
+                    </p:commandButton>
+                    <p:commandButton value="Ver" action="#{registroOfertaAcademicaController.visualizarDocumento()}" icon="ui-icon-search" title="Ver"/>
                 </p:column>
             </p:dataTable>
 
@@ -51,5 +53,20 @@
         <ui:include src="registrarOfertaAcademica.xhtml"/> 
     </h:body>
 
+    <p:dialog widgetVar="visualizarPDF">
+
+    </p:dialog>
+    <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
+        <p:graphicImage name="/demo/images/ajaxloadingbar.gif" />
+    </p:dialog>
+    <script type="text/javascript">
+        function start() {
+            PF('statusDialog').show();
+        }
+
+        function stop() {
+            PF('statusDialog').hide();
+        }
+    </script>
 </html>
 

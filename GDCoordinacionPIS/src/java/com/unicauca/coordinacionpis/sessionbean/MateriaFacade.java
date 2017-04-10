@@ -5,7 +5,7 @@
  */
 package com.unicauca.coordinacionpis.sessionbean;
 
-import com.unicauca.coodinacionpis.entidades.Curso;
+import com.unicauca.coodinacionpis.entidades.Materia;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author ROED26
  */
 @Stateless
-public class CursoFacade extends AbstractFacade<Curso> {
+public class MateriaFacade extends AbstractFacade<Materia> {
 
     @PersistenceContext(unitName = "GDCoordinacionPISPU")
     private EntityManager em;
@@ -25,8 +25,8 @@ public class CursoFacade extends AbstractFacade<Curso> {
         return em;
     }
 
-    public CursoFacade() {
-        super(Curso.class);
+    public MateriaFacade() {
+        super(Materia.class);
     }
     
 }

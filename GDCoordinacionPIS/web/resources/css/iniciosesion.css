@@ -71,7 +71,7 @@ body {
 }
 
 .ui-widget .ui-widget{
-    font-size: 13px !important;
+    font-size: 14px !important;
 }
 
 .ui-datatable th{
@@ -88,7 +88,7 @@ body {
 }
 
 .ui-button-text{
-    font-size: 10px !important;
+    font-size: 12px !important;
 }
 
 .fechaRed{
@@ -179,25 +179,8 @@ body {
 
 }
 
-form {
-    background: white;
-    box-shadow: 8px 7px 72px 18px #0b2672;
-    font-family: lato;
-    position: relative;
-    color: #333;
-    border-radius: 32px;
-    width: 34%;
-    height: 300px;
-}
-form header {
-    padding: 35px 15px;
-    color: black;
-    font-size: 1.2em;
-    font-weight: bold;
-    border-radius: 13px 13px 0 0;
-    text-align: center;
 
-}
+
 form label {
     margin-left: 20px;
     display: inline-block;
@@ -236,21 +219,22 @@ form .help {
 }
 form {
     background: white;
-    box-shadow: 2px 6px 101px 34px rgb(31, 35, 84);
+    box-shadow: 2px 6px 101px 34px rgb(46, 55, 162);
     font-family: lato;
     position: relative;
     color: #333;
     border-radius: 32px;
-    width: 385px;
+    width: 405px;
     height: 280px;
 }
 form header {
-    padding: 35px 15px;
-    color: black;
-    font-size: 1.2em;
+    padding: 16px 15px;
+    color: white;
+    font-size: 1.4em;
     font-weight: bold;
     border-radius: 13px 13px 0 0;
     text-align: center;
+    background: #0f2f78;
 
 }
 form label {
@@ -346,7 +330,16 @@ form .help {
     text-decoration: none !important;
     cursor: pointer;
     text-align: center;
+    color: #ffffff !important ;
     zoom: 1;
     overflow: visible;
+    background: #092167 !important;
+}
+
+element.style {
+    background: #092167 !important;
+    width: 150px;
+    color: #000000;
+    font-weight: bold;
 }
 

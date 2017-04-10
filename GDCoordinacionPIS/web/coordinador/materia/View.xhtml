@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="MateriaViewDlg" widgetVar="MateriaViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleMateria.ViewMateriaTitle}">
+            <h:form id="MateriaViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{materiaController.selected != null}">
+                        <h:outputText value="#{bundleMateria.ViewMateriaLabel_idMateria}"/>
+                        <h:outputText value="#{materiaController.selected.idMateria}" title="#{bundleMateria.ViewMateriaTitle_idMateria}"/>
+                        <h:outputText value="#{bundleMateria.ViewMateriaLabel_nombreMateria}"/>
+                        <h:outputText value="#{materiaController.selected.nombreMateria}" title="#{bundleMateria.ViewMateriaTitle_nombreMateria}"/>
+                        <h:outputText value="#{bundleMateria.ViewMateriaLabel_numeroEstudiantes}"/>
+                        <h:outputText value="#{materiaController.selected.numeroEstudiantes}" title="#{bundleMateria.ViewMateriaTitle_numeroEstudiantes}"/>
+                        <h:outputText value="#{bundleMateria.ViewMateriaLabel_gruposSolicitados}"/>
+                        <h:outputText value="#{materiaController.selected.gruposSolicitados}" title="#{bundleMateria.ViewMateriaTitle_gruposSolicitados}"/>
+                        <h:outputText value="#{bundleMateria.ViewMateriaLabel_gruposCancelados}"/>
+                        <h:outputText value="#{materiaController.selected.gruposCancelados}" title="#{bundleMateria.ViewMateriaTitle_gruposCancelados}"/>
+                        <h:outputText value="#{bundleMateria.ViewMateriaLabel_gruposOfertados}"/>
+                        <h:outputText value="#{materiaController.selected.gruposOfertados}" title="#{bundleMateria.ViewMateriaTitle_gruposOfertados}"/>
+                        <h:outputText value="#{bundleMateria.ViewMateriaLabel_gruposFusionados}"/>
+                        <h:outputText value="#{materiaController.selected.gruposFusionados}" title="#{bundleMateria.ViewMateriaTitle_gruposFusionados}"/>
+                        <h:outputText value="#{bundleMateria.ViewMateriaLabel_gruposNuevos}"/>
+                        <h:outputText value="#{materiaController.selected.gruposNuevos}" title="#{bundleMateria.ViewMateriaTitle_gruposNuevos}"/>
+                        <h:outputText value="#{bundleMateria.ViewMateriaLabel_idDepartamento}"/>
+                        <h:outputText value="#{materiaController.selected.idDepartamento}" title="#{bundleMateria.ViewMateriaTitle_idDepartamento}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundleMateria.Close}" onclick="MateriaViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

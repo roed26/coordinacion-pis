@@ -1,9 +1,9 @@
 package com.unicauca.coordinacionpis.managedbean;
 
-import com.unicauca.coodinacionpis.entidades.Curso;
+import com.unicauca.coodinacionpis.entidades.Materia;
 import com.unicauca.coordinacionpis.managedbean.util.JsfUtil;
 import com.unicauca.coordinacionpis.managedbean.util.JsfUtil.PersistAction;
-import com.unicauca.coordinacionpis.sessionbean.CursoFacade;
+import com.unicauca.coordinacionpis.sessionbean.MateriaFacade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,23 +19,23 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@Named("cursoController")
+@Named("materiaController")
 @SessionScoped
-public class CursoController implements Serializable {
+public class MateriaController implements Serializable {
 
     @EJB
-    private com.unicauca.coordinacionpis.sessionbean.CursoFacade ejbFacade;
-    private List<Curso> items = null;
-    private Curso selected;
+    private com.unicauca.coordinacionpis.sessionbean.MateriaFacade ejbFacade;
+    private List<Materia> items = null;
+    private Materia selected;
 
-    public CursoController() {
+    public MateriaController() {
     }
 
-    public Curso getSelected() {
+    public Materia getSelected() {
         return selected;
     }
 
-    public void setSelected(Curso selected) {
+    public void setSelected(Materia selected) {
         this.selected = selected;
     }
 
@@ -45,36 +45,36 @@ public class CursoController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private CursoFacade getFacade() {
+    private MateriaFacade getFacade() {
         return ejbFacade;
     }
 
-    public Curso prepareCreate() {
-        selected = new Curso();
+    public Materia prepareCreate() {
+        selected = new Materia();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("CursoCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/BundleMateria").getString("MateriaCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("CursoUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/BundleMateria").getString("MateriaUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("CursoDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/BundleMateria").getString("MateriaDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<Curso> getItems() {
+    public List<Materia> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -100,38 +100,38 @@ public class CursoController implements Serializable {
                 if (msg.length() > 0) {
                     JsfUtil.addErrorMessage(msg);
                 } else {
-                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleMateria").getString("PersistenceErrorOccured"));
                 }
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleMateria").getString("PersistenceErrorOccured"));
             }
         }
     }
 
-    public Curso getCurso(java.lang.Integer id) {
+    public Materia getMateria(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
-    public List<Curso> getItemsAvailableSelectMany() {
+    public List<Materia> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<Curso> getItemsAvailableSelectOne() {
+    public List<Materia> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = Curso.class)
-    public static class CursoControllerConverter implements Converter {
+    @FacesConverter(forClass = Materia.class)
+    public static class MateriaControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            CursoController controller = (CursoController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "cursoController");
-            return controller.getCurso(getKey(value));
+            MateriaController controller = (MateriaController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "materiaController");
+            return controller.getMateria(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {
@@ -151,11 +151,11 @@ public class CursoController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Curso) {
-                Curso o = (Curso) object;
-                return getStringKey(o.getIdCurso());
+            if (object instanceof Materia) {
+                Materia o = (Materia) object;
+                return getStringKey(o.getIdMateria());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Curso.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Materia.class.getName()});
                 return null;
             }
         }

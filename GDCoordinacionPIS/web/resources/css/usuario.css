@@ -170,5 +170,12 @@ body {
     border-color: rgba(238, 211, 215, 0.04) !important;
 }
 
+.ui-widget-content {
+    border: none !important;
+    
+}
+.ui-datagrid-column {
+    padding: 0px !important;
+}
 
 

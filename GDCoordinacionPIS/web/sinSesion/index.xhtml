@@ -36,10 +36,13 @@
         <div id="centrar">
             <h:form>
                 <header>Iniciar sesión</header>
+                <center>
+                    <br/>
+                    <br/>
                 <p:panelGrid style="text-align: left" styleClass="panelgrid" class="transparentBackground" >
                     <p:row >
                         <p:column >
-                            <p:outputLabel style="font-weight: bold;" value="Nombre de Usuario" />
+                            <p:outputLabel style="font-weight: bold; font-size: 17px;" value="Nombre de Usuario" />
                         </p:column>
                         <p:column>
                             <p:inputText id="nombreUsuario"  label="NombreUsuario" />
@@ -62,6 +65,7 @@
                     </p:row>
                     <p:row>
                         <p:column colspan="3" style="text-align: center; ">
+                            <br/>
                             <p:commandButton style="background: gainsboro; width: 150px; color:#000000; font-weight: bold; "
                                              value="Iniciar sesión" action="#{sessionController.login()}"
                                              ajax="false"
@@ -69,6 +73,7 @@
                         </p:column>
                     </p:row>
                 </p:panelGrid>
+            </center>
             </h:form>
         </div>
         <div id="footersesion">
