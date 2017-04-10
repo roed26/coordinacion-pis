@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    
+    
+        
+    
+
+
+        <h:body>
+            <h:form>
+                <p:commandButton id="createButton" icon="ui-icon-plus"   value="Agregar Departamento" actionListener="#{departamentoController.prepareCreate}" oncomplete="PF('DepartamentoCreateDialog').show()"/>
+            </h:form>
+            <h:form id="DepartamentoListForm">
+            
+                    <p:dataTable id="datalist" value="#{departamentoController.items}" var="item"
+                              
+                                 paginator="true"
+                                 rowKey="#{item.idDepartamento}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 paginatorPosition="top"
+                                 >
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Identificación departamento"/>
+                            </f:facet>
+                            <h:outputText value="#{item.idDepartamento}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Nombre Departamento"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nombre}"/>
+                        </p:column>
+                        <p:column style="width: 120px">
+                           
+                            <f:facet name="header">
+                                <h:outputText value="Acciones"/>
+                            </f:facet>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" action="#{departamentoController.setSelected(item)}" update=":DepartamentoViewForm" oncomplete="PF('DepartamentoViewDialog').show()"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" action="#{departamentoController.setSelected(item)}" update=":DepartamentoEditForm" oncomplete="PF('DepartamentoEditDialog').show()" />
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash" action="#{departamentoController.setSelected(item)}" actionListener="#{departamentoController.destroy}" update="datalist"/>
+                        </p:column>
+                    </p:dataTable>
+                
+            </h:form>
+
+            <ui:include src="agregarDepartamento.xhtml"/>
+            <ui:include src="editarDepartamento.xhtml"/>
+            <ui:include src="verDepartamento.xhtml"/>
+        </h:body>
+</html>
