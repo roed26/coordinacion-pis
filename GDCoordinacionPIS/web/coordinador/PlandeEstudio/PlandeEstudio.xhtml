@@ -21,7 +21,9 @@ and open the template in the editor.
             <p:commandButton value="Agregar Plan de estudio" onclick="PF('dlgRegistroPlandeEstudio').show()" />
         </h:form>
         <h:form id="formPlanesdeEstudio">
+            <!--Llama al método listaDocs para recuperar los planes de estudio contenidos en openkm-->
             <div onclick="#{registroPlandeEstudioController.listaDocs()}"/>
+            <!--Muestra los planes de estudio contenidos en openkm-->
             <p:dataTable value="#{registroPlandeEstudioController.documentosPlanEstudio}"
                          id="lstPlanesEstudio" paginator="true"
                          rowKey="#{item.id}" paginatorPosition="top"
@@ -33,7 +35,7 @@ and open the template in the editor.
                     </f:facet>
                     <p:outputLabel value="#{dato.document.path.substring(28)}"/>
                 </p:column>
-               
+
                 <p:column style="text-align: center; background: #C8CDD6; width: 140px">
                     <f:facet name="header">
                         Acciones

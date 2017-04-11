@@ -85,6 +85,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     public void setMetadatosPlandeEstudio(MetadatosPlanEstudio metadatosPlandeEstudio) {
         this.metadatosPlandeEstudio = metadatosPlandeEstudio;
     }
+//Al presionar el boton cancelar, se borran los datos ingresados en el formulario y se actualiza el formulario.
 
     public void cancelarRegistroPlanEstudio() {
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
@@ -93,13 +94,19 @@ public class RegistroPlandeEstudioController implements Serializable {
         rc.update("formMetadatosPlanEstudio");
     }
 
+    /**
+     * Recibe como parametro el archivo(Plan de estudio) que se va a guardar y
+     * se obtiene el archivo y nombre.
+     *
+     * @param event
+     */
     public void seleccionarArchivo(FileUploadEvent event) {
         nombreArchivo = event.getFile().getFileName();
         archivoPlan = event.getFile();
         FacesMessage msg = new FacesMessage("El archivo", nombreArchivo + " se seleccionó con exito");
         FacesContext.getCurrentInstance().addMessage(null, msg);
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.update("msg");
+        rc.update("msg");//Actualiza la etiqueta growl para que el mensaje pueda ser mostrado
 
     }
 
@@ -111,33 +118,33 @@ public class RegistroPlandeEstudioController implements Serializable {
             boolean existeFolder = false;
             boolean existeDocumento = false;
             for (Folder fld : okm.getFolderChildren("/okm:root")) {
-                if (fld.getPath().equalsIgnoreCase("/okm:root/Planes de Estudio")) {
+                if (fld.getPath().equalsIgnoreCase("/okm:root/Planes de Estudio")) {//Buscar en openkm si existe la carpeta Planes de Estudio
                     existeFolder = true;
                 }
             }
 
-            if (existeFolder) {
+            if (existeFolder) {//Si existe la carpeta, busca el documento
                 for (com.openkm.sdk4j.bean.Document doc : okm.getDocumentChildren("/okm:root/Planes de Estudio")) {
-                    if (doc.getPath().equalsIgnoreCase("/okm:root/Planes de Estudio/" + nombreArchivo)) {
+                    if (doc.getPath().equalsIgnoreCase("/okm:root/Planes de Estudio/" + nombreArchivo)) {//Buscar en openkm si existe el archivo a guardar
                         existeDocumento = true;
                     }
                 }
             }
-            if (existeFolder) {
+            if (existeFolder) {//Si existe la carpeta Planes de Estudio, crea dentro de ella el documento
                 if (!existeDocumento) {
-                    okm.createDocumentSimple("/okm:root/Planes de Estudio/" + nombreArchivo, archivoPlan.getInputstream());
+                    okm.createDocumentSimple("/okm:root/Planes de Estudio/" + nombreArchivo, archivoPlan.getInputstream());//Crear el documento en openkm
                     message = new FacesMessage("El archivo", nombreArchivo + " se registro con exito");
                 } else {
                     message = new FacesMessage("Error al registrar el archivo", nombreArchivo);
                 }
-            } else {
-                okm.createFolderSimple("/okm:root/Planes de Estudio");
-                okm.createDocumentSimple("/okm:root/Planes de Estudio/" + nombreArchivo, archivoPlan.getInputstream());
+            } else {//Si la carpeta no existe, la crea y dentro de ella crea el documento.
+                okm.createFolderSimple("/okm:root/Planes de Estudio");//Crear carpeta Planes de Estudio en openkm
+                okm.createDocumentSimple("/okm:root/Planes de Estudio/" + nombreArchivo, archivoPlan.getInputstream());//Crear el documento dentro de la carpeta Planes de Estudio en openkm
                 message = new FacesMessage("El archivo", nombreArchivo + " se registro con exito");
             }
             FacesContext.getCurrentInstance().addMessage(null, message);
-            rc.update("formMetadatosPlanEstudio");
-            rc.execute("PF('dlgRegistroPlandeEstudio').hide()");
+            rc.update("formMetadatosPlanEstudio");//Actualizar el formulario de registro
+            rc.execute("PF('dlgRegistroPlandeEstudio').hide()");//Cerrar el dialog que contiene el formulario
             limpiarVariables();
         } catch (PathNotFoundException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,10 +177,13 @@ public class RegistroPlandeEstudioController implements Serializable {
         }
     }
 
+    /**
+     * Obtener los planes de estudio contenidos en openkm
+     */
     public void listaDocs() {
         try {
             documentosPlanEstudio.clear();
-            documentosPlanEstudio = okm.findByName(datos);
+            documentosPlanEstudio = okm.findByName(datos);//Obtener los Planes de Estudio contenidos en openkm
             System.out.println("cantidad recuperada: " + documentosPlanEstudio.size());
         } catch (IOException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
@@ -190,11 +200,12 @@ public class RegistroPlandeEstudioController implements Serializable {
         }
     }
 
+    //Método utilizado para limitar la fecha de la vigencia del plan de estudio
     public Date fechaActual() {
         return new Date();
     }
 
-    public void limpiarVariables() {
+    public void limpiarVariables() {//Limpiar valores ingresados en el formulario
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
         nombreArchivo = "";
         archivoPlan = null;

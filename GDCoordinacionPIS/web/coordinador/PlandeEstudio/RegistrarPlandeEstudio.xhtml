@@ -25,6 +25,7 @@ and open the template in the editor.
         <p:row>
             <p:column colspan="2">
                 <h:form>
+                    <!--Subir documento del plan de estudio-->
                     <p:fileUpload style="margin-top: 3%" fileUploadListener="#{registroPlandeEstudioController.seleccionarArchivo}" mode="advanced"
                                   label="Seleccionar archivo"  invalidFileMessage="Solo se permiten archivos PDF" fileLimit="1" fileLimitMessage="Número máximo de archivos: 1"
                                   dragDropSupport="true" uploadLabel="Aceptar" cancelLabel="Cancelar"  
@@ -72,6 +73,7 @@ and open the template in the editor.
                         <p:inputText id="numPlanEstudio" type="number"  maxlength="3" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.numero}" required="true" requiredMessage="Campo Número Plan de Estudio obligatorio" >
                             <f:ajax event="change" render="msgNumPlan" /> 
                             <f:ajax event="keyup" render="msgNumPlan" /> 
+                            <!--Validar que el campo del número del plan de estudio sea mayor que cero-->
                             <f:validator validatorId="validarCampoNumeroPlanEstudio" rendered="msgNumPlan"/>
                         </p:inputText>
                     </p:column>                   
@@ -88,6 +90,7 @@ and open the template in the editor.
                     </p:column>
                     <p:column>
                         <p:inputText id="acPlanEstudio" maxlength="30" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.acuerdo}" required="true" requiredMessage="Campo Acuerdo Plan de Estudio obligatorio" validatorMessage="Longitud m&#237;n: 5 caracteres, m&#225;x 30 caracteres. ">
+                           <!--Validar el tamaño del dato ingresado en el campo, cada ves que se presione una tecla-->
                             <f:ajax event="keyup" render="msgAcPlan"/>
                             <f:validateLength minimum="5"/>
                         </p:inputText>
