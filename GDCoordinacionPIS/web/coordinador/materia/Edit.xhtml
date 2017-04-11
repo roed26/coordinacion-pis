@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="MateriaEditDlg" widgetVar="MateriaEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleMateria.EditMateriaTitle}">
+            <h:form id="MateriaEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{materiaController.selected != null}">
+                        <p:outputLabel value="#{bundleMateria.EditMateriaLabel_idMateria}" for="idMateria" />
+                        <p:inputText id="idMateria" value="#{materiaController.selected.idMateria}" title="#{bundleMateria.EditMateriaTitle_idMateria}" required="true" requiredMessage="#{bundleMateria.EditMateriaRequiredMessage_idMateria}"/>
+                        <p:outputLabel value="#{bundleMateria.EditMateriaLabel_nombreMateria}" for="nombreMateria" />
+                        <p:inputText id="nombreMateria" value="#{materiaController.selected.nombreMateria}" title="#{bundleMateria.EditMateriaTitle_nombreMateria}" required="true" requiredMessage="#{bundleMateria.EditMateriaRequiredMessage_nombreMateria}"/>
+                        <p:outputLabel value="#{bundleMateria.EditMateriaLabel_numeroEstudiantes}" for="numeroEstudiantes" />
+                        <p:inputText id="numeroEstudiantes" value="#{materiaController.selected.numeroEstudiantes}" title="#{bundleMateria.EditMateriaTitle_numeroEstudiantes}" />
+                        <p:outputLabel value="#{bundleMateria.EditMateriaLabel_gruposSolicitados}" for="gruposSolicitados" />
+                        <p:inputText id="gruposSolicitados" value="#{materiaController.selected.gruposSolicitados}" title="#{bundleMateria.EditMateriaTitle_gruposSolicitados}" />
+                        <p:outputLabel value="#{bundleMateria.EditMateriaLabel_gruposCancelados}" for="gruposCancelados" />
+                        <p:inputText id="gruposCancelados" value="#{materiaController.selected.gruposCancelados}" title="#{bundleMateria.EditMateriaTitle_gruposCancelados}" />
+                        <p:outputLabel value="#{bundleMateria.EditMateriaLabel_gruposOfertados}" for="gruposOfertados" />
+                        <p:inputText id="gruposOfertados" value="#{materiaController.selected.gruposOfertados}" title="#{bundleMateria.EditMateriaTitle_gruposOfertados}" />
+                        <p:outputLabel value="#{bundleMateria.EditMateriaLabel_gruposFusionados}" for="gruposFusionados" />
+                        <p:inputText id="gruposFusionados" value="#{materiaController.selected.gruposFusionados}" title="#{bundleMateria.EditMateriaTitle_gruposFusionados}" />
+                        <p:outputLabel value="#{bundleMateria.EditMateriaLabel_gruposNuevos}" for="gruposNuevos" />
+                        <p:inputText id="gruposNuevos" value="#{materiaController.selected.gruposNuevos}" title="#{bundleMateria.EditMateriaTitle_gruposNuevos}" />
+                        <p:outputLabel value="#{bundleMateria.EditMateriaLabel_idDepartamento}" for="idDepartamento" />
+                        <p:selectOneMenu id="idDepartamento" value="#{materiaController.selected.idDepartamento}" required="true" requiredMessage="#{bundleMateria.EditMateriaRequiredMessage_idDepartamento}">
+                            <f:selectItem itemLabel="#{bundleMateria.SelectOneMessage}"/>
+                            <f:selectItems value="#{departamentoController.itemsAvailableSelectOne}"
+                                           var="idDepartamentoItem"
+                                           itemValue="#{idDepartamentoItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{materiaController.update}" value="#{bundleMateria.Save}" update="display,:MateriaListForm:datalist,:growl" oncomplete="handleSubmit(args, 'MateriaEditDialog');"/>
+                    <p:commandButton value="#{bundleMateria.Cancel}" onclick="MateriaEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

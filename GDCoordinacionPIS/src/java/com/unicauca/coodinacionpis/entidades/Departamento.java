@@ -48,7 +48,7 @@ public class Departamento implements Serializable {
     @Column(name = "nombre")
     private String nombre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDepartamento")
-    private List<Curso> cursoList;
+    private List<Materia> materiaList;
 
     public Departamento() {
     }
@@ -79,12 +79,12 @@ public class Departamento implements Serializable {
     }
 
     @XmlTransient
-    public List<Curso> getCursoList() {
-        return cursoList;
+    public List<Materia> getMateriaList() {
+        return materiaList;
     }
 
-    public void setCursoList(List<Curso> cursoList) {
-        this.cursoList = cursoList;
+    public void setMateriaList(List<Materia> materiaList) {
+        this.materiaList = materiaList;
     }
 
     @Override

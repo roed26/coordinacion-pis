@@ -8,5 +8,13 @@
             <base-name>/Bundle</base-name>
             <var>bundle</var>
         </resource-bundle>
+        <resource-bundle>
+            <base-name>/BundleMateria</base-name>
+            <var>bundleMateria</var>
+        </resource-bundle>
+        <resource-bundle>
+            <base-name>/BundleMateria</base-name>
+            <var>bundleMateria</var>
+        </resource-bundle>
     </application>
 </faces-config>
