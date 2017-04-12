@@ -1,6 +1,6 @@
 package com.unicauca.coordinacionpis.managedbean;
 
-import com.unicauca.coodinacionpis.entidades.Materia;
+import com.unicauca.coordinacionpis.entidades.Materia;
 import com.unicauca.coordinacionpis.managedbean.util.JsfUtil;
 import com.unicauca.coordinacionpis.managedbean.util.JsfUtil.PersistAction;
 import com.unicauca.coordinacionpis.sessionbean.MateriaFacade;

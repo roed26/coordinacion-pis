@@ -19,53 +19,49 @@
             <p:inputText   style="width: 300px" placeholder="Nombre del documento" value="#{registroOfertaAcademicaController.datos}">
                 <p:ajax update="datalist"  event="keyup" />
             </p:inputText>  
-            <p:dataTable value="#{registroOfertaAcademicaController.listaDocs}" 
+            <p:dataTable value="#{registroOfertaAcademicaController.listadoOfertasAcademicas}" 
                          id="datalist" paginator="true"
                          rowKey="#{item.id}" paginatorPosition="top"
                          rows="10" emptyMessage="Sin documentos "
                          rowsPerPageTemplate="10,20,30,40,50"
-                         var="dato">
+                         var="ofertaAcademica">
                 <p:column>
                     <f:facet name="header">
                         <p:outputLabel value="Nombre del documento"/>
                     </f:facet>
-                    <p:outputLabel value="#{registroOfertaAcademicaController.nombreDelArchivo(dato.document.getPath())}"/>
+                    <p:outputLabel value="#{registroOfertaAcademicaController.nombreDelArchivo(ofertaAcademica.getPath())}"/>
                 </p:column>
                 <p:column style="width: 360px" >
                     <f:facet name="header">
                         Fecha de creación
                     </f:facet>
-                    <p:outputLabel value="#{registroOfertaAcademicaController.fecha(dato.document.getCreated())}"/>
+                    <p:outputLabel value="#{registroOfertaAcademicaController.fecha(ofertaAcademica.getCreated())}"/>
                 </p:column>
                 <p:column style="text-align: center; background: #C8CDD6; width: 140px">
                     <f:facet name="header">
                         Acciones
                     </f:facet>
                     <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" value="Descargar" icon="ui-icon-arrowthickstop-1-s" title="Descargar" >
-                        <p:fileDownload value="#{registroOfertaAcademicaController.descargarDocumento(dato)}" />
+                        <p:fileDownload value="#{registroOfertaAcademicaController.descargarDocumento(ofertaAcademica)}" />
                     </p:commandButton>
-                    <p:commandButton value="Ver" action="#{registroOfertaAcademicaController.visualizarDocumento()}" icon="ui-icon-search" title="Ver"/>
+                    <p:commandButton value="Ver" action="#{registroOfertaAcademicaController.visualizarDocumento(ofertaAcademica)}" icon="ui-icon-search" title="Ver"/>
                 </p:column>
             </p:dataTable>
-
         </h:form>
-
         <ui:include src="registrarOfertaAcademica.xhtml"/> 
     </h:body>
 
-    <p:dialog widgetVar="visualizarPDF">
-
-    </p:dialog>
-    <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
-        <p:graphicImage name="/demo/images/ajaxloadingbar.gif" />
+    <p:dialog widgetVar="visualizarPDF" modal="true">
+        <h3>PDF</h3>
+        <p:media value="#{registroOfertaAcademicaController.streamedContent}" width="750" height="560" player="pdf" />
     </p:dialog>
     <script type="text/javascript">
         function start() {
-            PF('statusDialog').show();
+            PF('cargando').show();
         }
 
         function stop() {
-            PF('statusDialog').hide();
+            PF('cargando').hide();
         }
     </script>
 </html>

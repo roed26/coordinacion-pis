@@ -38,33 +38,33 @@
                         <p:panelGrid>
                             <p:row>
                                 <p:column style="width: 150px; background: #C8CDD6">
-                                    <p:outputLabel value="Asignatura" style="font-weight: bold; color: #000000"/>
+                                    <p:outputLabel value="Materia" style="font-weight: bold; color: #000000"/>
                                 </p:column>
                                 <p:column style="background: #C8CDD6">
                                     <p:outputLabel value="Número aprox. de estudiantes" style="font-weight: bold; color: #000000"/>
                                     <p:outputLabel value="*" style="color: #ff5252"/>
                                 </p:column>
                                 <p:column style="background: #C8CDD6">
-                                    <p:outputLabel value="Numero de cursos solicitados" style="font-weight: bold; color: #000000"/>
+                                    <p:outputLabel value="Numero de grupos solicitados" style="font-weight: bold; color: #000000"/>
                                     <p:outputLabel value="*" style="color: #ff5252"/>
                                 </p:column>
                             </p:row>
                         </p:panelGrid>
-                        <p:dataGrid value="#{departamento.cursoList}" columns="1"  var="curso">
+                        <p:dataGrid value="#{departamento.materiaList}" columns="1"  var="materia">
                             <p:panelGrid styleClass="panelgrid">
                                 <p:row>
                                     <p:column style="width: 150px;">
-                                        <p:outputLabel value="#{curso.nombre}" style="font-weight: bold; color: #000000"/>
+                                        <p:outputLabel value="#{materia.nombreMateria}" style="font-weight: bold; color: #000000"/>
                                     </p:column>
                                     <p:column style="width: 183px;">
                                         <p:inputText id="estudiantesCalI" required="true" requiredMessage="Campo obligatorio"
-                                                     value="#{curso.numeroEstudiantes}">
+                                                     value="#{materia.numeroEstudiantes}">
                                             <f:validator validatorId="ValidarCampoNumerico"/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
                                         <p:inputText id="solicitadosCalI" required="true" requiredMessage="Campo obligatorio"
-                                                     value="#{curso.numeroSolicitados}" >
+                                                     value="#{materia.gruposSolicitados}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
 
                                         </p:inputText>
@@ -94,6 +94,14 @@
 
     <p:dialog header="Error" modal="true" position="center" widgetVar="mensajeError" closable="false">
         <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
+        <h:form>
+            <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                              onclick="PF('mensajeError').hide()" />
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog visible="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}" header="Error" modal="true" position="center" widgetVar="mensajeErrorConexion" closable="false">
+        erroor
         <h:form>
             <p:commandButton  value="Aceptar" style="font-weight: normal;"
                               onclick="PF('mensajeError').hide()" />
