@@ -9,10 +9,15 @@
         <title>Facelet Title</title>
     </h:head>
     <h:body>
-        <h:form>
+        <br rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}"/>
+        <br rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}"/>
+        <center><h:outputLabel rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}" value="Sin conexión con el gestor documental" style="font-size: 17px; font-weight: bold;" /></center>
+        <center><h:outputLabel rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}" value="Por favor compruebe que el gestor documental este disponible" style="font-size: 17px; font-weight: bold;" /></center>
+
+        <h:form rendered="#{registroOfertaAcademicaController.comprobarConexionOpenKM}">
             <p:commandButton value="Agregar oferta academica" onclick="PF('dlgRegistroOfertaAcedemica').show()"/>
         </h:form>
-        <h:form id="formListaDocumentos">  
+        <h:form id="formListaDocumentos" rendered="#{registroOfertaAcademicaController.comprobarConexionOpenKM}">  
             <br/>
             <p:outputLabel value="Buscar documento: " style="font-weight: bold; color: #000000"/>
 
@@ -48,21 +53,27 @@
                 </p:column>
             </p:dataTable>
         </h:form>
+
         <ui:include src="registrarOfertaAcademica.xhtml"/> 
-    </h:body>
+        <p:dialog widgetVar="visualizarPDF" modal="true">
+            <h:form id="visualizacion">
+               <h3>PDF</h3>
+            <p:media value="#{registroOfertaAcademicaController.streamedContent}" width="750" height="560" player="pdf" />
+            </h:form>
 
-    <p:dialog widgetVar="visualizarPDF" modal="true">
-        <h3>PDF</h3>
-        <p:media value="#{registroOfertaAcademicaController.streamedContent}" width="750" height="560" player="pdf" />
-    </p:dialog>
-    <script type="text/javascript">
-        function start() {
-            PF('cargando').show();
-        }
+            
+        </p:dialog>
 
-        function stop() {
-            PF('cargando').hide();
-        }
-    </script>
+        <script type="text/javascript">
+            function start() {
+                PF('cargando').show();
+            }
+
+            function stop() {
+                PF('cargando').hide();
+            }
+        </script>
+    </h:body>   
+
 </html>
 

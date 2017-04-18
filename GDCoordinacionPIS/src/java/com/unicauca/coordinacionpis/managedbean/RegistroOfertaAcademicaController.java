@@ -1,8 +1,6 @@
 package com.unicauca.coordinacionpis.managedbean;
 
-import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
-import com.unicauca.coordinacionpis.classMetadatos.MetadatosOfertaAcademica;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -10,19 +8,16 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.openkm.sdk4j.OKMWebservices;
-import com.openkm.sdk4j.OKMWebservicesFactory;
 import com.openkm.sdk4j.bean.Folder;
 import com.openkm.sdk4j.bean.QueryResult;
 import com.openkm.sdk4j.exception.AccessDeniedException;
@@ -41,38 +36,30 @@ import com.openkm.sdk4j.exception.UserQuotaExceededException;
 import com.openkm.sdk4j.exception.VersionException;
 import com.openkm.sdk4j.exception.VirusDetectedException;
 import com.openkm.sdk4j.exception.WebserviceException;
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import com.unicauca.coordinacionpis.entidades.Materia;
 import com.unicauca.coordinacionpis.entidades.Departamento;
 import com.unicauca.coordinacionpis.sessionbean.DepartamentoFacade;
 import com.unicauca.coordinacionpis.utilidades.ConexionOpenKM;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import org.apache.commons.io.IOUtils;
-import org.primefaces.component.tabview.Tab;
-import org.primefaces.component.tabview.TabView;
+import javax.faces.event.ValueChangeEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -99,6 +86,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
     private List<Departamento> listaDepartamentos;
     private com.openkm.sdk4j.bean.Document documento;
     private InputStream stream;
+    private boolean registroInicialOferta;
 
     public RegistroOfertaAcademicaController() {
         this.formatoFecha = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -108,6 +96,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
         listadoDocsOfertasAcademicas = new ArrayList<>();
         this.conexionOpenKM = new ConexionOpenKM();
         this.okm = conexionOpenKM.getOkm();
+        registroInicialOferta = true;
 
     }
 
@@ -139,6 +128,14 @@ public class RegistroOfertaAcademicaController implements Serializable {
             }
         } catch (Exception e) {
         }
+    }
+
+    public boolean isRegistroInicialOferta() {
+        return registroInicialOferta;
+    }
+
+    public void setRegistroInicialOferta(boolean registroInicialOferta) {
+        this.registroInicialOferta = registroInicialOferta;
     }
 
     public boolean isExitoSubirArchivo() {
@@ -186,6 +183,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
     }
 
     public List<Departamento> getListaDepartamentos() {
+        listaDepartamentos = ejbDepartamento.findAll();
         return listaDepartamentos;
     }
 
@@ -352,6 +350,14 @@ public class RegistroOfertaAcademicaController implements Serializable {
 
     }
 
+    public void registroInicial(ValueChangeEvent e) {
+        if (e.getNewValue().equals("Si")) {
+            registroInicialOferta = true;
+        } else {
+            registroInicialOferta = false;
+        }
+    }
+
     /*
     public void agregarMetadatos() {
         // create document and writer
@@ -394,6 +400,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
     }
 
     private Document generarPDF() {
+
         Document document = new Document(PageSize.A4);
         PdfWriter writer;
         try {
@@ -456,7 +463,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
         //cell.setBackgroundColor(BaseColor.GRAY);
         //table.addCell(cell);
         // now we add a cell with rowspan 2
-        if (!listadoCursos.get(0).getSemestre().equalsIgnoreCase("")) {
+        if (listadoCursos.get(0).getSemestre() != null) {
             float[] columnWidths = {2, 5, 7, 5, 5};
             table = new PdfPTable(columnWidths);
             table.setWidthPercentage(100);
@@ -485,7 +492,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
         table.addCell("Numero aprox. estudiantes");
         table.addCell("Cursos solicitados");*/
         for (int i = 0; i < listadoCursos.size(); i++) {
-            if (!listadoCursos.get(i).getSemestre().equalsIgnoreCase("")) {
+            if (listadoCursos.get(i).getSemestre() != null) {
                 table.addCell(listadoCursos.get(i).getSemestre());
             }
             table.addCell(listadoCursos.get(i).getCodigoMateria());
@@ -554,10 +561,15 @@ public class RegistroOfertaAcademicaController implements Serializable {
 
         try {
             this.documento = documento;
-            //InputStream in = okm.getContent(documento.getPath());
+            InputStream in = okm.getContent(documento.getPath());
+            streamedContent = new DefaultStreamedContent(in, "application/pdf");
+            //-------
+            Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            byte[] b = (byte[]) session.get("reportBytes");
+            if (b != null) {
+                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+            }
 
-            //streamedContent = new DefaultStreamedContent(in, "application/pdf");
-            //streamedContent = new DefaultStreamedContent(in, "application/pdf", nombreDelArchivo(documento.getPath()));
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.update("form:visualizacionPdf");
             requestContext.execute("PF('visualizarPDF').show()");
@@ -571,13 +583,19 @@ public class RegistroOfertaAcademicaController implements Serializable {
 
         try {
 
-            InputStream in = okm.getContent(this.documento.getPath());
+            /*InputStream in = okm.getContent(this.documento.getPath());
 
             //streamedContent = new DefaultStreamedContent(in, "application/pdf");
-            streamedContent = new DefaultStreamedContent(in, "application/pdf", nombreDelArchivo(documento.getPath()));
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.update("form:visualizacionPdf");
-            requestContext.execute("PF('visualizarPDF').show()");
+            streamedContent = new DefaultStreamedContent(in, "application/pdf", nombreDelArchivo(documento.getPath()));*/
+            InputStream in = okm.getContent(documento.getPath());
+            streamedContent = new DefaultStreamedContent(in, "application/pdf");
+            //-------
+            Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            byte[] b = (byte[]) session.get("reportBytes");
+            if (b != null) {
+                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -639,10 +657,20 @@ public class RegistroOfertaAcademicaController implements Serializable {
     }
 
     public boolean getComprobarConexionOpenKM() {
-        if (okm == null) {
-            return false;
-        } else {
-            return true;
+        boolean conexion = true;
+        try {
+            okm.getAppVersion();
+
+        } catch (RepositoryException ex) {
+            conexion = false;
+        } catch (DatabaseException ex) {
+            conexion = false;
+        } catch (UnknowException ex) {
+            conexion = false;
+        } catch (WebserviceException ex) {
+            conexion = false;
         }
+        return conexion;
     }
+
 }
