@@ -122,9 +122,9 @@ and open the template in the editor.
                 </p:row>
                 <p:row>
                     <p:column colspan="2">
-                        <p:commandButton value="Cerrar" style="margin-left: 25%;width: 80px;height: 25px"  action="#{registroPlandeEstudioController.cancelarRegistroPlanEstudio()}" onclick="PF('dlgRegistroPlandeEstudio').hide()" />
-                        <p:spacer width="30%" height="10"/>                        
-                        <p:commandButton value="Guardar" action="#{registroPlandeEstudioController.aceptarRegistroPlanEstudio()}" update=":formMetadatosPlanEstudio:msg,:formPlanesdeEstudio:lstPlanesEstudio" style="width: 80px;height:25px"/>
+                        <p:commandButton value="Agregar" action="#{registroPlandeEstudioController.aceptarRegistroPlanEstudio()}" update=":formMetadatosPlanEstudio:msg,:formPlanesdeEstudio:lstPlanesEstudio" style="width: 80px;height:25px"/>
+                        <p:spacer width="30%" height="10"/>                                                
+                        <p:commandButton value="Cancelar" style="margin-left: 25%;width: 80px;height: 25px"  action="#{registroPlandeEstudioController.cancelarRegistroPlanEstudio()}" onclick="PF('dlgRegistroPlandeEstudio').hide()" />
                     </p:column>
                 </p:row>
             </p:panelGrid>

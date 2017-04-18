@@ -9,6 +9,7 @@ import com.openkm.sdk4j.OKMWebservices;
 import com.openkm.sdk4j.OKMWebservicesFactory;
 import com.openkm.sdk4j.bean.Document;
 import com.openkm.sdk4j.bean.Folder;
+import com.openkm.sdk4j.bean.QueryResult;
 import com.openkm.sdk4j.exception.AccessDeniedException;
 import com.openkm.sdk4j.exception.AutomationException;
 import com.openkm.sdk4j.exception.DatabaseException;
@@ -24,11 +25,15 @@ import com.openkm.sdk4j.exception.UserQuotaExceededException;
 import com.openkm.sdk4j.exception.VirusDetectedException;
 import com.openkm.sdk4j.exception.WebserviceException;
 import com.unicauca.coordinacionpis.classMetadatos.MetadatosPlanEstudio;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
@@ -37,6 +42,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -216,5 +223,74 @@ public class RegistroPlandeEstudioController implements Serializable {
             }
         }
         return false;
+    }
+
+    public StreamedContent descargarDocumento(Document document) {
+        StreamedContent file = null;
+        com.openkm.sdk4j.bean.Document doc = document;
+        try {
+            InputStream is = okm.getContent(doc.getPath());
+            file = new DefaultStreamedContent(is, "application/pdf", nombreDelArchivo(doc.getPath()));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RepositoryException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PathNotFoundException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AccessDeniedException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DatabaseException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknowException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WebserviceException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return file;
+    }
+
+    public String nombreDelArchivo(String path) {
+        String partesPath[] = path.split("/");
+        return partesPath[partesPath.length - 1];
+    }
+
+    public StreamedContent stream(Document doc) {
+        InputStream in = null;
+        StreamedContent str = null;
+        try {
+            
+            in = okm.getContent(doc.getPath());
+            str = new DefaultStreamedContent(in, "application/pdf");
+            //-------
+            Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            byte[] b = (byte[]) session.get("reportBytes");
+            if (b != null) {
+                str = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+            }   return str;
+        } catch (RepositoryException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PathNotFoundException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AccessDeniedException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DatabaseException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknowException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WebserviceException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return str;
     }
 }

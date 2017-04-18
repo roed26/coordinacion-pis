@@ -15,7 +15,7 @@ and open the template in the editor.
         <title>TODO supply a title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <!--<meta http-equiv="refresh" content="3"/>-->
-        
+
     </h:head>
     <h:body>
         <h:form>
@@ -41,8 +41,12 @@ and open the template in the editor.
                     <f:facet name="header">
                         Acciones
                     </f:facet>
-                    <p:commandButton value="Descargar" disabled="true" icon="ui-icon-arrowthickstop-1-s" title="Descargar" />
-                    <p:commandButton value="Ver" disabled="true" icon="ui-icon-search" title="Ver"/>
+                    <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" value="Descargar" icon="ui-icon-arrowthickstop-1-s" title="Descargar" >
+                        <p:fileDownload value="#{registroPlandeEstudioController.descargarDocumento(dato)}" />
+                    </p:commandButton>
+                    <!--<p:commandButton value="Ver" disabled="true" icon="ui-icon-search" title="Ver"/>-->
+                    <p:media value="#{registroPlandeEstudioController.stream(dato)}" width="700px" height="700px" player="pdf" />
+    
                 </p:column>
             </p:dataTable>
         </h:form>
