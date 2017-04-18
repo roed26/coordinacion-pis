@@ -13,6 +13,20 @@
         <h:form id="formMetadatosOfertaAcademica">
             <p:panelGrid styleClass="panelgrid" >
                 <p:row>
+                    <p:column>
+                        <p:selectOneRadio id="opcionRegistro" value="Si" 
+                                          valueChangeListener="#{registroOfertaAcademicaController.registroInicial}">
+                            <f:selectItem itemLabel="Oferta academica prematricula" itemValue="Si"/>
+                            <f:selectItem itemValue="No" itemLabel="Oferta academica prematricula"/>
+                            <f:ajax execute="opcionRegistro" render="wzd "/>
+                        </p:selectOneRadio>    
+
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+            <p:separator/>
+            <p:panelGrid styleClass="panelgrid" >
+                <p:row>
                     <p:column colspan="2">
                         <p:outputLabel style="font-weight: bold; color: #000000" 
                                        value="Diligencie el siguiente formulario, tenga en cuenta los campos obligatorios ("/>
@@ -32,39 +46,40 @@
                     </p:column>
                 </p:row>
             </p:panelGrid>
-            <p:wizard>
-                <c:forEach items='#{registroOfertaAcademicaController.listaDepartamentos}' var='departamento'>
+            <p:wizard id="wzd" nextLabel="Siguiente" backLabel="Anterior">
+                <c:forEach items='#{registroOfertaAcademicaController.listaDepartamentos}' var='departamento' varStatus="iterador">
                     <p:tab title="#{departamento.nombre}">
-                        <p:panelGrid>
+                        <p:panelGrid id="pnlgCabeceraRegistro" 
+                                     rendered="#{registroOfertaAcademicaController.registroInicialOferta}">
                             <p:row>
                                 <p:column style="width: 150px; background: #C8CDD6">
-                                    <p:outputLabel value="Asignatura" style="font-weight: bold; color: #000000"/>
+                                    <p:outputLabel value="Materia" style="font-weight: bold; color: #000000"/>
                                 </p:column>
                                 <p:column style="background: #C8CDD6">
                                     <p:outputLabel value="Número aprox. de estudiantes" style="font-weight: bold; color: #000000"/>
                                     <p:outputLabel value="*" style="color: #ff5252"/>
                                 </p:column>
                                 <p:column style="background: #C8CDD6">
-                                    <p:outputLabel value="Numero de cursos solicitados" style="font-weight: bold; color: #000000"/>
+                                    <p:outputLabel value="Numero de grupos solicitados" style="font-weight: bold; color: #000000"/>
                                     <p:outputLabel value="*" style="color: #ff5252"/>
                                 </p:column>
                             </p:row>
                         </p:panelGrid>
-                        <p:dataGrid value="#{departamento.cursoList}" columns="1"  var="curso">
+                        <p:dataGrid id="pnlgContenidoRegistro" rendered="#{registroOfertaAcademicaController.registroInicialOferta}" value="#{departamento.materiaList}" columns="1"  var="materia">
                             <p:panelGrid styleClass="panelgrid">
                                 <p:row>
                                     <p:column style="width: 150px;">
-                                        <p:outputLabel value="#{curso.nombre}" style="font-weight: bold; color: #000000"/>
+                                        <p:outputLabel value="#{materia.nombreMateria}" style="font-weight: bold; color: #000000"/>
                                     </p:column>
                                     <p:column style="width: 183px;">
                                         <p:inputText id="estudiantesCalI" required="true" requiredMessage="Campo obligatorio"
-                                                     value="#{curso.numeroEstudiantes}">
+                                                     value="#{materia.numeroEstudiantes}">
                                             <f:validator validatorId="ValidarCampoNumerico"/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
                                         <p:inputText id="solicitadosCalI" required="true" requiredMessage="Campo obligatorio"
-                                                     value="#{curso.numeroSolicitados}" >
+                                                     value="#{materia.gruposSolicitados}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
 
                                         </p:inputText>
@@ -72,7 +87,65 @@
                                 </p:row>
                             </p:panelGrid>
                         </p:dataGrid>
-                        <p:commandButton value="Registrar información" update=":formListaDocumentos:datalist" action="#{registroOfertaAcademicaController.aceptarRegistroDeOferta()}" 
+                        <p:panelGrid id="pnlgCabeceraRegistroPos" rendered="#{!registroOfertaAcademicaController.registroInicialOferta}">
+                            <p:row>
+                                <p:column style="width: 150px; background: #C8CDD6">
+                                    <p:outputLabel value="Materia" style="font-weight: bold; color: #000000"/>
+                                </p:column>
+                                <p:column style="background: #C8CDD6">
+                                    <p:outputLabel value="Número de grupos cancelados" style="font-weight: bold; color: #000000"/>
+                                    <p:outputLabel value="*" style="color: #ff5252"/>
+                                </p:column>
+                                <p:column style="background: #C8CDD6">
+                                    <p:outputLabel value="Numero de grupos ofertados" style="font-weight: bold; color: #000000"/>
+                                    <p:outputLabel value="*" style="color: #ff5252"/>
+                                </p:column>
+                                <p:column style="background: #C8CDD6">
+                                    <p:outputLabel value="Numero de grupos fusionados" style="font-weight: bold; color: #000000"/>
+                                    <p:outputLabel value="*" style="color: #ff5252"/>
+                                </p:column>
+                                <p:column style="background: #C8CDD6">
+                                    <p:outputLabel value="Numero de grupos nuevos" style="font-weight: bold; color: #000000"/>
+                                    <p:outputLabel value="*" style="color: #ff5252"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <p:dataGrid id="pnlgContenidoRegistroPos" rendered="#{!registroOfertaAcademicaController.registroInicialOferta}" value="#{departamento.materiaList}" columns="1"  var="materia">
+                            <p:panelGrid styleClass="panelgrid">
+                                <p:row>
+                                    <p:column style="width: 150px" >
+                                        <p:outputLabel value="#{materia.nombreMateria}" style="font-weight: bold; color: #000000"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="cancelados" required="true" requiredMessage="Campo obligatorio"
+                                                     value="#{materia.gruposCancelados}">
+                                            <f:validator validatorId="ValidarCampoNumerico"/>
+                                        </p:inputText>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="ofertados" required="true" requiredMessage="Campo obligatorio"
+                                                     value="#{materia.gruposOfertados}" >
+                                            <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                        </p:inputText>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="fusionados" required="true" requiredMessage="Campo obligatorio"
+                                                     value="#{materia.gruposFusionados}" >
+                                            <f:validator validatorId="ValidarCampoNumerico"/>
+
+                                        </p:inputText>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="nuevos" required="true" requiredMessage="Campo obligatorio"
+                                                     value="#{materia.gruposNuevos}" >
+                                            <f:validator validatorId="ValidarCampoNumerico"/>
+                                        </p:inputText>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:dataGrid>
+                        <p:commandButton rendered="#{registroOfertaAcademicaController.listaDepartamentos.size()==iterador.count}" value="Registrar información" update=":formListaDocumentos:datalist" action="#{registroOfertaAcademicaController.aceptarRegistroDeOferta()}" 
                                          onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()"
                                          />
                     </p:tab>

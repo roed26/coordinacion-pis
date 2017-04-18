@@ -1,8 +1,6 @@
 package com.unicauca.coordinacionpis.managedbean;
 
-import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
-import com.unicauca.coordinacionpis.classMetadatos.MetadatosOfertaAcademica;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -10,19 +8,16 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.openkm.sdk4j.OKMWebservices;
-import com.openkm.sdk4j.OKMWebservicesFactory;
 import com.openkm.sdk4j.bean.Folder;
 import com.openkm.sdk4j.bean.QueryResult;
 import com.openkm.sdk4j.exception.AccessDeniedException;
@@ -41,38 +36,30 @@ import com.openkm.sdk4j.exception.UserQuotaExceededException;
 import com.openkm.sdk4j.exception.VersionException;
 import com.openkm.sdk4j.exception.VirusDetectedException;
 import com.openkm.sdk4j.exception.WebserviceException;
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-import com.unicauca.coodinacionpis.appScan.scanner;
-import com.unicauca.coodinacionpis.entidades.Materia;
-import com.unicauca.coodinacionpis.entidades.Departamento;
+import com.unicauca.coordinacionpis.entidades.Materia;
+import com.unicauca.coordinacionpis.entidades.Departamento;
 import com.unicauca.coordinacionpis.sessionbean.DepartamentoFacade;
+import com.unicauca.coordinacionpis.utilidades.ConexionOpenKM;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import org.apache.commons.io.IOUtils;
-import org.primefaces.component.tabview.Tab;
-import org.primefaces.component.tabview.TabView;
+import javax.faces.event.ValueChangeEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -89,28 +76,66 @@ public class RegistroOfertaAcademicaController implements Serializable {
     private String nombreArchivo;
     private String datos;
     private String periodoOfertaAcademica;
-    private UploadedFile archivOferta;
     private List<QueryResult> documentosOfertasAcademicas;
-    String url = "http://localhost:8080/OpenKM";
-    String user = "okmAdmin";
-    String pass = "admin";
-    OKMWebservices okm = OKMWebservicesFactory.newInstance(url, user, pass);
+    private List<com.openkm.sdk4j.bean.Document> listadoDocsOfertasAcademicas;
+    private ConexionOpenKM conexionOpenKM;
+    private OKMWebservices okm;
     private SimpleDateFormat formatoFecha;
     private SimpleDateFormat formatoFechaDocumento;
     private StreamedContent streamedContent;
     private List<Departamento> listaDepartamentos;
+    private com.openkm.sdk4j.bean.Document documento;
+    private InputStream stream;
+    private boolean registroInicialOferta;
 
     public RegistroOfertaAcademicaController() {
         this.formatoFecha = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         this.formatoFechaDocumento = new SimpleDateFormat("dd-MM-yyyy");
         datos = "";
         this.listaDepartamentos = new ArrayList<>();
+        listadoDocsOfertasAcademicas = new ArrayList<>();
+        this.conexionOpenKM = new ConexionOpenKM();
+        this.okm = conexionOpenKM.getOkm();
+        registroInicialOferta = true;
+
     }
 
     @PostConstruct
     public void init() {
         listaDepartamentos = ejbDepartamento.findAll();
         periodoOfertaAcademica = asignarPeriodo();
+
+        try {
+            //----------------------------------
+            /*Document doc = new Document();
+
+            OutputStream out = new ByteArrayOutputStream();
+            PdfWriter writer = PdfWriter.getInstance(doc, out);
+
+            doc.open();
+            doc.add(new Paragraph("Hello World. ok........"));
+            doc.close();
+            out.close();*/
+
+            //InputStream in = new ByteArrayInputStream(((ByteArrayOutputStream) out).toByteArray());
+            InputStream in = okm.getContent(documento.getPath());
+            streamedContent = new DefaultStreamedContent(in, "application/pdf");
+            //-------
+            Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            byte[] b = (byte[]) session.get("reportBytes");
+            if (b != null) {
+                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public boolean isRegistroInicialOferta() {
+        return registroInicialOferta;
+    }
+
+    public void setRegistroInicialOferta(boolean registroInicialOferta) {
+        this.registroInicialOferta = registroInicialOferta;
     }
 
     public boolean isExitoSubirArchivo() {
@@ -146,7 +171,11 @@ public class RegistroOfertaAcademicaController implements Serializable {
     }
 
     public StreamedContent getStreamedContent() {
-        return streamedContent;
+        if (FacesContext.getCurrentInstance().getRenderResponse()) {
+            return new DefaultStreamedContent();
+        } else {
+            return streamedContent;
+        }
     }
 
     public void setStreamedContent(StreamedContent streamedContent) {
@@ -154,6 +183,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
     }
 
     public List<Departamento> getListaDepartamentos() {
+        listaDepartamentos = ejbDepartamento.findAll();
         return listaDepartamentos;
     }
 
@@ -169,9 +199,43 @@ public class RegistroOfertaAcademicaController implements Serializable {
         this.periodoOfertaAcademica = periodoOfertaAcademica;
     }
 
+    public com.openkm.sdk4j.bean.Document getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(com.openkm.sdk4j.bean.Document documento) {
+        this.documento = documento;
+    }
+
+    public List<com.openkm.sdk4j.bean.Document> getListadoOfertasAcademicas() {
+        try {
+
+            listadoDocsOfertasAcademicas
+                    = okm.getDocumentChildren("/okm:root/Oferta academica");
+
+        } catch (RepositoryException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PathNotFoundException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DatabaseException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknowException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WebserviceException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listadoDocsOfertasAcademicas;
+    }
+
     public List<QueryResult> getListaDocs() {
         try {
             documentosOfertasAcademicas = okm.findByName(datos);
+
+            /* if(datos.equalsIgnoreCase("")){
+                documentosOfertasAcademicas = okm.;
+            }else{
+            documentosOfertasAcademicas = okm.findByName(datos);
+            }*/
         } catch (IOException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
@@ -187,20 +251,6 @@ public class RegistroOfertaAcademicaController implements Serializable {
         }
 
         return documentosOfertasAcademicas;
-    }
-
-    public void seleccionarArchivo(FileUploadEvent event) {
-        nombreArchivo = event.getFile().getFileName();
-        archivOferta = event.getFile();
-        FacesMessage message = new FacesMessage("El archivo", event.getFile().getFileName() + " se selecciono con exito");
-        FacesContext.getCurrentInstance().addMessage(null, message);
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.update("messages");
-        exitoSubirArchivo = true;
-        requestContext.update("formSeleccionarArchivo");
-        requestContext.update("formMetadatosOfertaAcademica");
-        requestContext.update("formArchivoSelecionado");
-
     }
 
     public void cambiarArchivo() {
@@ -300,6 +350,14 @@ public class RegistroOfertaAcademicaController implements Serializable {
 
     }
 
+    public void registroInicial(ValueChangeEvent e) {
+        if (e.getNewValue().equals("Si")) {
+            registroInicialOferta = true;
+        } else {
+            registroInicialOferta = false;
+        }
+    }
+
     /*
     public void agregarMetadatos() {
         // create document and writer
@@ -342,6 +400,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
     }
 
     private Document generarPDF() {
+
         Document document = new Document(PageSize.A4);
         PdfWriter writer;
         try {
@@ -372,21 +431,12 @@ public class RegistroOfertaAcademicaController implements Serializable {
             document.add(new Paragraph("\n"));
             document.add(new Paragraph("\n"));
             for (int i = 0; i < listaDepartamentos.size(); i++) {
+                document.add(new Paragraph(listaDepartamentos.get(i).getNombre()));
+                document.add(new Paragraph("\n"));
                 document.add(crearTablaCursoPorDepartamento(listaDepartamentos.get(i)));
+
                 document.add(new Paragraph("\n"));
             }
-            /*document.add(createFirstTable());
-            document.add(new Paragraph("\n"));
-            document.add(createFirstTableFisica());
-            document.add(new Paragraph("\n"));
-            document.add(createFirstTableHumanidades());
-            document.add(new Paragraph("\n"));
-            document.add(new Paragraph("\n"));
-            document.add(new Paragraph("\n"));
-            document.add(createFirstTableContables());
-            document.add(new Paragraph("\n"));
-            document.add(createFirstTableDerecho());*/
-
             document.close();
 
         } catch (FileNotFoundException ex) {
@@ -402,20 +452,50 @@ public class RegistroOfertaAcademicaController implements Serializable {
     public PdfPTable crearTablaCursoPorDepartamento(Departamento departamento) {
         List<Materia> listadoCursos = departamento.getMateriaList();
         // a table with three columns
-        PdfPTable table = new PdfPTable(3);
+
+        PdfPTable table;
+
         // the cell object
         PdfPCell cell;
         // we add a cell with colspan 3
-        cell = new PdfPCell(new Phrase(departamento.getNombre()));
-        cell.setColspan(3);
-        cell.setBackgroundColor(BaseColor.GRAY);
-        table.addCell(cell);
+        //cell = new PdfPCell(new Phrase(departamento.getNombre()));
+        //cell.setColspan(3);
+        //cell.setBackgroundColor(BaseColor.GRAY);
+        //table.addCell(cell);
         // now we add a cell with rowspan 2
+        if (listadoCursos.get(0).getSemestre() != null) {
+            float[] columnWidths = {2, 5, 7, 5, 5};
+            table = new PdfPTable(columnWidths);
+            table.setWidthPercentage(100);
+            cell = new PdfPCell(new Phrase("Sem"));
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            table.addCell(cell);
+        } else {
+            table = new PdfPTable(4);
+        }
+        cell = new PdfPCell(new Phrase("Código materia"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
 
-        table.addCell("Asignatura");
+        cell = new PdfPCell(new Phrase("Nombre materia"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Numero aprox. estudiantes"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Grupos solicitados"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+        /*table.addCell("Nombre materia");
         table.addCell("Numero aprox. estudiantes");
-        table.addCell("Cursos solicitados");
+        table.addCell("Cursos solicitados");*/
         for (int i = 0; i < listadoCursos.size(); i++) {
+            if (listadoCursos.get(i).getSemestre() != null) {
+                table.addCell(listadoCursos.get(i).getSemestre());
+            }
+            table.addCell(listadoCursos.get(i).getCodigoMateria());
             table.addCell(listadoCursos.get(i).getNombreMateria());
             table.addCell("" + listadoCursos.get(i).getNumeroEstudiantes());
             table.addCell("" + listadoCursos.get(i).getGruposSolicitados());
@@ -424,156 +504,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
         return table;
     }
 
-    /*
-    public PdfPTable createFirstTable() {
-        // a table with three columns
-        PdfPTable table = new PdfPTable(3);
-        // the cell object
-        PdfPCell cell;
-        // we add a cell with colspan 3
-        cell = new PdfPCell(new Phrase("Depatemaneto de Matemáticas"));
-        cell.setColspan(3);
-        table.addCell(cell);
-        // now we add a cell with rowspan 2
-
-        table.addCell("Asignatura");
-        table.addCell("Numero aprox. estudiantes");
-        table.addCell("Cursos solicitados");
-        table.addCell("Calculo I ");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesCalculoI());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosCalculoI());
-        table.addCell("Calculo II");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesCalculoII());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosCalculoII());
-        table.addCell("Calculo III");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesCalculoIII());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosCalculoIII());
-        table.addCell("Álgebra Lineal");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesLineal());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosLineal());
-        table.addCell("Ecuaciones diferenciales");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesEcuaciones());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosEcuaciones());
-        table.addCell("Estadistica");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesEstadistica());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosEstadistica());
-        return table;
-    }
-
-    public PdfPTable createFirstTableFisica() {
-        // a table with three columns
-        PdfPTable table = new PdfPTable(3);
-        // the cell object
-        PdfPCell cell;
-        // we add a cell with colspan 3
-        cell = new PdfPCell(new Phrase("Depatemaneto de Física"));
-        cell.setColspan(3);
-        table.addCell(cell);
-        // now we add a cell with rowspan 2
-
-        table.addCell("Asignatura");
-        table.addCell("Numero aprox. estudiantes");
-        table.addCell("Cursos solicitados");
-        table.addCell("Mecánica");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesMecanica());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosMecanica());
-        table.addCell("Electromagnetismo");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesElectro());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosElectro());
-        table.addCell("Laboratorio de mecánica");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesLabMecanica());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosLabMecanica());
-        table.addCell("Vibraciones y ondas");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesOndas());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosOndas());
-        table.addCell("Laboratorio de electromagnetismo");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesLabElectro());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosLabElectro());
-
-        return table;
-    }
-
-    public PdfPTable createFirstTableHumanidades() {
-        // a table with three columns
-        PdfPTable table = new PdfPTable(3);
-        // the cell object
-        PdfPCell cell;
-        // we add a cell with colspan 3
-        cell = new PdfPCell(new Phrase("Humanidades"));
-        cell.setColspan(3);
-        table.addCell(cell);
-        // now we add a cell with rowspan 2
-
-        table.addCell("Asignatura");
-        table.addCell("Numero aprox. estudiantes");
-        table.addCell("Cursos solicitados");
-        table.addCell("Lectura y escritura");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesLecto());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosLecto());
-        table.addCell("Electiva FISH I");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesFishI());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosFishI());
-        table.addCell("Electiva FISH II");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesFishII());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosFishII());
-        table.addCell("Electiva FISH III");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesFishIII());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosFishIII());
-        table.addCell("Ética");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesEtica());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosEtica());
-
-        return table;
-    }
-
-    public PdfPTable createFirstTableContables() {
-        // a table with three columns
-        PdfPTable table = new PdfPTable(3);
-        // the cell object
-        PdfPCell cell;
-        // we add a cell with colspan 3
-        cell = new PdfPCell(new Phrase("Facultad de ciencias contables"));
-        cell.setColspan(3);
-        table.addCell(cell);
-        // now we add a cell with rowspan 2
-
-        table.addCell("Asignatura");
-        table.addCell("Numero aprox. estudiantes");
-        table.addCell("Cursos solicitados");
-        table.addCell("Investigación de operaciones");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesInvoper());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosInvoper());
-        table.addCell("Fundamentos de economía");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesFundamentos());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosFundamentos());
-        table.addCell("Gestión Empresarial");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesGestion());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosGestion());
-
-        return table;
-    }
-
-    public PdfPTable createFirstTableDerecho() {
-        // a table with three columns
-        PdfPTable table = new PdfPTable(3);
-        // the cell object
-        PdfPCell cell;
-        // we add a cell with colspan 3
-        cell = new PdfPCell(new Phrase("Facultad de Derecho"));
-        cell.setColspan(3);
-        table.addCell(cell);
-        // now we add a cell with rowspan 2
-
-        table.addCell("Asignatura");
-        table.addCell("Numero aprox. estudiantes");
-        table.addCell("Cursos solicitados");
-        table.addCell("Legislación laboral");
-        table.addCell(metadatosOfertaAcademica.getEstudiantesLegislacion());
-        table.addCell(metadatosOfertaAcademica.getSolicitadosLegislacion());
-
-        return table;
-    }*/
-    public StreamedContent descargarDocumento(QueryResult queryResult) {
+    /*public StreamedContent descargarDocumento(QueryResult queryResult) {
         StreamedContent file = null;
         com.openkm.sdk4j.bean.Document doc = queryResult.getDocument();
         try {
@@ -598,45 +529,77 @@ public class RegistroOfertaAcademicaController implements Serializable {
         }
 
         return file;
+    }*/
+    public StreamedContent descargarDocumento(com.openkm.sdk4j.bean.Document queryResult) {
+        StreamedContent file = null;
+        com.openkm.sdk4j.bean.Document doc = queryResult;
+        try {
+            InputStream is = okm.getContent(doc.getPath());
+            file = new DefaultStreamedContent(is, "application/pdf", nombreDelArchivo(doc.getPath()));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RepositoryException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PathNotFoundException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AccessDeniedException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DatabaseException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknowException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WebserviceException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return file;
     }
 
-    public void visualizarDocumento() {
+    public void visualizarDocumento(com.openkm.sdk4j.bean.Document documento) {
 
         try {
-
-            /* com.openkm.sdk4j.bean.Document documento = queryResult.getDocument();
-            OutputStream out = new ByteArrayOutputStream();
-            //PdfWriter writer = PdfWriter.getInstance(documento, out);
-            out.close();
-
-            InputStream in = new ByteArrayInputStream(((ByteArrayOutputStream) out).toByteArray());
-
+            this.documento = documento;
+            InputStream in = okm.getContent(documento.getPath());
             streamedContent = new DefaultStreamedContent(in, "application/pdf");
-
+            //-------
             Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
             byte[] b = (byte[]) session.get("reportBytes");
             if (b != null) {
                 streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
-            }*/
-            Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
-            OutputStream out = new ByteArrayOutputStream();
-            PdfWriter writer = PdfWriter.getInstance(doc, out);
-            doc.open();
+            }
 
-            PdfPTable table = new PdfPTable(1);
-            PdfPCell cell = new PdfPCell(new Phrase("First PDF"));
-            cell.setBorder(Rectangle.NO_BORDER);
-            cell.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
-            table.addCell(cell);
-            doc.add(table);
-            doc.close();
-            out.close();
             RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.update("form:visualizacionPdf");
             requestContext.execute("PF('visualizarPDF').show()");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    public StreamedContent getVerPdf() {
+
+        try {
+
+            /*InputStream in = okm.getContent(this.documento.getPath());
+
+            //streamedContent = new DefaultStreamedContent(in, "application/pdf");
+            streamedContent = new DefaultStreamedContent(in, "application/pdf", nombreDelArchivo(documento.getPath()));*/
+            InputStream in = okm.getContent(documento.getPath());
+            streamedContent = new DefaultStreamedContent(in, "application/pdf");
+            //-------
+            Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            byte[] b = (byte[]) session.get("reportBytes");
+            if (b != null) {
+                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return streamedContent;
     }
 
     private Date asignarFecha() {
@@ -691,6 +654,23 @@ public class RegistroOfertaAcademicaController implements Serializable {
 
         }
         return anio + "-" + periodo;
+    }
+
+    public boolean getComprobarConexionOpenKM() {
+        boolean conexion = true;
+        try {
+            okm.getAppVersion();
+
+        } catch (RepositoryException ex) {
+            conexion = false;
+        } catch (DatabaseException ex) {
+            conexion = false;
+        } catch (UnknowException ex) {
+            conexion = false;
+        } catch (WebserviceException ex) {
+            conexion = false;
+        }
+        return conexion;
     }
 
 }

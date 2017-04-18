@@ -5,7 +5,7 @@
  */
 package com.unicauca.coordinacionpis.sessionbean;
 
-import com.unicauca.coodinacionpis.entidades.Departamento;
+import com.unicauca.coordinacionpis.entidades.Departamento;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unicauca.coodinacionpis.entidades;
+package com.unicauca.coordinacionpis.entidades;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -40,8 +40,14 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Materia.findByGruposNuevos", query = "SELECT m FROM Materia m WHERE m.gruposNuevos = :gruposNuevos")})
 public class Materia implements Serializable {
 
-    @Basic(optional = false)
-    @NotNull
+    @Size(max = 4)
+    @Column(name = "semestre")
+    private String semestre;
+    @Column(name = "creditos")
+    private Integer creditos;
+    @Column(name = "intensidad_horaria")
+    private Integer intensidadHoraria;
+
     @Size(min = 1, max = 30)
     @Column(name = "codigo_materia")
     private String codigoMateria;
@@ -188,6 +194,30 @@ public class Materia implements Serializable {
 
     public void setCodigoMateria(String codigoMateria) {
         this.codigoMateria = codigoMateria;
+    }
+
+    public String getSemestre() {
+        return semestre;
+    }
+
+    public void setSemestre(String semestre) {
+        this.semestre = semestre;
+    }
+
+    public Integer getCreditos() {
+        return creditos;
+    }
+
+    public void setCreditos(Integer creditos) {
+        this.creditos = creditos;
+    }
+
+    public Integer getIntensidadHoraria() {
+        return intensidadHoraria;
+    }
+
+    public void setIntensidadHoraria(Integer intensidadHoraria) {
+        this.intensidadHoraria = intensidadHoraria;
     }
     
 }

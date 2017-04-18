@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <h:form>
+            <p:commandButton id="createButton" icon="ui-icon-plus"   value="Registrar Materia" actionListener="#{materiaController.prepareCreate}" update=":MateriaCreateForm" oncomplete="PF('MateriaCreateDialog').show()"/>
+        </h:form>
+        <h:form id="MateriaListForm">
+            <p:panel header="#{bundleMateria.ListMateriaTitle}">
+                <p:dataTable id="datalist" value="#{materiaController.items}" var="item"
+                             paginator="true"
+                             rowKey="#{item.idMateria}"
+                             rows="10"
+                             rowsPerPageTemplate="10,20,30,40,50"
+                             >
+
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Semestre"/>
+                        </f:facet>
+                        <h:outputText value="#{item.semestre}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Código Asignatura"/>
+                        </f:facet>
+                        <h:outputText value="#{item.codigoMateria}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Materia"/>
+                        </f:facet>
+                        <h:outputText value="#{item.nombreMateria}"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Créditos"/>
+                        </f:facet>
+                        <h:outputText value="#{item.creditos}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Intensidad Horaria"/>
+                        </f:facet>
+                        <h:outputText value="#{item.intensidadHoraria}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Departamento/Facultad"/>
+                        </f:facet>
+                        <h:outputText value="#{item.idDepartamento.nombre}"/>
+                    </p:column>
+                    <p:column style="width: 120px">
+                        <f:facet name="header">
+                            <h:outputText value="Acciones"/>
+                        </f:facet>
+                        <p:commandButton id="editButton"   icon="ui-icon-pencil" action="#{materiaController.setSelected(item)}" update=":MateriaEditForm" oncomplete="PF('MateriaEditDialog').show()"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  action="#{materiaController.confirmarEliminacion(item)}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+        <ui:include src="CrearMateria.xhtml"/>
+        <ui:include src="EditarMateria.xhtml"/>
+        <ui:include src="VerMateria.xhtml"/>
+
+        <p:dialog header="Información" modal="true" position="center" widgetVar="mensajeRegistroExitoso" closable="false">
+            <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
+            <h:form>
+                <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                                  onclick="PF('mensajeRegistroExitoso').hide()"/>
+            </h:form>
+        </p:dialog>
+        <p:dialog header="Información" modal="true" position="center" widgetVar="Confirmacion" closable="false">
+            <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
+            <h:form>
+                <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                                  action="#{materiaController.eliminarMateria()}"  />
+                <p:commandButton  value="Cancelar" style="font-weight: normal;"
+                                  onclick="PF('Confirmacion').hide()"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+
+
+</html>

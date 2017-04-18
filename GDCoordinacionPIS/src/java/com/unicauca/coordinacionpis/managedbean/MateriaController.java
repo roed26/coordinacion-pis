@@ -1,6 +1,7 @@
 package com.unicauca.coordinacionpis.managedbean;
 
-import com.unicauca.coodinacionpis.entidades.Materia;
+import com.unicauca.coordinacionpis.entidades.Departamento;
+import com.unicauca.coordinacionpis.entidades.Materia;
 import com.unicauca.coordinacionpis.managedbean.util.JsfUtil;
 import com.unicauca.coordinacionpis.managedbean.util.JsfUtil.PersistAction;
 import com.unicauca.coordinacionpis.sessionbean.MateriaFacade;
@@ -14,10 +15,12 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.context.RequestContext;
 
 @Named("materiaController")
 @SessionScoped
@@ -26,19 +29,79 @@ public class MateriaController implements Serializable {
     @EJB
     private com.unicauca.coordinacionpis.sessionbean.MateriaFacade ejbFacade;
     private List<Materia> items = null;
-    private Materia selected;
+    private Materia materia;
+    private Departamento departamento;
 
     public MateriaController() {
+        materia= new Materia();
+        departamento= new Departamento();
     }
 
     public Materia getSelected() {
-        return selected;
+        return materia;
+    }
+
+    public Departamento getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(Departamento departamento) {
+        this.departamento = departamento;
     }
 
     public void setSelected(Materia selected) {
-        this.selected = selected;
+        this.materia = selected;
+        this.departamento= selected.getIdDepartamento();
     }
 
+    public void registrarMateria(){
+        materia.setIdDepartamento(departamento);
+        ejbFacade.create(materia);
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("PF('MateriaCreateDialog').hide()");
+        items = ejbFacade.findAll();
+        departamento = new Departamento();
+        materia = new Materia();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Materia registrada con exito."));
+        requestContext.execute("PF('mensajeRegistroExitoso').show()");
+    }
+    
+    public void editarMateria(){
+        materia.setIdDepartamento(departamento);
+        ejbFacade.edit(materia);
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("PF('MateriaEditDialog').hide()");
+        items = ejbFacade.findAll();
+        departamento = new Departamento();
+        materia = new Materia();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Materia editada con exito."));
+        requestContext.execute("PF('mensajeRegistroExitoso').show()");
+    }
+    
+    public void cancelarRegistro(){
+        
+        departamento = new Departamento();
+        materia = new Materia();
+    }
+    
+    public void confirmarEliminacion(Materia materia){
+        RequestContext context= RequestContext.getCurrentInstance();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "¿Desea Eliminar?"));
+        context.execute("PF('Confirmacion').show()");
+        this.materia = materia;
+    }
+    
+    public void eliminarMateria(){
+        ejbFacade.remove(materia);
+        items = ejbFacade.findAll();
+        RequestContext context= RequestContext.getCurrentInstance();
+        context.update("MateriaListForm:datalist");
+        context.execute("PF('Confirmacion').hide()");
+        departamento = new Departamento();
+        materia = new Materia();
+       
+    }
+    
     protected void setEmbeddableKeys() {
     }
 
@@ -49,30 +112,8 @@ public class MateriaController implements Serializable {
         return ejbFacade;
     }
 
-    public Materia prepareCreate() {
-        selected = new Materia();
-        initializeEmbeddableKey();
-        return selected;
-    }
+    
 
-    public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/BundleMateria").getString("MateriaCreated"));
-        if (!JsfUtil.isValidationFailed()) {
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
-    }
-
-    public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/BundleMateria").getString("MateriaUpdated"));
-    }
-
-    public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/BundleMateria").getString("MateriaDeleted"));
-        if (!JsfUtil.isValidationFailed()) {
-            selected = null; // Remove selection
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
-    }
 
     public List<Materia> getItems() {
         if (items == null) {
@@ -82,13 +123,13 @@ public class MateriaController implements Serializable {
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
-        if (selected != null) {
+        if (materia != null) {
             setEmbeddableKeys();
             try {
                 if (persistAction != PersistAction.DELETE) {
-                    getFacade().edit(selected);
+                    getFacade().edit(materia);
                 } else {
-                    getFacade().remove(selected);
+                    getFacade().remove(materia);
                 }
                 JsfUtil.addSuccessMessage(successMessage);
             } catch (EJBException ex) {
