@@ -106,21 +106,9 @@ public class RegistroOfertaAcademicaController implements Serializable {
         periodoOfertaAcademica = asignarPeriodo();
 
         try {
-            //----------------------------------
-            /*Document doc = new Document();
 
-            OutputStream out = new ByteArrayOutputStream();
-            PdfWriter writer = PdfWriter.getInstance(doc, out);
-
-            doc.open();
-            doc.add(new Paragraph("Hello World. ok........"));
-            doc.close();
-            out.close();*/
-
-            //InputStream in = new ByteArrayInputStream(((ByteArrayOutputStream) out).toByteArray());
             InputStream in = okm.getContent(documento.getPath());
             streamedContent = new DefaultStreamedContent(in, "application/pdf");
-            //-------
             Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
             byte[] b = (byte[]) session.get("reportBytes");
             if (b != null) {
@@ -208,20 +196,30 @@ public class RegistroOfertaAcademicaController implements Serializable {
     }
 
     public List<com.openkm.sdk4j.bean.Document> getListadoOfertasAcademicas() {
+        listadoDocsOfertasAcademicas.clear();
         try {
-
-            listadoDocsOfertasAcademicas
-                    = okm.getDocumentChildren("/okm:root/Oferta academica");
+            List<QueryResult> lista = okm.findByName(datos);
+            for (int i = 0; i < lista.size(); i++) {
+                String[] pathDividido = lista.get(i).getDocument().getPath().split("/");
+                String path = "/" + pathDividido[1] + "/" + pathDividido[2];
+                if (path.equalsIgnoreCase("/okm:root/Oferta academica")) {
+                    listadoDocsOfertasAcademicas.add(lista.get(i).getDocument());
+                }
+            }
+            /*listadoDocsOfertasAcademicas
+                    = okm.getDocumentChildren("/okm:root/Oferta academica");*/
 
         } catch (RepositoryException ex) {
-            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PathNotFoundException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DatabaseException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknowException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (WebserviceException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return listadoDocsOfertasAcademicas;
@@ -270,7 +268,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
     public void aceptarRegistroDeOferta() {
 
         Document okmDocument = new Document();
-        generarPDF();
+        
 
         try {
             boolean existeFolder = false;
@@ -285,19 +283,38 @@ public class RegistroOfertaAcademicaController implements Serializable {
                     existeCategoria = true;
                 }
             }
-            File initialFile = new File("D:\\" + periodoOfertaAcademica + ".pdf");
-            InputStream targetStream = new FileInputStream(initialFile);
-            if (!existeFolder) {
-                okm.createFolderSimple("/okm:root/Oferta academica");
-                okm.createDocumentSimple("/okm:root/Oferta academica/" + periodoOfertaAcademica + ".pdf", targetStream);
+            if (registroInicialOferta) {
+                generarPDFPre();
+                File initialFile = new File("D:\\" + periodoOfertaAcademica + "-pre.pdf");
+                InputStream targetStream = new FileInputStream(initialFile);
+                if (!existeFolder) {
+                    okm.createFolderSimple("/okm:root/Oferta academica");
+                    okm.createDocumentSimple("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", targetStream);
+                } else {
+                    okm.createDocumentSimple("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", targetStream);
+                }
+                if (!existeCategoria) {
+                    okm.createFolderSimple("/okm:categories/Oferta academica");
+                    okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", "/okm:categories/Oferta academica");
+                } else {
+                    okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", "/okm:categories/Oferta academica");
+                }
             } else {
-                okm.createDocumentSimple("/okm:root/Oferta academica/" + periodoOfertaAcademica + ".pdf", targetStream);
-            }
-            if (!existeCategoria) {
-                okm.createFolderSimple("/okm:categories/Oferta academica");
-                okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + ".pdf", "/okm:categories/Oferta academica");
-            } else {
-                okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + ".pdf", "/okm:categories/Oferta academica");
+                generarPDFPos();
+                File initialFile = new File("D:\\" + periodoOfertaAcademica + "-pos.pdf");
+                InputStream targetStream = new FileInputStream(initialFile);
+                if (!existeFolder) {
+                    okm.createFolderSimple("/okm:root/Oferta academica");
+                    okm.createDocumentSimple("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pos.pdf", targetStream);
+                } else {
+                    okm.createDocumentSimple("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pos.pdf", targetStream);
+                }
+                if (!existeCategoria) {
+                    okm.createFolderSimple("/okm:categories/Oferta academica");
+                    okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pos.pdf", "/okm:categories/Oferta academica");
+                } else {
+                    okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pos.pdf", "/okm:categories/Oferta academica");
+                }
             }
 
             exitoSubirArchivo = true;
@@ -399,12 +416,62 @@ public class RegistroOfertaAcademicaController implements Serializable {
         return formatoFecha.format(fecha.getTime());
     }
 
-    private Document generarPDF() {
+    private Document generarPDFPre() {
 
         Document document = new Document(PageSize.A4);
         PdfWriter writer;
         try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream("D:\\" + periodoOfertaAcademica + ".pdf"));
+            writer = PdfWriter.getInstance(document, new FileOutputStream("D:\\" + periodoOfertaAcademica + "-pre.pdf"));
+            // add meta-data to pdf
+            document.addAuthor("Memorynotfound");
+            document.addCreationDate();
+            document.addCreator("Memorynotfound.com");
+            document.addTitle("Add meta data to PDF");
+            document.addSubject("how to add meta data to pdf using itext");
+            document.addKeywords(periodoOfertaAcademica);
+            document.addHeader("type", "tutorial, example");
+
+            // add xmp meta data
+            writer.createXmpMetadata();
+
+            document.open();
+            Image img = Image.getInstance("D:\\unicauca.png");
+            document.add(img);
+            document.add(new Paragraph("\n"));
+            document.add(new Paragraph("\n"));
+            document.add(new Paragraph("\n"));
+            document.add(new Paragraph("Popayán, " + formatoFechaDocumento.format(asignarFecha())));
+            document.add(new Paragraph("\n"));
+
+            document.add(new Paragraph("Decano FIET"));
+            document.add(new Paragraph("Universidad del cauca"));
+            document.add(new Paragraph("\n"));
+            document.add(new Paragraph("\n"));
+            for (int i = 0; i < listaDepartamentos.size(); i++) {
+                document.add(new Paragraph(listaDepartamentos.get(i).getNombre()));
+                document.add(new Paragraph("\n"));
+                document.add(crearTablaCursoPorDepartamento(listaDepartamentos.get(i)));
+
+                document.add(new Paragraph("\n"));
+            }
+            document.close();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DocumentException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return document;
+    }
+    
+    private Document generarPDFPos() {
+
+        Document document = new Document(PageSize.A4);
+        PdfWriter writer;
+        try {
+            writer = PdfWriter.getInstance(document, new FileOutputStream("D:\\" + periodoOfertaAcademica + "-pos.pdf"));
             // add meta-data to pdf
             document.addAuthor("Memorynotfound");
             document.addCreationDate();

@@ -17,11 +17,14 @@
                         <p:outputLabel style="font-weight: bold; color: #000000" value="#{bundle.EditDepartamentoLabel_nombre}" for="nombre" />
                         <p:inputText id="nombre" value="#{departamentoController.selected.nombre}" title="#{bundle.EditDepartamentoTitle_nombre}" required="true" requiredMessage="#{bundle.EditDepartamentoRequiredMessage_nombre}"/>
                     </p:panelGrid>
-                    <center><p:commandButton actionListener="#{departamentoController.update}" value="Guardar" update="display,:DepartamentoListForm:datalist" oncomplete="handleSubmit(args, 'DepartamentoEditDialog');"/>
-                    <p:commandButton value="Cancelar" onclick="DepartamentoEditDialog.hide()"/></center>
+                    <center><p:commandButton action="#{departamentoController.editarDepartamento()}" value="Guardar" update="display,:DepartamentoListForm:datalist" />
+                        <p:commandButton value="Cancelar" action = "#{departamentoController.cancelarEdicion()}"/></center>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
+        
+        
 
     </ui:composition>
 </html>
+

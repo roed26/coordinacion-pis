@@ -14,6 +14,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -161,18 +162,70 @@ public class DepartamentoController implements Serializable {
                 return null;
             }
         }
-        
 
     }
-    
-    public void registrarDepartamento(){
-        
+
+    public void registrarDepartamento() {
+
         ejbFacade.create(departamento);
         RequestContext requestContext = RequestContext.getCurrentInstance();
         requestContext.execute("PF('DepartamentoCreateDialog').hide()");
         items = ejbFacade.findAll();
         departamento = new Departamento();
-    
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "La información se registró con éxito."));
+        requestContext.execute("PF('mensajeRegistroExitoso').show()");
+    }
+
+    public void editarDepartamento() {
+
+        ejbFacade.edit(departamento);
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("PF('DepartamentoEditDialog').hide()");
+        items = ejbFacade.findAll();
+        departamento = new Departamento();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "La información se actualizó con éxito."));
+        requestContext.execute("PF('mensajeRegistroExitoso').show()");
+    }
+
+    public void cancelarEdicion() {
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("PF('DepartamentoEditDialog').hide()");
+        departamento = new Departamento();
+    }
+    public void cancelarRegistro() {
+        departamento = new Departamento();
+    }
+    public void cancelarEliminacion() {
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("PF('mensajeConfirmarEliminar').hide()");
+        departamento = new Departamento();
+    }
+
+    public void eliminarDepartamento() {
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        if (departamento != null) {
+            if (departamento.getMateriaList().isEmpty()) {
+                ejbFacade.remove(departamento);
+                requestContext.execute("PF('mensajeConfirmarEliminar').hide()");
+                items = ejbFacade.findAll();
+                requestContext.update("DepartamentoListForm:datalist");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Se elimino el departamento con éxito"));
+                requestContext.execute("PF('mensajeRegistroExitoso').show()");
+            } else {
+                requestContext.execute("PF('mensajeConfirmarEliminar').hide()");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El departamento tiene asociadas materias"));
+                requestContext.execute("PF('mensajeError').show()");
+            }
+        }
+        departamento = new Departamento();
+
+    }
+
+    public void mostrarMensajeConfirmarEliminarDepartamento(Departamento departamento) {
+        this.departamento = departamento;
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("PF('mensajeConfirmarEliminar').show()");
+
     }
 
 }

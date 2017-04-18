@@ -5,54 +5,74 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-    
-    
-        
-    
+    <h:body>
+        <h:form>
+            <p:commandButton id="createButton" icon="ui-icon-plus" value="Agregar Departamento" onclick="PF('DepartamentoCreateDialog').show()"/>
+        </h:form>
+        <h:form id="DepartamentoListForm">
+
+            <p:dataTable id="datalist" value="#{departamentoController.items}" var="item"
+
+                         paginator="true"
+                         rowKey="#{item.idDepartamento}"
+                         rows="10"
+                         rowsPerPageTemplate="10,20,30,40,50"
+                         paginatorPosition="top"
+                         >
+
+                <p:column style = "width: 220px">
+                    <f:facet name="header">
+                        <h:outputText value="Identificación departamento"/>
+                    </f:facet>
+                    <center><h:outputText value="#{item.idDepartamento}"/></center>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Nombre Departamento"/>
+                    </f:facet>
+                    <h:outputText value="#{item.nombre}"/>
+                </p:column>
+                <p:column style="width: 70px">
+
+                    <f:facet name="header">
+                        <h:outputText value="Acciones"/>
+                    </f:facet>
+
+                    <p:commandButton id="editButton"   icon="ui-icon-pencil" action="#{departamentoController.setSelected(item)}" update=":DepartamentoEditForm" oncomplete="PF('DepartamentoEditDialog').show()" />
+                    <p:commandButton id="deleteButton" icon="ui-icon-trash" action="#{departamentoController.mostrarMensajeConfirmarEliminarDepartamento(item)}"/>
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+
+        <ui:include src="agregarDepartamento.xhtml"/>
+        <ui:include src="editarDepartamento.xhtml"/>
 
 
-        <h:body>
+        <p:dialog header="Información" modal="true" position="center" widgetVar="mensajeRegistroExitoso" closable="false">
+            <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
             <h:form>
-                <p:commandButton id="createButton" icon="ui-icon-plus"   value="Agregar Departamento" actionListener="#{departamentoController.prepareCreate}" oncomplete="PF('DepartamentoCreateDialog').show()"/>
+                <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                                  onclick="PF('mensajeRegistroExitoso').hide()"/>
             </h:form>
-            <h:form id="DepartamentoListForm">
-            
-                    <p:dataTable id="datalist" value="#{departamentoController.items}" var="item"
-                              
-                                 paginator="true"
-                                 rowKey="#{item.idDepartamento}"
-                                 rows="10"
-                                 rowsPerPageTemplate="10,20,30,40,50"
-                                 paginatorPosition="top"
-                                 >
-
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Identificación departamento"/>
-                            </f:facet>
-                            <h:outputText value="#{item.idDepartamento}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Nombre Departamento"/>
-                            </f:facet>
-                            <h:outputText value="#{item.nombre}"/>
-                        </p:column>
-                        <p:column style="width: 120px">
-                           
-                            <f:facet name="header">
-                                <h:outputText value="Acciones"/>
-                            </f:facet>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" action="#{departamentoController.setSelected(item)}" update=":DepartamentoViewForm" oncomplete="PF('DepartamentoViewDialog').show()"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" action="#{departamentoController.setSelected(item)}" update=":DepartamentoEditForm" oncomplete="PF('DepartamentoEditDialog').show()" />
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash" action="#{departamentoController.setSelected(item)}" actionListener="#{departamentoController.destroy}" update="datalist"/>
-                        </p:column>
-                    </p:dataTable>
-                
+        </p:dialog>
+        <p:dialog header="Error" modal="true" position="center" widgetVar="mensajeError" closable="false">
+            <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
+            <h:form>
+                <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                                  onclick="PF('mensajeError').hide()" />
             </h:form>
+        </p:dialog>
 
-            <ui:include src="agregarDepartamento.xhtml"/>
-            <ui:include src="editarDepartamento.xhtml"/>
-            <ui:include src="verDepartamento.xhtml"/>
-        </h:body>
+        <p:dialog header="Información" modal="true" position="center" widgetVar="mensajeConfirmarEliminar" closable="false">
+            <p:outputLabel value ="¿Seguro que desea eliminar el departamento?"/><br/><br/>
+            <h:form>
+                <center><p:commandButton  value="Aceptar" action="#{departamentoController.eliminarDepartamento()}" style="font-weight: normal;"
+                                          />
+                    <p:commandButton  value="Cancelar" style="font-weight: normal;"
+                                      action="#{departamentoController.cancelarEliminacion()}"/></center>
+            </h:form>
+        </p:dialog>
+
+    </h:body>
 </html>

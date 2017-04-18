@@ -11,9 +11,9 @@
             <p:commandButton id="createButton" icon="ui-icon-plus"   value="Registrar Materia" actionListener="#{materiaController.prepareCreate}" update=":MateriaCreateForm" oncomplete="PF('MateriaCreateDialog').show()"/>
         </h:form>
         <h:form id="MateriaListForm">
-            <p:panel header="#{bundleMateria.ListMateriaTitle}">
+            
                 <p:dataTable id="datalist" value="#{materiaController.items}" var="item"
-                             paginator="true"
+                             paginator="true" paginatorPosition="top"
                              rowKey="#{item.idMateria}"
                              rows="10"
                              rowsPerPageTemplate="10,20,30,40,50"
@@ -65,7 +65,7 @@
                         <p:commandButton id="deleteButton" icon="ui-icon-trash"  action="#{materiaController.confirmarEliminacion(item)}"/>
                     </p:column>
                 </p:dataTable>
-            </p:panel>
+            
         </h:form>
 
         <ui:include src="CrearMateria.xhtml"/>

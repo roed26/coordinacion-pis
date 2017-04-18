@@ -8,7 +8,7 @@
 
     <ui:composition>
 
-        <p:dialog id="MateriaEditDlg" widgetVar="MateriaEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleMateria.EditMateriaTitle}">
+        <p:dialog id="MateriaEditDlg" widgetVar="MateriaEditDialog" modal="true" resizable="false" appendTo="@(body)" header="Editar materia">
             <h:form id="MateriaEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid  styleClass="panelgrid">
@@ -18,10 +18,16 @@
                             </p:column>
                             <p:column>
                                 <p:selectOneMenu id="semestre" value="#{materiaController.selected.semestre}" required="true" requiredMessage="Campo obligatorio">
-                                    <f:selectItems value="#{materiaController.itemsAvailableSelectOne}"
-                                                   var="semestreItem"
-                                                   itemValue="#{semestreItem.semestre}"
-                                                   itemLabel="#{semestreItem.semestre}"/>
+                                    <f:selectItem itemLabel="I" itemValue="I"/>
+                                    <f:selectItem itemLabel="II" itemValue="II"/>
+                                    <f:selectItem itemLabel="III" itemValue="III"/>
+                                    <f:selectItem itemLabel="IV" itemValue="IV"/>
+                                    <f:selectItem itemLabel="V" itemValue="V"/>
+                                    <f:selectItem itemLabel="VI" itemValue="VI"/>
+                                    <f:selectItem itemLabel="VII" itemValue="VII"/>
+                                    <f:selectItem itemLabel="VIII" itemValue="VIII"/>
+                                    <f:selectItem itemLabel="IX" itemValue="IX"/>
+                                    <f:selectItem itemLabel="X" itemValue="X"/>                                 
                                 </p:selectOneMenu>
                             </p:column>
                         </p:row>
@@ -125,8 +131,8 @@
 
 
                     </p:panelGrid>
-                    <p:commandButton action="#{materiaController.editarMateria()}" value="#{bundleMateria.Save}" update="display,:MateriaListForm:datalist" oncomplete="handleSubmit(args, 'MateriaEditDialog');"/>
-                    <p:commandButton value="#{bundleMateria.Cancel}" onclick="MateriaEditDialog.hide()"/>
+                    <p:commandButton action="#{materiaController.editarMateria()}" value="Guardar" update="display,:MateriaListForm:datalist" oncomplete="handleSubmit(args, 'MateriaEditDialog');"/>
+                    <p:commandButton value="Cancelar" onclick="MateriaEditDialog.hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
