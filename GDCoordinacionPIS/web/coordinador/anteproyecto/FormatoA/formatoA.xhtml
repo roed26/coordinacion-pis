@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:commandButton value="Agregar formatoA" onclick="PF('dlgRegistroFormatoA').show()"/>
+        </h:form>
+        <h:form>            
+            <p:dataTable value="#{registroFormatoAController.listaDocs}" 
+                             id="datalist" paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                             var="dato">
+                    <p:column>
+                        <f:facet name="header">
+                            Nombre del Archivo
+                        </f:facet>
+                        <p:outputLabel value="#{registroFormatoAController.nombreDelArchivo(dato.document.getPath())}"/>
+                    </p:column>
+                    <p:column style="width: 360px" >
+                        <f:facet name="header">
+                            Fecha de creación
+                        </f:facet>
+                        <p:outputLabel value="#{registroFormatoAController.fecha(dato.document.getCreated())}"/>
+                    </p:column>
+                    <p:column style="text-align: center; background: #C8CDD6; width: 140px">
+                        <f:facet name="header">
+                            Acciones
+                        </f:facet>
+                        <p:commandButton value="Descargar" disabled="true" icon="ui-icon-arrowthickstop-1-s" title="Descargar" />
+                        <p:commandButton value="Ver" disabled="true" icon="ui-icon-search" title="Ver"/>
+                    </p:column>
+                </p:dataTable>
+            
+        </h:form>
+
+        <ui:include src="registrarFormatoA.xhtml"/> 
+    </h:body>
+
+</html>
+
