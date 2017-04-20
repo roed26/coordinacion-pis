@@ -31,8 +31,16 @@ public class CargarFormularioController implements Serializable {
         this.ruta = "/coordinador/departamento/listarDepartamento.xhtml";
     }
 
+    public void cargarRegistrarMateria() {
+        this.ruta = "/coordinador/materia/ListarMaterias.xhtml";
+    }
+
     public void cargarPlanesdeEstudio() {
         this.ruta = "/coordinador/PlandeEstudio/PlandeEstudio.xhtml";
+    }
+
+    public void cargarGestionAnteproyecto() {
+        this.ruta = "/coordinador/anteproyecto/FormatoA/formatoA.xhtml";
     }
 
 }

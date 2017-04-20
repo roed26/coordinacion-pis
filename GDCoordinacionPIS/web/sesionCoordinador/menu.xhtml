@@ -14,10 +14,14 @@
                     <p:submenu label="Oferta academica">
                         <p:menuitem value="Gestion de ofertas academicas" action="#{cargarFormulariosController.cargarGestionOfertaAcademica()}" ajax="false"/>
                         <p:menuitem value="Registrar departameto o facultad" action="#{cargarFormulariosController.cargarRegistrarDepartamento()}" ajax="false"/>
+                        <p:menuitem value="Registrar materia" action="#{cargarFormulariosController.cargarRegistrarMateria()}" ajax="false"/>                        
                     </p:submenu>    
                     <p:submenu label="Planes de Estudio">
                         <p:menuitem value="Gesti&#243;n Planes de Estudio" action="#{cargarFormulariosController.cargarPlanesdeEstudio()}" ajax="false"/>                        
                     </p:submenu>  
+                    <p:submenu label="Anteproyecto">
+                        <p:menuitem value="Gestión de anteproyectos" action="#{cargarFormulariosController.cargarGestionAnteproyecto()}" ajax="false"/>
+                    </p:submenu>
                 </p:menubar>
             </h:form>
         </div>
