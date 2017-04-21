@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="UsuarioCreateDlg" widgetVar="UsuarioCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleAdmin.CreateUsuarioTitle}">
+            <h:form id="UsuarioCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{usuarioController.selected != null}">
+                        <p:outputLabel value="#{bundleAdmin.CreateUsuarioLabel_usuid}" for="usuid" />
+                        <p:inputText id="usuid" value="#{usuarioController.selected.usuid}" title="#{bundleAdmin.CreateUsuarioTitle_usuid}" required="true" requiredMessage="#{bundleAdmin.CreateUsuarioRequiredMessage_usuid}"/>
+                        <p:outputLabel value="#{bundleAdmin.CreateUsuarioLabel_usufechanacimiento}" for="usufechanacimiento" />
+                        <p:calendar id="usufechanacimiento" pattern="MM/dd/yyyy HH:mm:ss" value="#{usuarioController.selected.usufechanacimiento}" title="#{bundleAdmin.EditUsuarioTitle_usufechanacimiento}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usufechanacimiento}" showOn="button"/>
+                        <p:outputLabel value="#{bundleAdmin.CreateUsuarioLabel_usunombres}" for="usunombres" />
+                        <p:inputText id="usunombres" value="#{usuarioController.selected.usunombres}" title="#{bundleAdmin.CreateUsuarioTitle_usunombres}" required="true" requiredMessage="#{bundleAdmin.CreateUsuarioRequiredMessage_usunombres}"/>
+                        <p:outputLabel value="#{bundleAdmin.CreateUsuarioLabel_usuapellidos}" for="usuapellidos" />
+                        <p:inputText id="usuapellidos" value="#{usuarioController.selected.usuapellidos}" title="#{bundleAdmin.CreateUsuarioTitle_usuapellidos}" required="true" requiredMessage="#{bundleAdmin.CreateUsuarioRequiredMessage_usuapellidos}"/>
+                        <p:outputLabel value="#{bundleAdmin.CreateUsuarioLabel_usugenero}" for="usugenero" />
+                        <p:inputText id="usugenero" value="#{usuarioController.selected.usugenero}" title="#{bundleAdmin.CreateUsuarioTitle_usugenero}" required="true" requiredMessage="#{bundleAdmin.CreateUsuarioRequiredMessage_usugenero}"/>
+                        <p:outputLabel value="#{bundleAdmin.CreateUsuarioLabel_usunombreusuario}" for="usunombreusuario" />
+                        <p:inputText id="usunombreusuario" value="#{usuarioController.selected.usunombreusuario}" title="#{bundleAdmin.CreateUsuarioTitle_usunombreusuario}" required="true" requiredMessage="#{bundleAdmin.CreateUsuarioRequiredMessage_usunombreusuario}"/>
+                        <p:outputLabel value="#{bundleAdmin.CreateUsuarioLabel_usucontrasena}" for="usucontrasena" />
+                        <p:inputText id="usucontrasena" value="#{usuarioController.selected.usucontrasena}" title="#{bundleAdmin.CreateUsuarioTitle_usucontrasena}" required="true" requiredMessage="#{bundleAdmin.CreateUsuarioRequiredMessage_usucontrasena}"/>
+                        <p:outputLabel value="#{bundleAdmin.CreateUsuarioLabel_usuemail}" for="usuemail" />
+                        <p:inputText id="usuemail" value="#{usuarioController.selected.usuemail}" title="#{bundleAdmin.CreateUsuarioTitle_usuemail}" required="true" requiredMessage="#{bundleAdmin.CreateUsuarioRequiredMessage_usuemail}"/>
+                        <p:outputLabel value="#{bundleAdmin.CreateUsuarioLabel_carid}" for="carid" />
+                        <p:selectOneMenu id="carid" value="#{usuarioController.selected.carid}" >
+                            <f:selectItems value="#{cargoController.itemsAvailableSelectOne}"
+                                           var="caridItem"
+                                           itemValue="#{caridItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{usuarioController.create}" value="#{bundleAdmin.Save}" update="display,:UsuarioListForm:datalist,:growl" oncomplete="handleSubmit(args,'UsuarioCreateDialog');"/>
+                    <p:commandButton value="#{bundleAdmin.Cancel}" onclick="UsuarioCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

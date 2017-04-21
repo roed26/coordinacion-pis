@@ -6,33 +6,45 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-   <h:head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <h:outputStylesheet name="./css/usuario.css"/>
-      <h:outputStylesheet name="./css/style.css"/>
-      <h:outputScript library="js" name="login.js"/>
-      <div id="header">
-         <div class="con_escudo_titulo">
-            <div class="bkg">
-               <div class="logo">
-                  <a href="http://www.unicauca.edu.co"></a>
-               </div>
-               <div class="borde-redondo"></div>
-            </div>
-            <div class="CuadroDeBotonesSesion">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/usuario.css"/>
+        <h:outputStylesheet name="./css/style.css"/>
+        <h:outputScript library="js" name="login.js"/>
+        <div id="header">
+            <div class="con_escudo_titulo">
+                <div class="bkg">
+                    <div class="logo">
+                        <a href="http://www.unicauca.edu.co"></a>
+                    </div>
+                    <div class="borde-redondo"></div>
+                </div>
+                <div class="tituloHeaderImg">
+                    <h:graphicImage width="260" height="120" library="img" name="img-header.png"/>
+                </div>
+                <div class="tituloHeader">
+                    <h:outputLabel value="Gestor documental" style="font-weight: bold;
+                                   font-size: 35px; font-family: serif "/>
+                    <br/>
+                    <br/>
+                    <h:outputLabel value="Programa de ingeniería de sistemas" style="font-weight: bold;
+                                   font-size: 35px; font-family: serif"/>
+                </div>
+
+                <div class="CuadroDeBotonesSesion">
                     <ui:insert name="CuadroDeBotonesSesion"> 
                         <h:form style="width: auto">
                             <h:link id="opcionesusuario" style="text-decoration: none;color:#FFFFFF; ">
-                                
+
                                 <p:graphicImage value="#{usuarioSessionController.imagenFlujo}" style="border-radius:20px;" width="35"  height="35" >
                                     <f:param name="id" value="#{usuarioSessionController.identificacion}" />
                                 </p:graphicImage> 
-                                
+
                             </h:link>
                             <p:menu  overlay="true"  trigger="opcionesusuario" my="right top" at="right bottom" >
                                 <p:menuitem value="Mi Perfil" 
                                             ajax="false"
-                              />
+                                            />
                                 <p:separator/>
                                 <p:menuitem value="Cerrar Sesión" action="#{sessionController.logout()}"/>
                             </p:menu>
@@ -40,21 +52,35 @@
                         </h:form>
                     </ui:insert>
                 </div>
-         </div>
-         <div class="bottom">            
-         </div>
-      </div>
-      <title>Gestor documental Coordinación PIS</title>
-   </h:head>
-   <h:body>
-      
-         <div id="menu">
+            </div>
+            <div class="bottom">            
+            </div>
+        </div>
+        <title>Gestor documental Coordinación PIS</title>
+    </h:head>
+    <h:body>
+
+        <div id="menu">
             <ui:insert name="left">Left</ui:insert>
-         </div>
-         <div id="content" >
+        </div>
+        <br/>
+        <div id="content" >
+            <h:form>
+                <p:panelGrid  styleClass="panelgrid">
+                    <p:row>
+                        <p:column >
+                            <h:outputLabel value="Esta en:" style="color: #FFFFFF; font-weight: bold;"/> 
+                        </p:column>
+                        <p:column>
+                            <p:breadCrumb  model="#{addNavegacionController.menu}">
+                            </p:breadCrumb>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form> 
             <ui:insert name="content">Content</ui:insert>
-         </div>
-      <ui:include src="/EfectodeCarga.xhtml"/>       
-   </h:body>
+        </div>
+        <ui:include src="/EfectodeCarga.xhtml"/>       
+    </h:body>
 
 </html>

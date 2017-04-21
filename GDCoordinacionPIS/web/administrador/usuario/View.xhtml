@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="UsuarioViewDlg" widgetVar="UsuarioViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleAdmin.ViewUsuarioTitle}">
+            <h:form id="UsuarioViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{usuarioController.selected != null}">
+                        <h:outputText value="#{bundleAdmin.ViewUsuarioLabel_usuid}"/>
+                        <h:outputText value="#{usuarioController.selected.usuid}" title="#{bundleAdmin.ViewUsuarioTitle_usuid}"/>
+                        <h:outputText value="#{bundleAdmin.ViewUsuarioLabel_usufechanacimiento}"/>
+                        <h:outputText value="#{usuarioController.selected.usufechanacimiento}" title="#{bundleAdmin.ViewUsuarioTitle_usufechanacimiento}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleAdmin.ViewUsuarioLabel_usunombres}"/>
+                        <h:outputText value="#{usuarioController.selected.usunombres}" title="#{bundleAdmin.ViewUsuarioTitle_usunombres}"/>
+                        <h:outputText value="#{bundleAdmin.ViewUsuarioLabel_usuapellidos}"/>
+                        <h:outputText value="#{usuarioController.selected.usuapellidos}" title="#{bundleAdmin.ViewUsuarioTitle_usuapellidos}"/>
+                        <h:outputText value="#{bundleAdmin.ViewUsuarioLabel_usugenero}"/>
+                        <h:outputText value="#{usuarioController.selected.usugenero}" title="#{bundleAdmin.ViewUsuarioTitle_usugenero}"/>
+                        <h:outputText value="#{bundleAdmin.ViewUsuarioLabel_usunombreusuario}"/>
+                        <h:outputText value="#{usuarioController.selected.usunombreusuario}" title="#{bundleAdmin.ViewUsuarioTitle_usunombreusuario}"/>
+                        <h:outputText value="#{bundleAdmin.ViewUsuarioLabel_usucontrasena}"/>
+                        <h:outputText value="#{usuarioController.selected.usucontrasena}" title="#{bundleAdmin.ViewUsuarioTitle_usucontrasena}"/>
+                        <h:outputText value="#{bundleAdmin.ViewUsuarioLabel_usuemail}"/>
+                        <h:outputText value="#{usuarioController.selected.usuemail}" title="#{bundleAdmin.ViewUsuarioTitle_usuemail}"/>
+                        <h:outputText value="#{bundleAdmin.ViewUsuarioLabel_carid}"/>
+                        <h:outputText value="#{usuarioController.selected.carid}" title="#{bundleAdmin.ViewUsuarioTitle_carid}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundleAdmin.Close}" onclick="UsuarioViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

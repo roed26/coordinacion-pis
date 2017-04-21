@@ -16,5 +16,9 @@
             <base-name>/BundleMateria</base-name>
             <var>bundleMateria</var>
         </resource-bundle>
+        <resource-bundle>
+            <base-name>/BundleAdmin</base-name>
+            <var>bundleAdmin</var>
+        </resource-bundle>
     </application>
 </faces-config>

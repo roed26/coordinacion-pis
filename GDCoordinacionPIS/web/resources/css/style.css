@@ -32,9 +32,9 @@
 }
 
 #loginButton:hover {
-     border:2px solid white; 
-     -moz-border-radius:3px;
-    
+    border:2px solid white; 
+    -moz-border-radius:3px;
+
 }
 
 /* Login Box */
@@ -164,8 +164,6 @@ input:focus {
 
 .CuadroDeBotonesSesion
 {
-
-    
     position: absolute;
     padding: 5px;
     color: #FFFFFF;
@@ -175,14 +173,28 @@ input:focus {
     right: 20px;
     top: 10px;
     border-radius: 20px; 
-    
+
+}
+
+.tituloHeader
+{
+    padding: 5px;
+    color: #FFFFFF;
+    text-align: center;
+
+}
+.tituloHeaderImg
+{
+    top: -25px;
+    width: 100px;
+    position: absolute;
+    left: 25%;
 }
 .CuadroLogo
 {
-
     padding: 5px;
     text-align: center;
-    
+
 }
 
 .CuadroDeBotonesSesion .botonSesion

@@ -12,15 +12,15 @@
             <h:form id="formMenu">
                 <p:menubar>
                     <p:submenu label="Oferta academica">
-                        <p:menuitem value="Gestion de ofertas academicas" action="#{cargarFormulariosController.cargarGestionOfertaAcademica()}" ajax="false"/>
-                        <p:menuitem value="Registrar departameto o facultad" action="#{cargarFormulariosController.cargarRegistrarDepartamento()}" ajax="false"/>
-                        <p:menuitem value="Registrar materia" action="#{cargarFormulariosController.cargarRegistrarMateria()}" ajax="false"/>                        
+                        <p:menuitem value="Gestion de ofertas academicas" action="#{cargarFormulariosController.cargarGestionOfertaAcademica()}"  actionListener="#{addNavegacionController.addOfertaAcademicaGestion()}" ajax="false"/>
+                        <p:menuitem value="Registrar departameto o facultad" action="#{cargarFormulariosController.cargarRegistrarDepartamento()}" actionListener="#{addNavegacionController.addOfertaAcademicaRegistroDepFac()}" ajax="false"/>
+                        <p:menuitem value="Registrar materia" action="#{cargarFormulariosController.cargarRegistrarMateria()}"  actionListener="#{addNavegacionController.addOfertaAcademicaRegistroMaterias()}" ajax="false"/>                        
                     </p:submenu>    
                     <p:submenu label="Planes de Estudio">
-                        <p:menuitem value="Gesti&#243;n Planes de Estudio" action="#{cargarFormulariosController.cargarPlanesdeEstudio()}" ajax="false"/>                        
+                        <p:menuitem value="Gesti&#243;n Planes de Estudio" action="#{cargarFormulariosController.cargarPlanesdeEstudio()}" actionListener="#{addNavegacionController.addPlanesDeEstudioGestion()}" ajax="false"/>                        
                     </p:submenu>  
                     <p:submenu label="Anteproyecto">
-                        <p:menuitem value="Gestión de anteproyectos" action="#{cargarFormulariosController.cargarGestionAnteproyecto()}" ajax="false"/>
+                        <p:menuitem value="Gestión de anteproyectos" action="#{cargarFormulariosController.cargarGestionAnteproyecto()}" actionListener="#{addNavegacionController.addAnteproyectoGestion()}" ajax="false"/>
                     </p:submenu>
                 </p:menubar>
             </h:form>

@@ -67,7 +67,7 @@ body {
 }
 
 #content{
-    background-color: #dddddd;
+    background-color: #22419a;
     padding: 4px;
     font-size: 12px !important;
 }
@@ -113,7 +113,9 @@ body {
 }
 .panelgrid , .panelgrid tr , .panelgrid td
 {
-    border-style: none !important
+    border-style: none !important;
+        background: transparent !important;
+        
 
 }
 
@@ -151,7 +153,8 @@ body {
 } 
 
 .ui-panelgrid .ui-panelgrid-cell{
-    vertical-align: top;
+    vertical-align: inherit;
+    padding: 0px;
 
 }
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
@@ -176,6 +179,27 @@ body {
 }
 .ui-datagrid-column {
     padding: 0px !important;
+}
+
+.ui-menubar,.ui-menu-child,.ui-menu {
+    background: #092167 !important;
+    
+}
+.ui-menuitem-text{
+    color: #FFFFFF !important;
+    font-weight: bold !important;
+    
+}
+
+.ui-widget-header {
+    border: none !important;
+    /*border: 1px solid #a8a8a8;*/
+    background: #c4c4c4 linear-gradient(top, rgba(255,255,255,0.8), rgba(255,255,255,0)) !important;
+    background: rgba(196, 196, 196, 0) -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), to(rgba(255,255,255,0)))!important;
+    background: #c4c4c4 -moz-linear-gradient(top, rgba(255,255,255,0.8), rgba(255,255,255,0))!important;
+    color: #000000 !important;
+    font-weight: bold !important;
+    text-shadow: 0px 1px 0px rgba(255,255,255,0.7) !important;
 }
 
 
