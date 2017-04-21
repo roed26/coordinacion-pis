@@ -67,7 +67,7 @@ body {
 }
 
 #content{
-    background-color: #22419a;
+    background-color: #dbe0e6;
     padding: 4px;
     font-size: 12px !important;
 }
@@ -114,8 +114,8 @@ body {
 .panelgrid , .panelgrid tr , .panelgrid td
 {
     border-style: none !important;
-        background: transparent !important;
-        
+    background: transparent !important;
+
 
 }
 
@@ -154,7 +154,7 @@ body {
 
 .ui-panelgrid .ui-panelgrid-cell{
     vertical-align: inherit;
-    padding: 0px;
+    padding: 2px;
 
 }
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
@@ -175,7 +175,7 @@ body {
 
 .ui-widget-content {
     border: none !important;
-    
+
 }
 .ui-datagrid-column {
     padding: 0px !important;
@@ -183,12 +183,12 @@ body {
 
 .ui-menubar,.ui-menu-child,.ui-menu {
     background: #092167 !important;
-    
+
 }
 .ui-menuitem-text{
     color: #FFFFFF !important;
     font-weight: bold !important;
-    
+
 }
 
 .ui-widget-header {
@@ -200,6 +200,10 @@ body {
     color: #000000 !important;
     font-weight: bold !important;
     text-shadow: 0px 1px 0px rgba(255,255,255,0.7) !important;
+}
+
+.ui-breadcrumb .ui-menuitem-text {
+    color: #000000 !important;
 }
 
 
