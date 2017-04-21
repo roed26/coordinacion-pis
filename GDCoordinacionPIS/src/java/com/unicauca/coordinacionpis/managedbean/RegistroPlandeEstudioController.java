@@ -62,6 +62,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     String url = "http://localhost:8080/OpenKM";
     String user = "okmAdmin";
     String pass = "admin";
+    private StreamedContent streamedContent;
 
     OKMWebservices okm = OKMWebservicesFactory.newInstance(url, user, pass);
 
@@ -93,6 +94,16 @@ public class RegistroPlandeEstudioController implements Serializable {
     public void setMetadatosPlandeEstudio(MetadatosPlanEstudio metadatosPlandeEstudio) {
         this.metadatosPlandeEstudio = metadatosPlandeEstudio;
     }
+
+    public StreamedContent getStreamedContent() {
+        return streamedContent;
+    }
+
+    public void setStreamedContent(StreamedContent streamedContent) {
+        this.streamedContent = streamedContent;
+    }
+    
+    
 //Al presionar el boton cancelar, se borran los datos ingresados en el formulario y se actualiza el formulario.
 
     public void cancelarRegistroPlanEstudio() {
@@ -204,6 +215,28 @@ public class RegistroPlandeEstudioController implements Serializable {
         }
     }
 
+    public void visualizarDocumento(com.openkm.sdk4j.bean.Document documento) {
+
+        try {
+//            this.documento = documento;
+            InputStream in = okm.getContent(documento.getPath());
+            streamedContent = new DefaultStreamedContent(in, "application/pdf");
+            //-------
+            Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            byte[] b = (byte[]) session.get("reportBytes");
+            if (b != null) {
+                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+            }
+
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.update("form:visualizacionPdf");
+            requestContext.execute("PF('visualizarPDF').show()");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     //Método utilizado para limitar la fecha de la vigencia del plan de estudio
     public Date fechaActual() {
         return new Date();
@@ -261,7 +294,7 @@ public class RegistroPlandeEstudioController implements Serializable {
         InputStream in = null;
         StreamedContent str = null;
         try {
-            
+
             in = okm.getContent(doc.getPath());
             str = new DefaultStreamedContent(in, "application/pdf");
             //-------
@@ -269,7 +302,8 @@ public class RegistroPlandeEstudioController implements Serializable {
             byte[] b = (byte[]) session.get("reportBytes");
             if (b != null) {
                 str = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
-            }   return str;
+            }
+            return str;
         } catch (RepositoryException ex) {
             Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

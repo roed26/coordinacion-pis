@@ -44,12 +44,25 @@ and open the template in the editor.
                     <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" value="Descargar" icon="ui-icon-arrowthickstop-1-s" title="Descargar" >
                         <p:fileDownload value="#{registroPlandeEstudioController.descargarDocumento(dato)}" />
                     </p:commandButton>
-                    <!--<p:commandButton value="Ver" disabled="true" icon="ui-icon-search" title="Ver"/>-->
-                    <!--<p:media value="{registroPlandeEstudioController.stream(dato)}" width="700px" height="700px" player="pdf" />-->
-    
+                    <p:commandButton value="Ver" action="#{registroPlandeEstudioController.visualizarDocumento(dato)}" icon="ui-icon-search" title="Ver"/>                   
                 </p:column>
             </p:dataTable>
         </h:form>
         <ui:include src="RegistrarPlandeEstudio.xhtml"/>
+        <p:dialog widgetVar="visualizarPDF" modal="true">
+            <h:form id="visualizacion">
+                <h3>PDF</h3>
+                <p:media value="#{registroPlandeEstudioController.streamedContent}" width="750" height="560" player="pdf" />
+            </h:form>
+        </p:dialog>
+        <script type="text/javascript">
+            function start() {
+                PF('cargando').show();
+            }
+
+            function stop() {
+                PF('cargando').hide();
+            }
+        </script>
     </h:body>
 </html>
