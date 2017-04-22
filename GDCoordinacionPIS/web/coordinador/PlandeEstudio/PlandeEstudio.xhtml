@@ -43,14 +43,15 @@ and open the template in the editor.
                     </f:facet>
                     <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" value="Descargar" icon="ui-icon-arrowthickstop-1-s" title="Descargar" >
                         <p:fileDownload value="#{registroPlandeEstudioController.descargarDocumento(dato)}" />
-                    </p:commandButton>
-                    <p:commandButton value="Ver" action="#{registroPlandeEstudioController.visualizarDocumento(dato)}" icon="ui-icon-search" title="Ver"/>                   
+                    </p:commandButton>                    
+                    <!--<p:commandButton value="Ver" action="{registroPlandeEstudioController.show(dato)}" icon="ui-icon-search" title="Ver"/>-->  
+                    <p:commandLink value="ver" action="#{registroPlandeEstudioController.visualizarDocumento(dato)}" ajax="false" target="_blank" style="background-color: gainsboro;padding: 2px 15px 2px 15px; border-radius: 2px; text-decoration: none"></p:commandLink>
                 </p:column>
             </p:dataTable>
         </h:form>
         <ui:include src="RegistrarPlandeEstudio.xhtml"/>
         <p:dialog widgetVar="visualizarPDF" modal="true">
-            <h:form id="visualizacion">
+            <h:form id="visualizacionPlanPdf">
                 <h3>PDF</h3>
                 <p:media value="#{registroPlandeEstudioController.streamedContent}" width="750" height="560" player="pdf" />
             </h:form>

@@ -25,6 +25,8 @@ import com.openkm.sdk4j.exception.UserQuotaExceededException;
 import com.openkm.sdk4j.exception.VirusDetectedException;
 import com.openkm.sdk4j.exception.WebserviceException;
 import com.unicauca.coordinacionpis.classMetadatos.MetadatosPlanEstudio;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,8 +40,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -63,6 +67,9 @@ public class RegistroPlandeEstudioController implements Serializable {
     String user = "okmAdmin";
     String pass = "admin";
     private StreamedContent streamedContent;
+    private com.openkm.sdk4j.bean.Document documento;
+    private BufferedOutputStream output;
+    private BufferedInputStream input;
 
     OKMWebservices okm = OKMWebservicesFactory.newInstance(url, user, pass);
 
@@ -102,10 +109,8 @@ public class RegistroPlandeEstudioController implements Serializable {
     public void setStreamedContent(StreamedContent streamedContent) {
         this.streamedContent = streamedContent;
     }
-    
-    
-//Al presionar el boton cancelar, se borran los datos ingresados en el formulario y se actualiza el formulario.
 
+//Al presionar el boton cancelar, se borran los datos ingresados en el formulario y se actualiza el formulario.
     public void cancelarRegistroPlanEstudio() {
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
         limpiarVariables();
@@ -215,26 +220,57 @@ public class RegistroPlandeEstudioController implements Serializable {
         }
     }
 
-    public void visualizarDocumento(com.openkm.sdk4j.bean.Document documento) {
+    public void visualizarDocumento(Document documento) {
+       
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 
+//        file = new File(filePath, fileName);
         try {
-//            this.documento = documento;
             InputStream in = okm.getContent(documento.getPath());
-            streamedContent = new DefaultStreamedContent(in, "application/pdf");
-            //-------
-            Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-            byte[] b = (byte[]) session.get("reportBytes");
-            if (b != null) {
-                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+//            streamedContent = new DefaultStreamedContent(in, "application/pdf");
+            input = new BufferedInputStream(in,
+                    5000000);
+            if (response.isCommitted()) {
+                return;
             }
+            response.reset();
+            response.setHeader("Content-Type", "");
+//            response.setHeader("Cache-Control", "no-cache");
+//            response.setHeader("Content-Length", "Nuevo");
 
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.update("form:visualizacionPdf");
-            requestContext.execute("PF('visualizarPDF').show()");
-        } catch (Exception e) {
-            e.printStackTrace();
+            output = new BufferedOutputStream(response.getOutputStream(),
+                    5000000);
+
+            byte[] buffer = new byte[5000000];
+            int length;
+            while ((length = input.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+
+            FacesContext.getCurrentInstance().responseComplete();
+            output.close();
+            input.close();
+        } catch (IOException ioe) {
+//            JsfUtil.addWarningMessage("Errore nell'apertura del file!");
+        } catch (RepositoryException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PathNotFoundException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AccessDeniedException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DatabaseException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknowException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WebserviceException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+
         }
-
+        facesContext.responseComplete();
     }
 
     //Método utilizado para limitar la fecha de la vigencia del plan de estudio
