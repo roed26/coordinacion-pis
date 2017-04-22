@@ -60,6 +60,7 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     private MetadatosPlanEstudio metadatosPlandeEstudio;
     private String nombreArchivo;
+    private boolean exitoSubirArchivo;
     private UploadedFile archivoPlan;
     private String datos;
     private List<Document> documentosPlanEstudio;
@@ -76,6 +77,23 @@ public class RegistroPlandeEstudioController implements Serializable {
     public RegistroPlandeEstudioController() {
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
         documentosPlanEstudio = new ArrayList<>();
+        exitoSubirArchivo = false;
+    }
+
+    public String getNombreArchivo() {
+        return nombreArchivo;
+    }
+
+    public void setNombreArchivo(String nombreArchivo) {
+        this.nombreArchivo = nombreArchivo;
+    }
+
+    public boolean isExitoSubirArchivo() {
+        return exitoSubirArchivo;
+    }
+
+    public void setExitoSubirArchivo(boolean exitoSubirArchivo) {
+        this.exitoSubirArchivo = exitoSubirArchivo;
     }
 
     public String getDatos() {
@@ -131,6 +149,10 @@ public class RegistroPlandeEstudioController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("msg");//Actualiza la etiqueta growl para que el mensaje pueda ser mostrado
+        exitoSubirArchivo = true;
+        rc.update("formSeleccionarArchivoPlanEstudio");
+        rc.update("formArchivoSelecionadoPlanEstudio");
+        rc.update("formMetadatosPlanEstudio");
 
     }
 
@@ -221,22 +243,22 @@ public class RegistroPlandeEstudioController implements Serializable {
     }
 
     public void visualizarDocumento(Document documento) {
-       
+
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 
-//        file = new File(filePath, fileName);
         try {
             InputStream in = okm.getContent(documento.getPath());
-//            streamedContent = new DefaultStreamedContent(in, "application/pdf");
             input = new BufferedInputStream(in,
                     5000000);
             if (response.isCommitted()) {
                 return;
             }
             response.reset();
-            response.setHeader("Content-Type", "");
+            response.setContentType("application/pdf");
+//            response.setHeader("Content-Type", "");
+//            response.addHeader("Content-disposition", "inline; filename=Gen.pdf");
 //            response.setHeader("Cache-Control", "no-cache");
 //            response.setHeader("Content-Length", "Nuevo");
 
@@ -362,5 +384,14 @@ public class RegistroPlandeEstudioController implements Serializable {
             }
         }
         return str;
+    }
+
+    public void cambiarArchivo() {
+        exitoSubirArchivo = false;
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.update("formSeleccionarArchivoPlanEstudio");
+        rc.update("formArchivoSelecionadoPlanEstudio");
+        rc.update("formMetadatosPlanEstudio");
+
     }
 }

@@ -50,12 +50,12 @@ and open the template in the editor.
             </p:dataTable>
         </h:form>
         <ui:include src="RegistrarPlandeEstudio.xhtml"/>
-        <p:dialog widgetVar="visualizarPDF" modal="true">
+<!--        <p:dialog widgetVar="visualizarPDF" modal="true">
             <h:form id="visualizacionPlanPdf">
                 <h3>PDF</h3>
-                <p:media value="#{registroPlandeEstudioController.streamedContent}" width="750" height="560" player="pdf" />
+                <p:media value="{registroPlandeEstudioController.streamedContent}" width="750" height="560" player="pdf" />
             </h:form>
-        </p:dialog>
+        </p:dialog>-->
         <script type="text/javascript">
             function start() {
                 PF('cargando').show();
