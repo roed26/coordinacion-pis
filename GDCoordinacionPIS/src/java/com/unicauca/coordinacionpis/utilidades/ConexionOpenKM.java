@@ -20,7 +20,7 @@ public class ConexionOpenKM {
     OKMWebservices okm ;
 
     public ConexionOpenKM() {
-        this.url = "http://localhost:8080/OpenKM";
+        this.url = "http://localhost:8083/OpenKM";
         this.user = "okmAdmin";
         this.pass = "admin";
         this.okm = OKMWebservicesFactory.newInstance(url, user, pass);
