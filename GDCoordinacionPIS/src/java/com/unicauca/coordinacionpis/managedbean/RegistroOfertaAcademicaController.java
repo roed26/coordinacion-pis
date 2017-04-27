@@ -435,8 +435,8 @@ public class RegistroOfertaAcademicaController implements Serializable {
             writer.createXmpMetadata();
 
             document.open();
-            Image img = Image.getInstance("D:\\unicauca.png");
-            document.add(img);
+            //Image img = Image.getInstance("D:\\unicauca.png");
+            //document.add(img);
             document.add(new Paragraph("\n"));
             document.add(new Paragraph("\n"));
             document.add(new Paragraph("\n"));
