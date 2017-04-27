@@ -9,14 +9,12 @@ import com.openkm.sdk4j.OKMWebservices;
 import com.openkm.sdk4j.OKMWebservicesFactory;
 import com.openkm.sdk4j.bean.Document;
 import com.openkm.sdk4j.bean.Folder;
-import com.openkm.sdk4j.bean.QueryResult;
 import com.openkm.sdk4j.exception.AccessDeniedException;
 import com.openkm.sdk4j.exception.AutomationException;
 import com.openkm.sdk4j.exception.DatabaseException;
 import com.openkm.sdk4j.exception.ExtensionException;
 import com.openkm.sdk4j.exception.FileSizeExceededException;
 import com.openkm.sdk4j.exception.ItemExistsException;
-import com.openkm.sdk4j.exception.ParseException;
 import com.openkm.sdk4j.exception.PathNotFoundException;
 import com.openkm.sdk4j.exception.RepositoryException;
 import com.openkm.sdk4j.exception.UnknowException;
@@ -25,6 +23,7 @@ import com.openkm.sdk4j.exception.UserQuotaExceededException;
 import com.openkm.sdk4j.exception.VirusDetectedException;
 import com.openkm.sdk4j.exception.WebserviceException;
 import com.unicauca.coordinacionpis.classMetadatos.MetadatosPlanEstudio;
+import com.unicauca.coordinacionpis.utilidades.ConexionOpenKM;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -32,7 +31,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -64,20 +65,22 @@ public class RegistroPlandeEstudioController implements Serializable {
     private UploadedFile archivoPlan;
     private String datos;
     private List<Document> documentosPlanEstudio;
-    String url = "http://localhost:8080/OpenKM";
-    String user = "okmAdmin";
-    String pass = "admin";
+    private ConexionOpenKM conexionOpenKM;
     private StreamedContent streamedContent;
     private com.openkm.sdk4j.bean.Document documento;
     private BufferedOutputStream output;
     private BufferedInputStream input;
+    private SimpleDateFormat formatoFecha;
 
-    OKMWebservices okm = OKMWebservicesFactory.newInstance(url, user, pass);
+    private OKMWebservices okm;
 
     public RegistroPlandeEstudioController() {
-        metadatosPlandeEstudio = new MetadatosPlanEstudio();
-        documentosPlanEstudio = new ArrayList<>();
-        exitoSubirArchivo = false;
+        this.formatoFecha = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        this.metadatosPlandeEstudio = new MetadatosPlanEstudio();
+        this.documentosPlanEstudio = new ArrayList<>();
+        this.exitoSubirArchivo = false;
+        this.conexionOpenKM = new ConexionOpenKM();
+        this.okm = conexionOpenKM.getOkm();
     }
 
     public String getNombreArchivo() {
@@ -246,7 +249,7 @@ public class RegistroPlandeEstudioController implements Serializable {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
-        HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
+        HttpServletResponse response = (HttpServletResponse)facesContext.getExternalContext().getResponse();
 
         try {
             InputStream in = okm.getContent(documento.getPath());
@@ -256,21 +259,23 @@ public class RegistroPlandeEstudioController implements Serializable {
                 return;
             }
             response.reset();
+            
             response.setContentType("application/pdf");
-//            response.setHeader("Content-Type", "");
-//            response.addHeader("Content-disposition", "inline; filename=Gen.pdf");
+//            response.setHeader("Content-Type", "application/pdf");
+            response.addHeader("Content-disposition", "inline; filename=Gen.pdf");
 //            response.setHeader("Cache-Control", "no-cache");
 //            response.setHeader("Content-Length", "Nuevo");
 
+
             output = new BufferedOutputStream(response.getOutputStream(),
-                    5000000);
+                    5000000);            
 
             byte[] buffer = new byte[5000000];
             int length;
             while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
             }
-            output.flush();
+            output.flush();            
 
             FacesContext.getCurrentInstance().responseComplete();
             output.close();
@@ -348,6 +353,10 @@ public class RegistroPlandeEstudioController implements Serializable {
         return partesPath[partesPath.length - 1];
     }
 
+    public String fecha(Date fecha) {
+        return formatoFecha.format(fecha.getTime());
+    }
+
     public StreamedContent stream(Document doc) {
         InputStream in = null;
         StreamedContent str = null;
@@ -394,4 +403,22 @@ public class RegistroPlandeEstudioController implements Serializable {
         rc.update("formMetadatosPlanEstudio");
 
     }
+
+    public boolean getComprobarConexionOpenKM() {
+        boolean conexion = true;
+        try {
+            okm.getAppVersion();
+
+        } catch (RepositoryException ex) {
+            conexion = false;
+        } catch (DatabaseException ex) {
+            conexion = false;
+        } catch (UnknowException ex) {
+            conexion = false;
+        } catch (WebserviceException ex) {
+            conexion = false;
+        }
+        return conexion;
+    }
+
 }
