@@ -31,10 +31,12 @@ public class MateriaController implements Serializable {
     private List<Materia> items = null;
     private Materia materia;
     private Departamento departamento;
+    private String datoBusqueda;
 
     public MateriaController() {
         materia= new Materia();
         departamento= new Departamento();
+        datoBusqueda="";
     }
 
     public Materia getSelected() {
@@ -54,6 +56,18 @@ public class MateriaController implements Serializable {
         this.departamento= selected.getIdDepartamento();
     }
 
+    public String getDatoBusqueda() {
+        return datoBusqueda;
+    }
+
+    public void setDatoBusqueda(String datoBusqueda) {
+        this.datoBusqueda = datoBusqueda;
+    }
+
+    public List<Materia> getListaMaterias(){
+        
+        return ejbFacade.buscarMateria(datoBusqueda);
+    }
     public void registrarMateria(){
         materia.setIdDepartamento(departamento);
         ejbFacade.create(materia);

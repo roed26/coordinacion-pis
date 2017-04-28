@@ -8,64 +8,70 @@
 
     <h:body>
         <h:form>
-            <p:commandButton id="createButton" icon="ui-icon-plus"   value="Registrar Materia" actionListener="#{materiaController.prepareCreate}" update=":MateriaCreateForm" oncomplete="PF('MateriaCreateDialog').show()"/>
+            <p:commandButton id="createButton" icon="ui-icon-plus"   value="Registrar Materia" onclick="PF('MateriaCreateDialog').show()"/>
         </h:form>
         <h:form id="MateriaListForm">
-            
-                <p:dataTable id="datalist" value="#{materiaController.items}" var="item"
-                             paginator="true" paginatorPosition="top"
-                             rowKey="#{item.idMateria}"
-                             rows="10"
-                             rowsPerPageTemplate="10,20,30,40,50"
-                             >
+            <br/>
+            <p:outputLabel value="Buscar materia: " style="font-weight: bold; color: #000000"/>
+
+            <p:inputText   style="width: 300px" placeholder="Nombre semestre, código asignatura o materia" value="#{materiaController.datoBusqueda}">
+                <p:ajax update="datalist"  event="keyup" />
+            </p:inputText>
+
+            <p:dataTable id="datalist" value="#{materiaController.listaMaterias}" var="item"
+                         paginator="true" paginatorPosition="top"
+                         rowKey="#{item.idMateria}"
+                         rows="10"
+                         rowsPerPageTemplate="10,20,30,40,50"
+                         >
 
 
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Semestre"/>
-                        </f:facet>
-                        <h:outputText value="#{item.semestre}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Código Asignatura"/>
-                        </f:facet>
-                        <h:outputText value="#{item.codigoMateria}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Materia"/>
-                        </f:facet>
-                        <h:outputText value="#{item.nombreMateria}"/>
-                    </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Semestre"/>
+                    </f:facet>
+                    <h:outputText value="#{item.semestre}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Código Asignatura"/>
+                    </f:facet>
+                    <h:outputText value="#{item.codigoMateria}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Nombre materia"/>
+                    </f:facet>
+                    <h:outputText value="#{item.nombreMateria}"/>
+                </p:column>
 
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Créditos"/>
-                        </f:facet>
-                        <h:outputText value="#{item.creditos}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Intensidad Horaria"/>
-                        </f:facet>
-                        <h:outputText value="#{item.intensidadHoraria}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Departamento/Facultad"/>
-                        </f:facet>
-                        <h:outputText value="#{item.idDepartamento.nombre}"/>
-                    </p:column>
-                    <p:column style="width: 120px">
-                        <f:facet name="header">
-                            <h:outputText value="Acciones"/>
-                        </f:facet>
-                        <p:commandButton id="editButton"   icon="ui-icon-pencil" action="#{materiaController.setSelected(item)}" update=":MateriaEditForm" oncomplete="PF('MateriaEditDialog').show()"/>
-                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  action="#{materiaController.confirmarEliminacion(item)}"/>
-                    </p:column>
-                </p:dataTable>
-            
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Créditos"/>
+                    </f:facet>
+                    <h:outputText value="#{item.creditos}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Intensidad Horaria"/>
+                    </f:facet>
+                    <h:outputText value="#{item.intensidadHoraria}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Departamento/Facultad"/>
+                    </f:facet>
+                    <h:outputText value="#{item.idDepartamento.nombre}"/>
+                </p:column>
+                <p:column style="width: 120px">
+                    <f:facet name="header">
+                        <h:outputText value="Acciones"/>
+                    </f:facet>
+                    <p:commandButton id="editButton"   icon="ui-icon-pencil" action="#{materiaController.setSelected(item)}" update=":MateriaEditForm" oncomplete="PF('MateriaEditDialog').show()"/>
+                    <p:commandButton id="deleteButton" icon="ui-icon-trash"  action="#{materiaController.confirmarEliminacion(item)}"/>
+                </p:column>
+            </p:dataTable>
+
         </h:form>
 
         <ui:include src="CrearMateria.xhtml"/>

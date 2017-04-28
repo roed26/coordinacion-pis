@@ -6,9 +6,11 @@
 package com.unicauca.coordinacionpis.sessionbean;
 
 import com.unicauca.coordinacionpis.entidades.Materia;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -29,4 +31,9 @@ public class MateriaFacade extends AbstractFacade<Materia> {
         super(Materia.class);
     }
     
+    public List<Materia> buscarMateria(String datoBusqueda){
+        Query query= getEntityManager().createNamedQuery("Materia.findByMateria");
+        query.setParameter("datoBusqueda", "%"+datoBusqueda+"%");
+        return query.getResultList();
+    }
 }

@@ -37,7 +37,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Materia.findByGruposCancelados", query = "SELECT m FROM Materia m WHERE m.gruposCancelados = :gruposCancelados"),
     @NamedQuery(name = "Materia.findByGruposOfertados", query = "SELECT m FROM Materia m WHERE m.gruposOfertados = :gruposOfertados"),
     @NamedQuery(name = "Materia.findByGruposFusionados", query = "SELECT m FROM Materia m WHERE m.gruposFusionados = :gruposFusionados"),
-    @NamedQuery(name = "Materia.findByGruposNuevos", query = "SELECT m FROM Materia m WHERE m.gruposNuevos = :gruposNuevos")})
+    @NamedQuery(name = "Materia.findByGruposNuevos", query = "SELECT m FROM Materia m WHERE m.gruposNuevos = :gruposNuevos"),
+    @NamedQuery(name = "Materia.findByMateria", query = "SELECT m FROM Materia m WHERE LOWER(CONCAT(CONCAT(CONCAT(CONCAT(m.semestre,' '),m.codigoMateria),' '),m.nombreMateria)) LIKE :datoBusqueda")
+})
+
 public class Materia implements Serializable {
 
     @Size(max = 4)
@@ -219,5 +222,5 @@ public class Materia implements Serializable {
     public void setIntensidadHoraria(Integer intensidadHoraria) {
         this.intensidadHoraria = intensidadHoraria;
     }
-    
+
 }
