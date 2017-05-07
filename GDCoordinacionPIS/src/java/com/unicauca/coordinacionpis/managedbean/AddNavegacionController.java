@@ -54,6 +54,22 @@ public class AddNavegacionController implements Serializable {
         this.menuNavegacion.addElement(ofertaAcademicaGestion);
 
     }
+    public void addOfertaAcademicaLista() {
+        this.menuNavegacion = new DefaultMenuModel();
+        DefaultMenuItem index = new DefaultMenuItem();
+        index.setValue("Index");
+
+        DefaultMenuItem ofertaAcademica = new DefaultMenuItem();
+        ofertaAcademica.setValue("Oferta académica");
+
+        DefaultMenuItem ofertaAcademicaGestion = new DefaultMenuItem();
+        ofertaAcademicaGestion.setValue("Listado de ofertas académicas");
+
+        this.menuNavegacion.addElement(index);
+        this.menuNavegacion.addElement(ofertaAcademica);
+        this.menuNavegacion.addElement(ofertaAcademicaGestion);
+
+    }
 
     public void addOfertaAcademicaRegistroMaterias() {
         this.menuNavegacion = new DefaultMenuModel();

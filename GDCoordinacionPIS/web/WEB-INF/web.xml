@@ -25,4 +25,63 @@
     <welcome-file-list>
         <welcome-file>GDCP/sinSesion/index.xhtml</welcome-file>
     </welcome-file-list>
+    <security-constraint>
+        <display-name>pages administrador</display-name>
+        <web-resource-collection>
+            <web-resource-name>paginas autorizadas administrador</web-resource-name>
+            <description/>
+            <url-pattern>/GDCP/administrador/*</url-pattern>
+            <url-pattern>/GDCP/sesionCoordinador/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>administrador</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <display-name>pages coordinador</display-name>
+        <web-resource-collection>
+            <web-resource-name>paginas autorizadas coordinador</web-resource-name>
+            <description/>
+            <url-pattern>/GDCP/coordinador/*</url-pattern>
+            <url-pattern>/GDCP/sesionCoordinador/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>coordinador</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <display-name>pages jefe</display-name>
+        <web-resource-collection>
+            <web-resource-name>paginas autorizadas jefe</web-resource-name>
+            <description/>
+            <url-pattern>/GDCP/jefe/*</url-pattern>
+            <url-pattern>/GDCP/sesionJefe/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>jefe</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>coordpisJDBCRealm</realm-name>
+        <form-login-config>
+            <form-login-page>/sinSesion/index.xhtml</form-login-page>
+            <form-error-page>/sinSesion/index.xhtml</form-error-page>
+        </form-login-config>
+    </login-config>
+    <security-role>
+        <description/>
+        <role-name>administrador</role-name>
+    </security-role>
+    <security-role>
+        <description/>
+        <role-name>coordinador</role-name>
+    </security-role>
+    <security-role>
+        <description/>
+        <role-name>jefe</role-name>
+    </security-role>
 </web-app>

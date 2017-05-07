@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <br rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}"/>
+        <br rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}"/>
+        <center><h:outputLabel rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}" value="Sin conexión con el gestor documental" style="font-size: 17px; font-weight: bold;" /></center>
+        <center><h:outputLabel rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}" value="Por favor compruebe que el gestor documental este disponible" style="font-size: 17px; font-weight: bold;" /></center>
+        
+        <h:form id="formListaDocumentos" rendered="#{registroOfertaAcademicaController.comprobarConexionOpenKM}">  
+            <br/>
+            <p:outputLabel value="Buscar documento: " style="font-weight: bold; color: #000000"/>
+
+            <p:inputText   style="width: 300px" placeholder="Nombre del documento" value="#{registroOfertaAcademicaController.datos}">
+                <p:ajax update="datalist"  event="keyup" />
+            </p:inputText>  
+            <p:dataTable value="#{registroOfertaAcademicaController.listadoOfertasAcademicas}" 
+                         id="datalist" paginator="true"
+                         rowKey="#{item.id}" paginatorPosition="top"
+                         rows="10" emptyMessage="Sin documentos "
+                         rowsPerPageTemplate="10,20,30,40,50"
+                         var="ofertaAcademica">
+                <p:column>
+                    <f:facet name="header">
+                        <p:outputLabel value="Nombre del documento"/>
+                    </f:facet>
+                    <h:graphicImage width="15" height="20" library="img" name="pdf-icon.png"/>
+                    <p:outputLabel value="  #{registroOfertaAcademicaController.nombreDelArchivo(ofertaAcademica.getPath())}"/>
+                </p:column>
+                <p:column style="width: 360px" >
+                    <f:facet name="header">
+                        Fecha de creación
+                    </f:facet>
+                    <p:outputLabel value="#{registroOfertaAcademicaController.fecha(ofertaAcademica.getCreated())}"/>
+                </p:column>
+                <p:column style="text-align: center; background: #C8CDD6; width: 140px">
+                    <f:facet name="header">
+                        Acciones
+                    </f:facet>
+                    <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" value="Descargar" icon="ui-icon-arrowthickstop-1-s" title="Descargar" >
+                        <p:fileDownload value="#{registroOfertaAcademicaController.descargarDocumento(ofertaAcademica)}" />
+                    </p:commandButton>
+                    <p:commandButton value="Ver" action="#{registroOfertaAcademicaController.visualizarDocumento(ofertaAcademica)}" icon="ui-icon-search" title="Ver"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <p:dialog widgetVar="visualizarPDF" modal="true">
+            <h:form id="visualizacion">
+               <h3>PDF</h3>
+            <p:media value="#{registroOfertaAcademicaController.streamedContent}" width="750" height="560" player="pdf" />
+            </h:form>
+
+            
+        </p:dialog>
+
+        <script type="text/javascript">
+            function start() {
+                PF('cargando').show();
+            }
+
+            function stop() {
+                PF('cargando').hide();
+            }
+        </script>
+    </h:body>   
+
+</html>
+

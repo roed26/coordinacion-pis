@@ -16,8 +16,8 @@
                     <p:column>
                         <p:selectOneRadio id="opcionRegistro" value="Si" 
                                           valueChangeListener="#{registroOfertaAcademicaController.registroInicial}">
-                            <f:selectItem itemLabel="Oferta academica prematricula" itemValue="Si"/>
-                            <f:selectItem itemValue="No" itemLabel="Oferta academica prematricula"/>
+                            <f:selectItem itemLabel="Oferta académica prematricula" itemValue="Si"/>
+                            <f:selectItem itemValue="No" itemLabel="Oferta académica posmatricula"/>
                             <f:ajax execute="opcionRegistro" render="wzd "/>
                         </p:selectOneRadio>    
 
@@ -25,9 +25,9 @@
                 </p:row>
             </p:panelGrid>
             <p:separator/>
-            <p:panelGrid styleClass="panelgrid" >
+            <p:panelGrid id="panelgridPeriodo" styleClass="panelgrid" >
                 <p:row>
-                    <p:column colspan="2">
+                    <p:column colspan="3">
                         <p:outputLabel style="font-weight: bold; color: #000000" 
                                        value="Diligencie el siguiente formulario, tenga en cuenta los campos obligatorios ("/>
                         <p:outputLabel value="*" style="color: #ff5252"/>
@@ -36,13 +36,19 @@
                 </p:row>
                 <p:row>
                     <p:column>
-                        <p:outputLabel value="Periodo académico" style="font-weight: bold; color: #000000"/>
+                        <p:outputLabel value="Periodo académico"
+                                       style="font-weight: bold; color: #000000"/>
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>
                         <p:inputText id="periodoAcademico" required="true" requiredMessage="Campo obligatorio"
                                      value="#{registroOfertaAcademicaController.periodoOfertaAcademica}">
+                            <p:ajax event="keyup" update="msgPeriodo"/>
                         </p:inputText>
+                        
+                    </p:column>
+                    <p:column>
+                        <p:message id="msgPeriodo" for="periodoAcademico"/>
                     </p:column>
                 </p:row>
             </p:panelGrid>
@@ -146,7 +152,8 @@
                                 </p:row>
                             </p:panelGrid>
                         </p:dataGrid>
-                        <p:commandButton rendered="#{registroOfertaAcademicaController.listaDepartamentos.size()==iterador.count}" value="Registrar información" update=":formListaDocumentos:datalist" action="#{registroOfertaAcademicaController.aceptarRegistroDeOferta()}" 
+                        <p:commandButton rendered="#{registroOfertaAcademicaController.listaDepartamentos.size()==iterador.count}" value="Registrar información" update=":formListaDocumentos:datalist" 
+                                         action="#{registroOfertaAcademicaController.aceptarRegistroDeOferta()}" 
                                          onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()"
                                          />
                     </p:tab>

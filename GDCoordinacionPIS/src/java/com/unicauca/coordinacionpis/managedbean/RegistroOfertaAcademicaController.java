@@ -97,13 +97,14 @@ public class RegistroOfertaAcademicaController implements Serializable {
         this.conexionOpenKM = new ConexionOpenKM();
         this.okm = conexionOpenKM.getOkm();
         registroInicialOferta = true;
+        periodoOfertaAcademica = asignarPeriodo();
 
     }
 
     @PostConstruct
     public void init() {
         listaDepartamentos = ejbDepartamento.findAll();
-        periodoOfertaAcademica = asignarPeriodo();
+        
 
         try {
 
@@ -268,11 +269,12 @@ public class RegistroOfertaAcademicaController implements Serializable {
     public void aceptarRegistroDeOferta() {
 
         Document okmDocument = new Document();
-        
 
         try {
             boolean existeFolder = false;
             boolean existeCategoria = false;
+            boolean existeFolderPeriodo = false;
+
             for (Folder fld : okm.getFolderChildren("/okm:root")) {
                 if (fld.getPath().equalsIgnoreCase("/okm:root/Oferta academica")) {
                     existeFolder = true;
@@ -283,21 +285,29 @@ public class RegistroOfertaAcademicaController implements Serializable {
                     existeCategoria = true;
                 }
             }
+            for (Folder fld : okm.getFolderChildren("/okm:root")) {
+                if (fld.getPath().equalsIgnoreCase("/okm:root/Oferta academica/Periodo-" + periodoOfertaAcademica)) {
+                    existeFolderPeriodo = true;
+                }
+            }
             if (registroInicialOferta) {
                 generarPDFPre();
                 File initialFile = new File("D:\\" + periodoOfertaAcademica + "-pre.pdf");
                 InputStream targetStream = new FileInputStream(initialFile);
                 if (!existeFolder) {
                     okm.createFolderSimple("/okm:root/Oferta academica");
-                    okm.createDocumentSimple("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", targetStream);
-                } else {
-                    okm.createDocumentSimple("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", targetStream);
                 }
-                if (!existeCategoria) {
+                /*if (!existeCategoria) {
                     okm.createFolderSimple("/okm:categories/Oferta academica");
                     okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", "/okm:categories/Oferta academica");
                 } else {
                     okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", "/okm:categories/Oferta academica");
+                }*/
+                if (!existeFolderPeriodo) {
+                    okm.createFolderSimple("/okm:root/Oferta academica/Periodo-" + periodoOfertaAcademica);
+                    okm.createDocumentSimple("/okm:root/Oferta academica/Periodo-" + periodoOfertaAcademica + "/Oferta académica-" + periodoOfertaAcademica + "-prematricula.pdf", targetStream);
+                } else {
+                    okm.createDocumentSimple("/okm:root/Oferta academica/Periodo-" + periodoOfertaAcademica + "/Oferta académica-" + periodoOfertaAcademica + "-prematricula.pdf", targetStream);
                 }
             } else {
                 generarPDFPos();
@@ -450,7 +460,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
             for (int i = 0; i < listaDepartamentos.size(); i++) {
                 document.add(new Paragraph(listaDepartamentos.get(i).getNombre()));
                 document.add(new Paragraph("\n"));
-                document.add(crearTablaCursoPorDepartamento(listaDepartamentos.get(i)));
+                document.add(crearTablaCursoPorDepartamentoPrematricula(listaDepartamentos.get(i)));
 
                 document.add(new Paragraph("\n"));
             }
@@ -465,7 +475,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
         }
         return document;
     }
-    
+
     private Document generarPDFPos() {
 
         Document document = new Document(PageSize.A4);
@@ -500,7 +510,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
             for (int i = 0; i < listaDepartamentos.size(); i++) {
                 document.add(new Paragraph(listaDepartamentos.get(i).getNombre()));
                 document.add(new Paragraph("\n"));
-                document.add(crearTablaCursoPorDepartamento(listaDepartamentos.get(i)));
+                document.add(crearTablaCursoPorDepartamentoPosmatricula(listaDepartamentos.get(i)));
 
                 document.add(new Paragraph("\n"));
             }
@@ -516,7 +526,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
         return document;
     }
 
-    public PdfPTable crearTablaCursoPorDepartamento(Departamento departamento) {
+    public PdfPTable crearTablaCursoPorDepartamentoPosmatricula(Departamento departamento) {
         List<Materia> listadoCursos = departamento.getMateriaList();
         // a table with three columns
 
@@ -531,6 +541,71 @@ public class RegistroOfertaAcademicaController implements Serializable {
         //table.addCell(cell);
         // now we add a cell with rowspan 2
         if (listadoCursos.get(0).getSemestre() != null) {
+            float[] columnWidths = {2, 5, 7, 5, 5, 5, 5};
+            table = new PdfPTable(columnWidths);
+            table.setWidthPercentage(100);
+            cell = new PdfPCell(new Phrase("Sem"));
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            table.addCell(cell);
+        } else {
+            table = new PdfPTable(4);
+        }
+        cell = new PdfPCell(new Phrase("Código materia"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Nombre materia"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Número de grupos cancelados"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Número de grupos ofertados"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Número de grupos fusionados"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Número de grupos nuevos"));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+        /*table.addCell("Nombre materia");
+        table.addCell("Numero aprox. estudiantes");
+        table.addCell("Cursos solicitados");*/
+        for (int i = 0; i < listadoCursos.size(); i++) {
+            if (listadoCursos.get(i).getSemestre() != null) {
+                table.addCell(listadoCursos.get(i).getSemestre());
+            }
+            table.addCell(listadoCursos.get(i).getCodigoMateria());
+            table.addCell(listadoCursos.get(i).getNombreMateria());
+            table.addCell("" + listadoCursos.get(i).getGruposCancelados());
+            table.addCell("" + listadoCursos.get(i).getGruposOfertados());
+            table.addCell("" + listadoCursos.get(i).getGruposFusionados());
+            table.addCell("" + listadoCursos.get(i).getGruposNuevos());
+
+        }
+
+        return table;
+    }
+    public PdfPTable crearTablaCursoPorDepartamentoPrematricula(Departamento departamento) {
+        List<Materia> listadoCursos = departamento.getMateriaList();
+        // a table with three columns
+
+        PdfPTable table;
+
+        // the cell object
+        PdfPCell cell;
+        // we add a cell with colspan 3
+        //cell = new PdfPCell(new Phrase(departamento.getNombre()));
+        //cell.setColspan(3);
+        //cell.setBackgroundColor(BaseColor.GRAY);
+        //table.addCell(cell);
+        // now we add a cell with rowspan 2
+        if (!listadoCursos.get(0).getSemestre().equalsIgnoreCase("")) {
             float[] columnWidths = {2, 5, 7, 5, 5};
             table = new PdfPTable(columnWidths);
             table.setWidthPercentage(100);
@@ -559,7 +634,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
         table.addCell("Numero aprox. estudiantes");
         table.addCell("Cursos solicitados");*/
         for (int i = 0; i < listadoCursos.size(); i++) {
-            if (listadoCursos.get(i).getSemestre() != null) {
+            if (!listadoCursos.get(i).getSemestre().equalsIgnoreCase("")) {
                 table.addCell(listadoCursos.get(i).getSemestre());
             }
             table.addCell(listadoCursos.get(i).getCodigoMateria());

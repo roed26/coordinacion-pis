@@ -19,16 +19,13 @@
                     </div>
                     <div class="borde-redondo"></div>
                 </div>
-                <div class="tituloHeaderImg">
-                    <h:graphicImage width="260" height="120" library="img" name="img-header.png"/>
-                </div>
+                
                 <div class="tituloHeader">
                     <h:outputLabel value="Gestor documental" style="font-weight: bold;
-                                   font-size: 35px; font-family: serif "/>
-                    <br/>
+                                   font-size: 20px; font-family: serif; padding: 30px; "/>
                     <br/>
                     <h:outputLabel value="Programa de ingeniería de sistemas" style="font-weight: bold;
-                                   font-size: 35px; font-family: serif"/>
+                                   font-size: 20px; font-family: serif; padding: 30px "/>
                 </div>
 
                 <div class="CuadroDeBotonesSesion">
@@ -36,17 +33,18 @@
                         <h:form style="width: auto">
                             <h:link id="opcionesusuario" style="text-decoration: none;color:#FFFFFF; ">
 
-                                <p:graphicImage value="#{usuarioSessionController.imagenFlujo}" style="border-radius:20px;" width="35"  height="35" >
-                                    <f:param name="id" value="#{usuarioSessionController.identificacion}" />
+                                <p:graphicImage value="#{sesionController.imagenFlujo}" style="border-radius:20px;" width="35"  height="35" >
+                                    <f:param name="id" value="#{sesionController.identificacion}" />
                                 </p:graphicImage> 
-
+                                    #{sesionController.paraMostrar()}
                             </h:link>
                             <p:menu  overlay="true"  trigger="opcionesusuario" my="right top" at="right bottom" >
                                 <p:menuitem value="Mi Perfil" 
                                             ajax="false"
                                             />
                                 <p:separator/>
-                                <p:menuitem value="Cerrar Sesión" action="#{sessionController.logout()}"/>
+                                <p:menuitem rendered="#{sesionController.grupo.equalsIgnoreCase('2')}" value="Opciones de administrador" />
+                                <p:menuitem value="Cerrar Sesión" action="#{sesionController.logout()}"/>
                             </p:menu>
 
                         </h:form>

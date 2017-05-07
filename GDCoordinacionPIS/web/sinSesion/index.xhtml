@@ -8,7 +8,7 @@
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        
+
         <h:outputStylesheet name="./css/iniciosesion.css"/>
 
         <title>Gestor documental Coordinación PIS</title>
@@ -39,63 +39,79 @@
                 <center>
                     <br/>
                     <br/>
-                <p:panelGrid style="text-align: left" styleClass="panelgrid" class="transparentBackground" >
-                    <p:row >
-                        <p:column >
-                            <p:outputLabel style="font-weight: bold; font-size: 17px;" value="Nombre de Usuario" />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="nombreUsuario"  label="NombreUsuario" />
-                        </p:column>
-                    </p:row>
-                    <p:row>
-                        <p:column >
-                            <p:outputLabel style="font-weight: bold;" value="Contraseña" />
-                        </p:column>
-                        <p:column>
-                            <p:password id="contrasena"  
-                                        label="contraseña" rendered="true" requiredMessage="Ingrese una contraseña">
-                            </p:password>                          
-                        </p:column>
-                    </p:row>
-                    <p:row>
-                        <p:column colspan="3" style="text-align: center; ">
-                            <br/>                            
-                        </p:column>                        
-                    </p:row>
-                    <p:row>
-                        <p:column colspan="3" style="text-align: center; ">
-                            <br/>
-                            <p:commandButton style="background: gainsboro; width: 150px; color:#000000; font-weight: bold; "
-                                             value="Iniciar sesión" action="#{sessionController.login()}"
-                                             ajax="false"
-                                             />
-                        </p:column>
-                    </p:row>
-                </p:panelGrid>
-            </center>
+                    <p:panelGrid style="text-align: left" styleClass="panelgrid" class="transparentBackground" >
+                        <p:row >
+                            <p:column>
+                                <p:inputText class="userNameClass" value="#{sesionController.nombreDeUsuario}" 
+                                             id="nombreUsuario"  label="NombreUsuario" required="true"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>                        
+                            <p:column>
+                                <p:password id="contrasena"  class="passwordClass" value="#{sesionController.contrasenia}"
+                                            label="contraseña" required="true">
+                                </p:password>                          
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" style="text-align: center; ">
+                                <br/>                            
+                            </p:column>                        
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" style="text-align: center; ">
+                                <br/>
+                                <p:commandButton style="background: gainsboro; width: 150px; color:#000000; font-weight: bold; "
+                                                 value="Iniciar sesión" action="#{sesionController.login()}"
+                                                 ajax="false"
+                                                 />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </center>
             </h:form>
         </div>
         <div id="footersesion">
-                <p:panelGrid styleClass="panelgrid" style="background: transparent">
-                    <p:row>
-                        <p:column >
-                            <p:outputLabel style="color: #ffffff;  " value="Programa Ingeniería de Sistemas"/>
-                        </p:column>
-                    </p:row>
-                    <p:row>
-                        <p:column >
-                            <p:outputLabel style="color: #ffffff;  " value="Facultad de Ingeniería Electrónica y Telecomunicaciones"/>
-                        </p:column>
-                    </p:row>
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel style="color: #ffffff;  " value="Sector Tulcán frente al Centro Deportivo Universitario (CDU)"/>
-                        </p:column>
-                    </p:row>
-                </p:panelGrid>    
+            <p:panelGrid styleClass="panelgrid" style="background: transparent">
+                <p:row>
+                    <p:column >
+                        <p:outputLabel style="color: #ffffff;  " value="Programa Ingeniería de Sistemas"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column >
+                        <p:outputLabel style="color: #ffffff;  " value="Facultad de Ingeniería Electrónica y Telecomunicaciones"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel style="color: #ffffff;  " value="Sector Tulcán frente al Centro Deportivo Universitario (CDU)"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>    
         </div>
+        <p:dialog visible="#{sesionController.errorSesion}" 
+                  resizable="false" width="250"
+                  widgetVar="errorInicioSesion" closable="false"
+                  modal="true" 
+                  style="background: #C8CDD6"
+                  >
+            <p:panelGrid styleClass="panelgrid" style="text-align:center" >
+                <p:row >
+                    <p:column  style="background: #C8CDD6">
+                        <p:outputLabel value="El usuario o la contraseña no son correctos" />            
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column  style="background: #C8CDD6">
+                        <p:commandButton value="Aceptar" 
+                                         onclick="PF('errorInicioSesion').hide()"
+                                         />
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
 
+        </p:dialog>
 
     </h:body>
 

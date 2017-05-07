@@ -178,9 +178,9 @@ input:focus {
 
 .tituloHeader
 {
-    padding: 5px;
+    padding: 22px;
     color: #FFFFFF;
-    text-align: center;
+    text-align: left;
 
 }
 .tituloHeaderImg

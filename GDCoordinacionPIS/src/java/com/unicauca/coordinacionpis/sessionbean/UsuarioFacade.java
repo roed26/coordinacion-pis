@@ -6,9 +6,11 @@
 package com.unicauca.coordinacionpis.sessionbean;
 
 import com.unicauca.coordinacionpis.entidades.Usuario;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,6 +29,25 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
 
     public UsuarioFacade() {
         super(Usuario.class);
+    }
+    
+    public Usuario buscarUsuarioPorNombreDeUsuario(String nombreUsuario) {
+
+        Query query = getEntityManager().createNamedQuery("Usuario.findByUsunombreusuario");
+        query.setParameter("usunombreusuario", nombreUsuario);
+        List<Usuario> resultList = query.getResultList();
+        if (resultList.size() > 0) {
+            return resultList.get(0);
+        } else {
+            return null;
+        }
+    }
+    
+    public List<Usuario> buscarPorIdUsuario(Long usuid) {
+        Query query = getEntityManager().createNamedQuery("Usuario.findByUsuid");
+        query.setParameter("usuid", usuid);
+        List<Usuario> resultList = query.getResultList();
+        return resultList;
     }
     
 }
