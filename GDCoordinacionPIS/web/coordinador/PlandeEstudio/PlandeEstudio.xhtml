@@ -57,7 +57,7 @@ and open the template in the editor.
                         <p:fileDownload value="#{registroPlandeEstudioController.descargarDocumento(dato)}" />
                     </p:commandButton>                    
                     <!--<p:commandButton value="Ver" action="{registroPlandeEstudioController.show(dato)}" icon="ui-icon-search" title="Ver"/>-->  
-                    <p:commandLink value="ver" action="#{registroPlandeEstudioController.visualizarDocumento(dato)}" ajax="false" target="_blank" style="background-color: gainsboro;padding: 2px 15px 2px 15px; border-radius: 2px; text-decoration: none"></p:commandLink>
+                    <p:commandLink styleClass="btn" value="ver" action="#{registroPlandeEstudioController.visualizarDocumento(dato)}" ajax="false" target="_blank" style="background-color: gainsboro;padding: 2px 15px 2px 15px; border-radius: 2px; text-decoration: none"></p:commandLink>
                 </p:column>
             </p:dataTable>
         </h:form>

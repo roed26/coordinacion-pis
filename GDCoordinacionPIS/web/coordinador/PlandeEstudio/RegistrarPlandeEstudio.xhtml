@@ -102,12 +102,12 @@ and open the template in the editor.
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>
-                        <p:inputText id="numPlanEstudio" type="number"  maxlength="3" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.numero}" required="true" requiredMessage="Campo Número Plan de Estudio obligatorio" >
+                        <p:spinner id="numPlanEstudio" maxlength="3" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.numero}" required="true" requiredMessage="Campo Número Plan de Estudio obligatorio" min="0">
                             <f:ajax event="change" render="msgNumPlan" /> 
                             <f:ajax event="keyup" render="msgNumPlan" /> 
                             <!--Validar que el campo del número del plan de estudio sea mayor que cero-->
                             <f:validator validatorId="validarCampoNumeroPlanEstudio" rendered="msgNumPlan"/>
-                        </p:inputText>
+                        </p:spinner>
                     </p:column>                   
                 </p:row>
                 <p:row>
@@ -123,6 +123,7 @@ and open the template in the editor.
                     <p:column>
                         <p:inputText id="acPlanEstudio" maxlength="30" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.acuerdo}" required="true" requiredMessage="Campo Acuerdo Plan de Estudio obligatorio" validatorMessage="Longitud m&#237;n: 5 caracteres, m&#225;x 30 caracteres. ">
                             <!--Validar el tamaño del dato ingresado en el campo, cada ves que se presione una tecla-->
+                            <p:watermark for="acPlanEstudio" value="Acuerdo 062 de 2008 / CA" id="watermark" />
                             <f:ajax event="keyup" render="msgAcPlan"/>
                             <f:validateLength minimum="5"/>
                         </p:inputText>
@@ -139,7 +140,7 @@ and open the template in the editor.
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>                        
-                        <p:calendar  value="#{registroPlandeEstudioController.metadatosPlandeEstudio.vigencia}" id="vigPlanEstudio" onkeypress="return false"  navigator="true" pattern="dd-MM-yyyy" required="true" requiredMessage="Campo Vigencia Plan de Estudio obligatorio" placeholder="dd/mm/aaaa" mindate="#{registroPlandeEstudioController.fechaActual()}"/>
+                        <p:calendar  value="#{registroPlandeEstudioController.metadatosPlandeEstudio.vigencia}" id="vigPlanEstudio" onkeypress="return false"  navigator="true" pattern="dd-MM-yyyy" required="true" requiredMessage="Campo Vigencia Plan de Estudio obligatorio" placeholder="dd/mm/aaaa"/>
                     </p:column>                   
                 </p:row>
                 <p:row>
@@ -154,7 +155,7 @@ and open the template in the editor.
                 </p:row>
                 <p:row>
                     <p:column colspan="2">
-                        <p:commandButton value="Agregar" action="#{registroPlandeEstudioController.aceptarRegistroPlanEstudio()}" update=":formMetadatosPlanEstudio:msg,:formPlanesdeEstudio:lstPlanesEstudio" style="width: 80px;height:25px"/>
+                        <p:commandButton value="Agregar" action="#{registroPlandeEstudioController.aceptarRegistroPlanEstudio()}" update=":formMetadatosPlanEstudio:msg,:formPlanesdeEstudio:lstPlanesEstudio" style="width: 80px;height:25px" onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()"/>
                         <p:spacer width="30%" height="10"/>                                                
                         <p:commandButton value="Cancelar" style="margin-left: 25%;width: 80px;height: 25px"  action="#{registroPlandeEstudioController.cancelarRegistroPlanEstudio()}" onclick="PF('dlgRegistroPlandeEstudio').hide()" />
                     </p:column>

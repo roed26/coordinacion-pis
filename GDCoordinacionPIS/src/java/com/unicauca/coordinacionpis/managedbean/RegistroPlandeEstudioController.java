@@ -164,6 +164,8 @@ public class RegistroPlandeEstudioController implements Serializable {
         FacesMessage message = null;
 
         try {
+            listaDocs();
+            rc.update("lstPlanesEstudio");
             boolean existeFolder = false;
             boolean existeDocumento = false;
 
@@ -191,7 +193,16 @@ public class RegistroPlandeEstudioController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, message);
             rc.update("formMetadatosPlanEstudio");//Actualizar el formulario de registro
             rc.execute("PF('dlgRegistroPlandeEstudio').hide()");//Cerrar el dialog que contiene el formulario
+            
             limpiarVariables();
+
+            rc.update("formSeleccionarArchivoPlanEstudio");
+            rc.update("formArchivoSelecionadoPlanEstudio");
+            rc.update("formMetadatosPlanEstudio");//Actualizar el formulario de registro
+            rc.execute("PF('dlgRegistroPlandeEstudio').hide()");//Cerrar el dialog que contiene el formulario
+            listaDocs();
+            rc.update("lstPlanesEstudio");
+            
         } catch (PathNotFoundException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RepositoryException ex) {
@@ -309,6 +320,7 @@ public class RegistroPlandeEstudioController implements Serializable {
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
         nombreArchivo = "";
         archivoPlan = null;
+        exitoSubirArchivo = false;
     }
 
     private boolean existeCarpeta() throws PathNotFoundException, RepositoryException, DatabaseException, UnknowException, WebserviceException {
