@@ -45,6 +45,7 @@
             <description/>
             <url-pattern>/GDCP/coordinador/*</url-pattern>
             <url-pattern>/GDCP/sesionCoordinador/*</url-pattern>
+            <url-pattern>/GDCP/administrador/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>

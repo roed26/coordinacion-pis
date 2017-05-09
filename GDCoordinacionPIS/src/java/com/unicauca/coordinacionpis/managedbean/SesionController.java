@@ -35,12 +35,17 @@ public class SesionController implements Serializable {
     private String nombreDeUsuario;
     private String contrasenia;
     private String identificacion;
-    private boolean haySesion;
-    private boolean errorSesion;
     private String grupo;
 
-    public SesionController() {
+    //bools
+    private boolean haySesion;
+    private boolean errorSesion;
+    private boolean opcionesCoordinador;
+    private boolean opcionesAdministrador;
 
+    public SesionController() {
+        opcionesAdministrador = false;
+        opcionesCoordinador = true;
     }
 
     public String getNombreDeUsuario() {
@@ -90,7 +95,22 @@ public class SesionController implements Serializable {
     public void setGrupo(String grupo) {
         this.grupo = grupo;
     }
-    
+
+    public boolean isOpcionesCoordinador() {
+        return opcionesCoordinador;
+    }
+
+    public void setOpcionesCoordinador(boolean opcionesCoordinador) {
+        this.opcionesCoordinador = opcionesCoordinador;
+    }
+
+    public boolean isOpcionesAdministrador() {
+        return opcionesAdministrador;
+    }
+
+    public void setOpcionesAdministrador(boolean opcionesAdministrador) {
+        this.opcionesAdministrador = opcionesAdministrador;
+    }
 
     public void login() throws IOException, ServletException {
         RequestContext requestContext = RequestContext.getCurrentInstance();
@@ -202,6 +222,23 @@ public class SesionController implements Serializable {
                 return new DefaultStreamedContent(new ByteArrayInputStream(usu.getUsufoto()));
             }
         }
+    }
+
+    public void modficarOpciones(String opcion, CargarFormularioController cargarFormularioController, AddNavegacionController addNavegacionController) {
+        if (opcion.equalsIgnoreCase("coordinador")) {
+            opcionesAdministrador = false;
+            opcionesCoordinador = true;
+        } else {
+            opcionesAdministrador = true;
+            opcionesCoordinador = false;
+        }
+        cargarFormularioController.setRuta("");
+        addNavegacionController.cambioDeOpciones();
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.update("formMenu");
+        requestContext.update("formMenuUsuario");
+        requestContext.update("panelContent");
+        requestContext.update("navegacion");
     }
 
 }

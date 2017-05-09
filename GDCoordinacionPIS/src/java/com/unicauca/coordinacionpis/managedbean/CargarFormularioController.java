@@ -19,8 +19,12 @@ public class CargarFormularioController implements Serializable {
         return ruta;
     }
 
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
+    
     public CargarFormularioController() {
-
+        
     }
 
     public void cargarGestionOfertaAcademica() {
@@ -28,11 +32,11 @@ public class CargarFormularioController implements Serializable {
     }
     
     public void cargarRegistrarDepartamento() {
-        this.ruta = "/coordinador/departamento/listarDepartamento.xhtml";
+        this.ruta = "/administrador/departamento/listarDepartamento.xhtml";
     }
 
     public void cargarRegistrarMateria() {
-        this.ruta = "/coordinador/materia/ListarMaterias.xhtml";
+        this.ruta = "/administrador/materia/ListarMaterias.xhtml";
     }
 
     public void cargarPlanesdeEstudio() {
@@ -46,5 +50,9 @@ public class CargarFormularioController implements Serializable {
     //jefe
     public void cargarListaOfertaAcademica() {
         this.ruta = "/jefe/OfertaAcademica/ofertasAcademicas.xhtml";
+    }
+    
+    public void cargarPerfilUsuario() {
+        this.ruta = "/perfilUsuario.xhtml";
     }
 }

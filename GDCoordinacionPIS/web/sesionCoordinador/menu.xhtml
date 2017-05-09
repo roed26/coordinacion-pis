@@ -4,15 +4,13 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-   
+
     <h:body>
         <div id="contenidoMenu">
             <h:form id="formMenu">
-                <p:menubar >
+                <p:menubar rendered="#{sesionController.opcionesCoordinador}" >
                     <p:submenu label="Oferta académica">
                         <p:menuitem value="Gestión de ofertas académicas" action="#{cargarFormulariosController.cargarGestionOfertaAcademica()}"  actionListener="#{addNavegacionController.addOfertaAcademicaGestion()}" ajax="false"/>
-                        <p:menuitem value="Registrar departameto o facultad" action="#{cargarFormulariosController.cargarRegistrarDepartamento()}" actionListener="#{addNavegacionController.addOfertaAcademicaRegistroDepFac()}" ajax="false"/>
-                        <p:menuitem value="Registrar materia" action="#{cargarFormulariosController.cargarRegistrarMateria()}"  actionListener="#{addNavegacionController.addOfertaAcademicaRegistroMaterias()}" ajax="false"/>                        
                     </p:submenu>    
                     <p:submenu label="Planes de Estudio">
                         <p:menuitem value="Gesti&#243;n Planes de Estudio" action="#{cargarFormulariosController.cargarPlanesdeEstudio()}" actionListener="#{addNavegacionController.addPlanesDeEstudioGestion()}" ajax="false"/>                        
@@ -20,6 +18,18 @@
                     <p:submenu label="Anteproyecto">
                         <p:menuitem value="Gestión de anteproyectos" action="#{cargarFormulariosController.cargarGestionAnteproyecto()}" actionListener="#{addNavegacionController.addAnteproyectoGestion()}" ajax="false"/>
                     </p:submenu>
+                </p:menubar>
+                <p:menubar rendered="#{sesionController.opcionesAdministrador}" >
+                    <p:submenu label="Materias">
+                        <p:menuitem value="Registrar materia" action="#{cargarFormulariosController.cargarRegistrarMateria()}"  actionListener="#{addNavegacionController.addOfertaAcademicaRegistroMaterias()}" ajax="false"/>                        
+                    </p:submenu>    
+                    <p:submenu label="Departamentos  y facultades">
+                        <p:menuitem value="Registrar departameto o facultad" action="#{cargarFormulariosController.cargarRegistrarDepartamento()}" actionListener="#{addNavegacionController.addOfertaAcademicaRegistroDepFac()}" ajax="false"/>
+                    </p:submenu>
+                    <p:submenu label="Usuarios">
+
+                    </p:submenu>  
+
                 </p:menubar>
             </h:form>
         </div>

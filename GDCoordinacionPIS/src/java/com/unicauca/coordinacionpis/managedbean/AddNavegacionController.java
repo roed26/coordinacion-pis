@@ -54,6 +54,7 @@ public class AddNavegacionController implements Serializable {
         this.menuNavegacion.addElement(ofertaAcademicaGestion);
 
     }
+
     public void addOfertaAcademicaLista() {
         this.menuNavegacion = new DefaultMenuModel();
         DefaultMenuItem index = new DefaultMenuItem();
@@ -137,6 +138,18 @@ public class AddNavegacionController implements Serializable {
         this.menuNavegacion.addElement(anteproyecto);
         this.menuNavegacion.addElement(anteproyectoGestion);
 
+    }
+
+    public void cambioDeOpciones() {
+        this.menuNavegacion = new DefaultMenuModel();
+        DefaultMenuItem index = new DefaultMenuItem();
+        index.setValue("Index");
+
+        DefaultMenuItem inicio = new DefaultMenuItem();
+        inicio.setValue("Inicio");
+
+        this.menuNavegacion.addElement(index);
+        this.menuNavegacion.addElement(inicio);
     }
 
 }

@@ -7,7 +7,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-    <p:dialog widgetVar="dlgRegistroOfertaAcedemica" modal="true" width="900" height="500"  position="260,50"  
+    <p:dialog resizable="false" widgetVar="dlgRegistroOfertaAcedemica" modal="true" width="900" height="500"  position="260,50"  
               closable="false" header="Registro de oferta académica"> 
 
         <h:form id="formMetadatosOfertaAcademica">
@@ -41,22 +41,29 @@
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>
-                        <p:inputText id="periodoAcademico" required="true" requiredMessage="Campo obligatorio"
-                                     value="#{registroOfertaAcademicaController.periodoOfertaAcademica}">
-                            <p:ajax event="keyup" update="msgPeriodo"/>
-                        </p:inputText>
-                        
+                        <p:selectOneMenu style="width: 60px" filter="true" id="anioPeriodoAcademico" required="true" requiredMessage="Campo obligatorio"
+                                         value="#{registroOfertaAcademicaController.anioOfertaAcademica}" >
+                            
+                            <f:selectItems value="#{registroOfertaAcademicaController.aniosDisponibles}" var="fecha" itemLabel="#{fecha}" itemValue="#{fecha}"/>
+                        </p:selectOneMenu>                  
+                        <p:outputLabel value="-"/>
+                        <p:selectOneMenu style="width: 50px" id="periodoAcademico" required="true" requiredMessage="Campo obligatorio"
+                                         value="#{registroOfertaAcademicaController.periodoOfertaAcademica}">
+                            
+                            <f:selectItem itemLabel="I" itemValue="I"/>
+                            <f:selectItem itemLabel="II" itemValue="II"/>
+                        </p:selectOneMenu>                        
                     </p:column>
                     <p:column>
                         <p:message id="msgPeriodo" for="periodoAcademico"/>
                     </p:column>
                 </p:row>
             </p:panelGrid>
-            <p:wizard id="wzd" nextLabel="Siguiente" backLabel="Anterior">
+            <p:tabView id="wzd" >
                 <c:forEach items='#{registroOfertaAcademicaController.listaDepartamentos}' var='departamento' varStatus="iterador">
-                    <p:tab title="#{departamento.nombre}">
-                        <p:panelGrid id="pnlgCabeceraRegistro" 
-                                     rendered="#{registroOfertaAcademicaController.registroInicialOferta}">
+                    <p:tab title="#{departamento.nombre}" >
+                        <p:panelGrid  id="pnlgCabeceraRegistro" 
+                                      rendered="#{registroOfertaAcademicaController.registroInicialOferta}">
                             <p:row>
                                 <p:column style="width: 150px; background: #C8CDD6">
                                     <p:outputLabel value="Materia" style="font-weight: bold; color: #000000"/>
@@ -78,17 +85,29 @@
                                         <p:outputLabel value="#{materia.nombreMateria}" style="font-weight: bold; color: #000000"/>
                                     </p:column>
                                     <p:column style="width: 183px;">
-                                        <p:inputText id="estudiantesCalI" required="true" requiredMessage="Campo obligatorio"
+                                        <p:inputText id="numEstudiantes" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.numeroEstudiantes}">
                                             <f:validator validatorId="ValidarCampoNumerico"/>
+                                            <p:ajax event="keyup" update="msgEstudiantes numEstudiantes"/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
-                                        <p:inputText id="solicitadosCalI" required="true" requiredMessage="Campo obligatorio"
+                                        <p:inputText id="solicitados" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposSolicitados}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
-
+                                            <p:ajax event="keyup" update="msgSolicitados solicitados"/>
                                         </p:inputText>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column style="width: 150px;">
+
+                                    </p:column>
+                                    <p:column style="width: 183px;">
+                                        <p:message id="msgEstudiantes" for="numEstudiantes"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:message id="msgSolicitados" for="solicitados"/>
                                     </p:column>
                                 </p:row>
                             </p:panelGrid>
@@ -127,42 +146,73 @@
                                         <p:inputText id="cancelados" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposCancelados}">
                                             <f:validator validatorId="ValidarCampoNumerico"/>
+                                            <p:ajax event="keyup" update="msgCancelados cancelados"/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
                                         <p:inputText id="ofertados" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposOfertados}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
-
+                                            <p:ajax event="keyup" update="msgOfertados ofertados"/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
                                         <p:inputText id="fusionados" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposFusionados}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
-
+                                            <p:ajax event="keyup" update="msgFusionados fusionados"/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
                                         <p:inputText id="nuevos" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposNuevos}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
+                                            <p:ajax event="keyup" update="msgNuevos nuevos"/>
                                         </p:inputText>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column style="width: 150px" >
+
+                                    </p:column>
+                                    <p:column>
+                                        <p:message id="msgCancelados" for="cancelados"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:message id="msgOfertados" for="ofertados" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:message id="msgFusionados" for="fusionados" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:message id="msgNuevos" for="nuevos"/>
                                     </p:column>
                                 </p:row>
                             </p:panelGrid>
                         </p:dataGrid>
-                        <p:commandButton rendered="#{registroOfertaAcademicaController.listaDepartamentos.size()==iterador.count}" value="Registrar información" update=":formListaDocumentos:datalist" 
+                    </p:tab>
+                </c:forEach>
+            </p:tabView>
+            <p:growl id="messagesGuardar" showDetail="true" />
+
+            <p:separator/>
+            <p:toolbar id="tb">                
+                <f:facet name="left"><center>
+                        <p:commandButton value="Registrar información" 
+                                         update=":formListaDocumentos:datalist" 
                                          action="#{registroOfertaAcademicaController.aceptarRegistroDeOferta()}" 
                                          onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()"
                                          />
-                    </p:tab>
-                </c:forEach>
-            </p:wizard>
-            <p:growl id="messagesGuardar" showDetail="true" />
+                        <span class="ui-separator">
+                            <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                        </span>
+                        <p:commandButton value="Cancelar registro" onclick="PF('dlgRegistroOfertaAcedemica').hide()" oncomplete="#{registroOfertaAcademicaController.cancelarRegistroDeOferta()}"/>
+                    </center>
+                </f:facet>
+            </p:toolbar>
         </h:form>
         <h:form>
-            <p:commandButton value="Cancelar registro" action="#{registroOfertaAcademicaController.cancelarRegistroDeOferta()}"/>
+
         </h:form>
     </p:dialog>
     <p:dialog header="Información" modal="true" position="center" widgetVar="mensajeRegistroExitoso" closable="false">
@@ -178,6 +228,14 @@
         <h:form>
             <p:commandButton  value="Aceptar" style="font-weight: normal;"
                               onclick="PF('mensajeError').hide()" />
+        </h:form>
+    </p:dialog>
+
+    <p:dialog header="Error" modal="true" position="center" widgetVar="mensajeErrorRegistro" closable="false">
+        <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
+        <h:form>
+            <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                              onclick="PF('mensajeErrorRegistro').hide()" />
         </h:form>
     </p:dialog>
 
