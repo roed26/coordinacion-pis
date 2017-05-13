@@ -18,7 +18,7 @@ public class MetadatosPlanEstudio {
     private Date vigencia;
 
     public MetadatosPlanEstudio() {
-        numero = 0;
+        numero = 1;
         acuerdo = "";
         vigencia = null;
     }

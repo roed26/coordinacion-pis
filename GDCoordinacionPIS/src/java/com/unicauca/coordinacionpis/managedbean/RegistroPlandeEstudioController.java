@@ -136,7 +136,12 @@ public class RegistroPlandeEstudioController implements Serializable {
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
         limpiarVariables();
         RequestContext rc = RequestContext.getCurrentInstance();
+        rc.update("formSeleccionarArchivoPlanEstudio");
+        rc.update("formArchivoSelecionadoPlanEstudio");
         rc.update("formMetadatosPlanEstudio");
+        
+        
+                
     }
 
     /**
@@ -193,7 +198,7 @@ public class RegistroPlandeEstudioController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, message);
             rc.update("formMetadatosPlanEstudio");//Actualizar el formulario de registro
             rc.execute("PF('dlgRegistroPlandeEstudio').hide()");//Cerrar el dialog que contiene el formulario
-            
+
             limpiarVariables();
 
             rc.update("formSeleccionarArchivoPlanEstudio");
@@ -202,7 +207,7 @@ public class RegistroPlandeEstudioController implements Serializable {
             rc.execute("PF('dlgRegistroPlandeEstudio').hide()");//Cerrar el dialog que contiene el formulario
             listaDocs();
             rc.update("lstPlanesEstudio");
-            
+
         } catch (PathNotFoundException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RepositoryException ex) {
@@ -260,7 +265,7 @@ public class RegistroPlandeEstudioController implements Serializable {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
-        HttpServletResponse response = (HttpServletResponse)facesContext.getExternalContext().getResponse();
+        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 
         try {
             InputStream in = okm.getContent(documento.getPath());
@@ -270,23 +275,22 @@ public class RegistroPlandeEstudioController implements Serializable {
                 return;
             }
             response.reset();
-            
+
             response.setContentType("application/pdf");
 //            response.setHeader("Content-Type", "application/pdf");
             response.addHeader("Content-disposition", "inline; filename=Gen.pdf");
 //            response.setHeader("Cache-Control", "no-cache");
 //            response.setHeader("Content-Length", "Nuevo");
 
-
             output = new BufferedOutputStream(response.getOutputStream(),
-                    5000000);            
+                    5000000);
 
             byte[] buffer = new byte[5000000];
             int length;
             while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
             }
-            output.flush();            
+            output.flush();
 
             FacesContext.getCurrentInstance().responseComplete();
             output.close();
