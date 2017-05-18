@@ -12,7 +12,7 @@ and open the template in the editor.
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 
-    <p:dialog resizable="true" widgetVar="dlgRegistroPlandeEstudio" modal="true"  width="540" height="340" position="425,50"  
+    <p:dialog resizable="false" widgetVar="dlgRegistroPlandeEstudio" modal="true"  width="540" position="425,50"  
               closable="true" showEffect="explode" header="Registro de Plan de Estudio" >
         <p:ajax event="close" listener="#{registroPlandeEstudioController.cancelarRegistroPlanEstudio()}"/>
         <h:outputStylesheet library="css" name="uploadFile.css"/>
@@ -82,7 +82,7 @@ and open the template in the editor.
                     <p:column>
                         <p:spinner id="numPlanEstudio" maxlength="3" min="1" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.numero}" required="true" requiredMessage="Campo Número Plan de Estudio obligatorio"  >
                             <f:ajax event="change" render="msgNumPlan" /> 
-                            <f:ajax event="keyup" render="msgNumPlan" /> 
+                            <p:ajax event="keyup" update="msgNumPlan" /> 
                             <!--Validar que el campo del número del plan de estudio sea mayor que cero-->
                             <f:validator validatorId="validarCampoNumeroPlanEstudio" rendered="msgNumPlan"/>
                         </p:spinner>
@@ -99,9 +99,8 @@ and open the template in the editor.
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>
-                        <p:inputText id="acPlanEstudio" maxlength="30" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.acuerdo}" required="true" requiredMessage="Campo Acuerdo Plan de Estudio obligatorio" validatorMessage="Longitud m&#237;n: 5 caracteres, m&#225;x 30 caracteres. ">
-                            <!--Validar el tamaño del dato ingresado en el campo, cada ves que se presione una tecla-->
-                            <f:ajax event="keyup" render="msgAcPlan"/>
+                        <p:inputText id="acPlanEstudio"   maxlength="30"  value="#{registroPlandeEstudioController.metadatosPlandeEstudio.acuerdo}" required="true" requiredMessage="Campo Acuerdo Plan de Estudio obligatorio" validatorMessage="Longitud m&#237;n: 5 caracteres, m&#225;x 30 caracteres. ">                            
+                            <p:ajax event="keyup" update="msgAcPlan" />
                             <f:validateLength minimum="5"/>
                             <p:watermark for="acPlanEstudio" value="Ejemplo: Acuerdo 062 de 2008 / CA" id="watermark" />                            
                         </p:inputText>
@@ -109,6 +108,7 @@ and open the template in the editor.
                 </p:row>
                 <p:row>
                     <p:column colspan="2">
+                        
                         <p:message id="msgAcPlan" for="acPlanEstudio"/>
                     </p:column>
                 </p:row>
@@ -134,8 +134,7 @@ and open the template in the editor.
                 <p:row>
                     <p:column colspan="2" >
                         <p:commandButton value="Agregar" action="#{registroPlandeEstudioController.aceptarRegistroPlanEstudio()}" update=":formMetadatosPlanEstudio:msg,:formPlanesdeEstudio:lstPlanesEstudio" icon="ui-icon-disk" style="margin-left: 46%;margin-top: 10px;font-size: 80px;width: 100px;height:30px" onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()"/>
-                        <p:spacer width="30%" height="10"/>                                                
-                        <!--<p:commandButton value="Cancelar" style="margin-left: 25%;width: 80px;height: 25px"  action="{registroPlandeEstudioController.cancelarRegistroPlanEstudio()}" onclick="PF('dlgRegistroPlandeEstudio').hide()" />-->
+                        <p:spacer width="30%" height="10"/>                                                                        
                     </p:column>
                 </p:row>
             </p:panelGrid>
