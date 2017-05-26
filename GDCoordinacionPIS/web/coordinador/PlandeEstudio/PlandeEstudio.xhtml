@@ -24,9 +24,9 @@ and open the template in the editor.
         <center><h:outputLabel rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}" value="Sin conexión con el gestor documental" style="font-size: 17px; font-weight: bold;" /></center>
         <center><h:outputLabel rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}" value="Por favor compruebe que el gestor documental este disponible" style="font-size: 17px; font-weight: bold;" /></center>
         <h:form rendered="#{registroPlandeEstudioController.comprobarConexionOpenKM}">
-            <p:commandButton value="Agregar Plan de estudio" onclick="PF('dlgRegistroPlandeEstudio').show()" />
+            <p:commandButton value="Agregar Plan de estudio" onclick="PF('dlgRegistroPlandeEstudio').show()" />             
         </h:form>
-        <h:form  id="formPlanesdeEstudio" rendered="#{registroPlandeEstudioController.comprobarConexionOpenKM}">
+        <h:form id="formPlanesdeEstudio" rendered="#{registroPlandeEstudioController.comprobarConexionOpenKM}">
             <!--Llama al método listaDocs para recuperar los planes de estudio contenidos en openkm-->
             <div onclick="#{registroPlandeEstudioController.listaDocs()}"/>
             <!--Muestra los planes de estudio contenidos en openkm-->
@@ -40,6 +40,7 @@ and open the template in the editor.
                         Nombre del archivo
                     </f:facet>
                     <p:outputLabel value="#{registroPlandeEstudioController.nombreDelArchivo(dato.path)}"/>
+                    
                 </p:column>
 
                 <p:column>
@@ -53,16 +54,15 @@ and open the template in the editor.
                     <f:facet name="header">
                         Acciones
                     </f:facet>
-                    <p:commandButton value="Editar" icon=" ui-icon-pencil" onclick="PF('dlgEditarPlanEstudio').show()"/>
+                    <p:commandButton value="Editar" icon=" ui-icon-pencil" action="#{registroPlandeEstudioController.cargarPlanEstudio(dato)}" onclick="PF('dlgEditarPlanEstudio').show()"/>
                     <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" value="Descargar" icon="ui-icon-arrowthickstop-1-s" title="Descargar" >
                         <p:fileDownload value="#{registroPlandeEstudioController.descargarDocumento(dato)}" />
                     </p:commandButton>                    
                     <!--<p:commandButton value="Ver" action="{registroPlandeEstudioController.show(dato)}" icon="ui-icon-search" title="Ver"/>-->  
-                    <p:commandLink target="_blank"  value="ver" action="#{registroPlandeEstudioController.visualizarDocumento(dato)}" ajax="false"/>
+                    <p:commandLink styleClass="btn" value="ver" action="#{registroPlandeEstudioController.visualizarDocumento(dato)}" ajax="false" target="_blank" style="background-color: gainsboro;padding: 2px 15px 2px 15px; border-radius: 2px; text-decoration: none"></p:commandLink>
                 </p:column>
             </p:dataTable>
         </h:form>
-
         <ui:include src="RegistrarPlandeEstudio.xhtml"/>
         <ui:include src="ActualizarPlanEstudio.xhtml"/>
         <!--        <p:dialog widgetVar="visualizarPDF" modal="true">

@@ -6,7 +6,6 @@
 package com.unicauca.coordinacionpis.managedbean;
 
 import com.openkm.sdk4j.OKMWebservices;
-import com.openkm.sdk4j.OKMWebservicesFactory;
 import com.openkm.sdk4j.bean.Document;
 import com.openkm.sdk4j.bean.Folder;
 import com.openkm.sdk4j.exception.AccessDeniedException;
@@ -15,15 +14,19 @@ import com.openkm.sdk4j.exception.DatabaseException;
 import com.openkm.sdk4j.exception.ExtensionException;
 import com.openkm.sdk4j.exception.FileSizeExceededException;
 import com.openkm.sdk4j.exception.ItemExistsException;
+import com.openkm.sdk4j.exception.LockException;
+import com.openkm.sdk4j.exception.ParseException;
 import com.openkm.sdk4j.exception.PathNotFoundException;
 import com.openkm.sdk4j.exception.RepositoryException;
 import com.openkm.sdk4j.exception.UnknowException;
 import com.openkm.sdk4j.exception.UnsupportedMimeTypeException;
 import com.openkm.sdk4j.exception.UserQuotaExceededException;
+import com.openkm.sdk4j.exception.VersionException;
 import com.openkm.sdk4j.exception.VirusDetectedException;
 import com.openkm.sdk4j.exception.WebserviceException;
 import com.unicauca.coordinacionpis.classMetadatos.MetadatosPlanEstudio;
 import com.unicauca.coordinacionpis.utilidades.ConexionOpenKM;
+import com.unicauca.coordinacionpis.utilidades.Validador;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -37,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
@@ -76,6 +80,7 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     public RegistroPlandeEstudioController() {
         this.formatoFecha = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
         this.metadatosPlandeEstudio = new MetadatosPlanEstudio();
         this.documentosPlanEstudio = new ArrayList<>();
         this.exitoSubirArchivo = false;
@@ -139,9 +144,7 @@ public class RegistroPlandeEstudioController implements Serializable {
         rc.update("formSeleccionarArchivoPlanEstudio");
         rc.update("formArchivoSelecionadoPlanEstudio");
         rc.update("formMetadatosPlanEstudio");
-        
-        
-                
+
     }
 
     /**
@@ -169,8 +172,8 @@ public class RegistroPlandeEstudioController implements Serializable {
         FacesMessage message = null;
 
         try {
-            listaDocs();
-            rc.update("lstPlanesEstudio");
+//            listaDocs();
+//            rc.update("lstPlanesEstudio");
             boolean existeFolder = false;
             boolean existeDocumento = false;
 
@@ -185,7 +188,11 @@ public class RegistroPlandeEstudioController implements Serializable {
             }
             if (existeFolder) {//Si existe la carpeta Planes de Estudio, crea dentro de ella el documento
                 if (!existeDocumento) {
-                    okm.createDocumentSimple("/okm:root/Planes de Estudio/" + nombreArchivo, archivoPlan.getInputstream());//Crear el documento en openkm
+                    okm.createDocumentSimple("/okm:root/Planes de Estudio/" + nombreArchivo, archivoPlan.getInputstream());//Crear el documento en openkm                    
+                    okm.addKeyword("/okm:root/Planes de Estudio/" + nombreArchivo, "" + metadatosPlandeEstudio.getNumero());
+                    okm.addKeyword("/okm:root/Planes de Estudio/" + nombreArchivo, "" + metadatosPlandeEstudio.getAcuerdo());
+                    okm.addKeyword("/okm:root/Planes de Estudio/" + nombreArchivo, "" + formatoFecha.format(metadatosPlandeEstudio.getVigencia()));
+
                     message = new FacesMessage("El archivo", nombreArchivo + " se registro con exito");
                 } else {
                     message = new FacesMessage("Error al registrar el archivo", nombreArchivo);
@@ -193,7 +200,7 @@ public class RegistroPlandeEstudioController implements Serializable {
             } else {//Si la carpeta no existe, la crea y dentro de ella crea el documento.
                 okm.createFolderSimple("/okm:root/Planes de Estudio");//Crear carpeta Planes de Estudio en openkm
                 okm.createDocumentSimple("/okm:root/Planes de Estudio/" + nombreArchivo, archivoPlan.getInputstream());//Crear el documento dentro de la carpeta Planes de Estudio en openkm
-                message = new FacesMessage("El archivo", nombreArchivo + " se registro con exito");
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "El archivo " + nombreArchivo + " se registro con exito");
             }
             FacesContext.getCurrentInstance().addMessage(null, message);
             rc.update("formMetadatosPlanEstudio");//Actualizar el formulario de registro
@@ -204,10 +211,12 @@ public class RegistroPlandeEstudioController implements Serializable {
             rc.update("formSeleccionarArchivoPlanEstudio");
             rc.update("formArchivoSelecionadoPlanEstudio");
             rc.update("formMetadatosPlanEstudio");//Actualizar el formulario de registro
-            rc.execute("PF('dlgRegistroPlandeEstudio').hide()");//Cerrar el dialog que contiene el formulario
+
             listaDocs();
             rc.update("lstPlanesEstudio");
+            rc.execute("PF('dlgRegistroPlandeEstudio').hide()");//Cerrar el dialog que contiene el formulario
 
+//            rc.execute("PF('mensajeInformacionPlanEstudio').show()");
         } catch (PathNotFoundException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RepositoryException ex) {
@@ -236,7 +245,39 @@ public class RegistroPlandeEstudioController implements Serializable {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (VirusDetectedException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (VersionException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (LockException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void cargarPlanEstudio(Document document) {
+        try {
+            RequestContext rc = RequestContext.getCurrentInstance();
+
+            Set<String> palabras = document.getKeywords();
+            for (int i = 0; i < palabras.size(); i++) {
+                if (Validador.esFecha((String) palabras.toArray()[i])) {
+                    String fecha = (String) palabras.toArray()[i];
+                    metadatosPlandeEstudio.setVigencia(formatoFecha.parse(fecha));
+                } else if (Validador.esNumero((String) palabras.toArray()[i])) {
+                    metadatosPlandeEstudio.setNumero(Integer.parseInt((String) palabras.toArray()[i]));
+                } else {
+                    metadatosPlandeEstudio.setAcuerdo((String) palabras.toArray()[i]);
+                }
+            }
+
+            nombreArchivo = nombreDelArchivo(document.getPath());
+            rc.update("formArchivoSelecionadoActualizarPlanEstudio");
+            rc.update("formActualizarMetadatosPlanEstudio");
+        } catch (java.text.ParseException ex) {
+            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void editarPlanEstudio() {
+
     }
 
     /**
