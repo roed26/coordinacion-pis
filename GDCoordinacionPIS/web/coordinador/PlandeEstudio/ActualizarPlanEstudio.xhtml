@@ -15,31 +15,34 @@ and open the template in the editor.
               closable="true" showEffect="explode" header="Actualización Plan de estudio">
         <!--        <p:ajax event="close"/>-->
 
-        <!--        <h:form id="formActualizarArchivoPlanEstudio">
-                    <p:growl id="msg" life="4000" showDetail="true"/>
-                    <p:fileUpload mode="advanced"
-                                  label="Seleccionar archivo"  invalidFileMessage="Solo se permiten archivos PDF" 
-                                  dragDropSupport="true" update="msg" uploadLabel="Subir"  
-                                  allowTypes="/(\.|\/)(pdf)$/" />
-                </h:form>-->
+        <h:form id="formActualizarArchivoPlanEstudio">
+            <p:growl id="msg" life="4000" showDetail="true"/>
+            <p:outputLabel rendered="#{!registroPlandeEstudioController.exitoSubirArchivo}" 
+                           value="Seleccione el archivo pdf del plan de Estudio" 
+                           style="font-weight: bold; color: #000000"/>
+            <p:fileUpload rendered="#{!registroPlandeEstudioController.exitoSubirArchivo}" mode="advanced" 
+                          label="Seleccionar archivo"  invalidFileMessage="Solo se permiten archivos PDF" 
+                          dragDropSupport="true"  uploadLabel="Aceptar" cancelLabel="Cancelar"  
+                          allowTypes="/(\.|\/)(pdf)$/"  update="msg" fileUploadListener="#{registroPlandeEstudioController.seleccionarArchivoActualizacion}"/>
+
+            <!--<p:growl id="mensaje" showDetail="true" />-->
+        </h:form>
 
         <h:form id="formArchivoSelecionadoActualizarPlanEstudio">
-            <p:panelGrid styleClass="panelgrid"> 
-                         <!--rendered="{registroPlandeEstudioController.exitoSubirArchivo}">-->
+            <p:panelGrid styleClass="panelgrid" rendered="#{registroPlandeEstudioController.exitoSubirArchivo}">                
 
-                         <p:row>
+                <p:row>
                     <p:column colspan="4">
                         <p:outputLabel style="font-weight: bold; color: #000000" value="Nombre del archivo seleccionado: "/>
                         <p:outputLabel style="font-weight: bold; color: blue" value="#{registroPlandeEstudioController.nombreArchivo}  "/>
-                        <p:commandButton value="Cambiar archivo"  action="#{registroPlandeEstudioController.cambiarArchivo}"/>
+                        <p:commandButton value="Cambiar archivo"  action="#{registroPlandeEstudioController.cambiarArchivoActualizacion}"/>
                     </p:column>
                 </p:row>
             </p:panelGrid>
         </h:form>
         <h:form id="formActualizarMetadatosPlanEstudio">
             <p:growl id="msg" showDetail="true" life="4000"/>
-            <p:panelGrid styleClass="panelgrid" id="panelMetadadosPlanEstudio"
-                         >  
+            <p:panelGrid styleClass="panelgrid" id="panelMetadadosPlanEstudio" rendered="#{registroPlandeEstudioController.exitoSubirArchivo}">  
                 <!--rendered="{registroPlandeEstudioController.exitoSubirArchivo}"-->
                 <p:row>
                     <p:column colspan="2">
@@ -124,7 +127,7 @@ and open the template in the editor.
                 </p:row>
                 <p:row>
                     <p:column colspan="2">
-                        <p:commandButton value="Actualizar" update="msg,:formPlanesdeEstudio:lstPlanesEstudio" style="width: 80px;height:25px" onstart="PF('cargando').show()" onsuccess="PF('cargando').hide()"/>
+                        <p:commandButton value="Actualizar" action="#{registroPlandeEstudioController.editarPlanEstudio()}" update="msg,:formPlanesdeEstudio:lstPlanesEstudio" style="width: 80px;height:25px" onstart="PF('cargando').show()" onsuccess="PF('cargando').hide()"/>
                         <p:spacer width="30%" height="10"/>                                                                      
                     </p:column>
                 </p:row>
