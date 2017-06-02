@@ -55,4 +55,9 @@ public class CargarFormularioController implements Serializable {
     public void cargarPerfilUsuario() {
         this.ruta = "/perfilUsuario.xhtml";
     }
+    
+    //admin
+    public void cargarRegistrarUsuarios() {
+        this.ruta = "/administrador/usuario/ListarUsuarios.xhtml";
+    }
 }
