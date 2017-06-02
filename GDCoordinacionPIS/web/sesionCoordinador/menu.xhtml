@@ -19,18 +19,7 @@
                         <p:menuitem value="Gestión de anteproyectos" action="#{cargarFormulariosController.cargarGestionAnteproyecto()}" actionListener="#{addNavegacionController.addAnteproyectoGestion()}" ajax="false"/>
                     </p:submenu>
                 </p:menubar>
-                <p:menubar rendered="#{sesionController.opcionesAdministrador}" >
-                    <p:submenu label="Materias">
-                        <p:menuitem value="Registrar materia" action="#{cargarFormulariosController.cargarRegistrarMateria()}"  actionListener="#{addNavegacionController.addOfertaAcademicaRegistroMaterias()}" ajax="false"/>                        
-                    </p:submenu>    
-                    <p:submenu label="Departamentos  y facultades">
-                        <p:menuitem value="Registrar departameto o facultad" action="#{cargarFormulariosController.cargarRegistrarDepartamento()}" actionListener="#{addNavegacionController.addOfertaAcademicaRegistroDepFac()}" ajax="false"/>
-                    </p:submenu>
-                    <p:submenu label="Usuarios">
-
-                    </p:submenu>  
-
-                </p:menubar>
+                
             </h:form>
         </div>
 

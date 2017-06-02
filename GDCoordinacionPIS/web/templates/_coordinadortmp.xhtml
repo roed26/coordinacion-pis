@@ -44,11 +44,6 @@
                                             ajax="false"
                                             />
                                 <p:separator/>
-                                <p:menuitem rendered="#{sesionController.grupo.equalsIgnoreCase('2')}" 
-                                            value="Opciones de administrador" action="#{sesionController.modficarOpciones('administrador',cargarFormulariosController,addNavegacionController )}" />
-                                <p:menuitem rendered="#{sesionController.grupo.equalsIgnoreCase('2')}"  
-                                            value="Opciones de coordinador" action="#{sesionController.modficarOpciones('coordinador',cargarFormulariosController,addNavegacionController )}" />
-                                <p:separator/>
                                 <p:menuitem value="Cerrar Sesión" action="#{sesionController.logout()}"/>
                             </p:menu>
 

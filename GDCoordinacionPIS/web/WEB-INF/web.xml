@@ -31,7 +31,7 @@
             <web-resource-name>paginas autorizadas administrador</web-resource-name>
             <description/>
             <url-pattern>/GDCP/administrador/*</url-pattern>
-            <url-pattern>/GDCP/sesionCoordinador/*</url-pattern>
+            <url-pattern>/GDCP/sesionAdmin/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>
@@ -69,8 +69,8 @@
         <auth-method>FORM</auth-method>
         <realm-name>coordpisJDBCRealm</realm-name>
         <form-login-config>
-            <form-login-page>/sinSesion/index.xhtml</form-login-page>
-            <form-error-page>/sinSesion/index.xhtml</form-error-page>
+            <form-login-page>/GDCP/sinSesion/index.xhtml</form-login-page>
+            <form-error-page>/GDCP/sinSesion/index.xhtml</form-error-page>
         </form-login-config>
     </login-config>
     <security-role>
