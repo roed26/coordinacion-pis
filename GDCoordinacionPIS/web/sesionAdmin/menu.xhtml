@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <div id="contenidoMenu">
+            <h:form id="formMenu">
+                <p:menubar rendered="#{sesionController.opcionesAdministrador}" >
+                    <p:submenu label="Materias">
+                        <p:menuitem value="Registrar materia" action="#{cargarFormulariosController.cargarRegistrarMateria()}"  actionListener="#{addNavegacionController.addOfertaAcademicaRegistroMaterias()}" ajax="false"/>                        
+                    </p:submenu>    
+                    <p:submenu label="Departamentos  y facultades">
+                        <p:menuitem value="Registrar departameto o facultad" action="#{cargarFormulariosController.cargarRegistrarDepartamento()}" actionListener="#{addNavegacionController.addOfertaAcademicaRegistroDepFac()}" ajax="false"/>
+                    </p:submenu>
+                    <p:submenu label="Usuarios">
+                        <p:menuitem value="Registrar departameto o facultad" action="#{cargarFormulariosController.cargarRegistrarUsuarios()}"  ajax="false"/>
+                    </p:submenu>  
+
+                </p:menubar>
+            </h:form>
+        </div>
+
+    </h:body>
+</html>

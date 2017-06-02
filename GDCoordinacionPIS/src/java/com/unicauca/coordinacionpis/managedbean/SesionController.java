@@ -126,8 +126,11 @@ public class SesionController implements Serializable {
                 this.errorSesion = false;
                 Usuariogrupo usuariogrupo = this.ejbUsuarioGrupo.buscarPorNombreUsuarioObj(req.getUserPrincipal().getName());
                 this.grupo = usuariogrupo.getUsuariogrupoPK().getGruid();
+                if (grupo.equalsIgnoreCase("1")) {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/GDCoordinacionPIS/GDCP/sesionAdmin/Principal.xhtml");
+                    identificacion = "" + this.ejbUsuarioGrupo.buscarPorNombreUsuario(req.getUserPrincipal().getName()).get(0).getUsuario().getUsuid();
 
-                if (grupo.equalsIgnoreCase("2")) {
+                } else if (grupo.equalsIgnoreCase("2")) {
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/GDCoordinacionPIS/GDCP/sesionCoordinador/Principal.xhtml");
                     identificacion = "" + this.ejbUsuarioGrupo.buscarPorNombreUsuario(req.getUserPrincipal().getName()).get(0).getUsuario().getUsuid();
 
