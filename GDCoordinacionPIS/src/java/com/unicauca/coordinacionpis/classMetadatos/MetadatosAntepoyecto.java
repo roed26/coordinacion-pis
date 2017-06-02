@@ -5,8 +5,6 @@
  */
 package com.unicauca.coordinacionpis.classMetadatos;
 
-import java.util.Date;
-
 /**
  *
  * @author Andrés
@@ -15,7 +13,7 @@ public class MetadatosAntepoyecto {
     
     private String profesor;
     private String titulo;
-    private Date fecha;
+    private String fecha;
     private String viabilidad;
     private String actaAprobacion;
     private String nombreEstudiante1;
@@ -64,11 +62,11 @@ public class MetadatosAntepoyecto {
         this.titulo = titulo;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
