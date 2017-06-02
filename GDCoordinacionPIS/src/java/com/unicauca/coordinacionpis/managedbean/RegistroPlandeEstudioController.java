@@ -314,7 +314,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     public void editarPlanEstudio() {
 
         RequestContext rc = RequestContext.getCurrentInstance();
-        FacesMessage message = null;
+        FacesMessage message = new FacesMessage( FacesMessage.SEVERITY_WARN ,"Advertencia", "No registraste ningún cambio");
 
         try {
             if (!nombreArchivo.equals(documentoAnterior)) {
@@ -323,22 +323,22 @@ public class RegistroPlandeEstudioController implements Serializable {
                 okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + metadatosPlandeEstudio.getNumero());
                 okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + metadatosPlandeEstudio.getAcuerdo());
                 okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + formatoFecha.format(metadatosPlandeEstudio.getVigencia()));
-                message = new FacesMessage("Plan de estudio actualizado correctamente");
+                message = new FacesMessage( FacesMessage.SEVERITY_INFO ,"Confirmación","Plan de estudio actualizado correctamente");
             } else {
                 if (metadatosPlandeEstudio.getNumero() != auxNumeroPlan) {
                     okm.removeKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + auxNumeroPlan);
                     okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + metadatosPlandeEstudio.getNumero());
-                    message = new FacesMessage("Plan de estudio actualizado correctamente");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO ,"Confirmación","Plan de estudio actualizado correctamente");
                 }
                 if (!metadatosPlandeEstudio.getAcuerdo().equalsIgnoreCase(auxAcuerdoPlan)) {
                     okm.removeKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + auxAcuerdoPlan);
                     okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + metadatosPlandeEstudio.getAcuerdo());
-                    message = new FacesMessage("Plan de estudio actualizado correctamente");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO ,"Confirmación","Plan de estudio actualizado correctamente");
                 }
                 if (metadatosPlandeEstudio.getVigencia().compareTo(auxFechaPlan) != 0) {
                     okm.removeKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + formatoFecha.format(auxFechaPlan));
                     okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + formatoFecha.format(metadatosPlandeEstudio.getVigencia()));
-                    message = new FacesMessage("Plan de estudio actualizado correctamente");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO ,"Confirmación","Plan de estudio actualizado correctamente");
                 }
             }
             FacesContext.getCurrentInstance().addMessage(null, message);
