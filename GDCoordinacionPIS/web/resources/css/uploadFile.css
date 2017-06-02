@@ -12,3 +12,7 @@ and open the template in the editor.
 
     width: 110px;
 }
+
+.ui-fileupload-buttonbar .ui-fileupload-cancel{
+    visibility: hidden;
+}

@@ -11,45 +11,39 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
+    <p:dialog resizable="false" widgetVar="dlgEditarPlanEstudio" modal="true" width="540"  position="425,50"
+              closable="true" showEffect="explode" header="Actualización Plan de estudio">
+        <!--        <p:ajax event="close"/>-->
 
-    <p:dialog widgetVar="dlgRegistroPlandeEstudio" modal="true" width="560" position="425,50" 
-              closable="true" showEffect="explode" header="Registro de Plan de Estudio">
-        <p:ajax event="close" listener="#{registroPlandeEstudioController.cancelarRegistroPlanEstudio()}"/>
-        <h:outputStylesheet library="css" name="uploadFile.css"/>
-
-        <h:form id="formSeleccionarArchivoPlanEstudio">
+        <h:form id="formActualizarArchivoPlanEstudio">
+            <p:growl id="msg" life="4000" showDetail="true"/>
             <p:outputLabel rendered="#{!registroPlandeEstudioController.exitoSubirArchivo}" 
                            value="Seleccione el archivo pdf del plan de Estudio" 
                            style="font-weight: bold; color: #000000"/>
             <p:fileUpload rendered="#{!registroPlandeEstudioController.exitoSubirArchivo}" mode="advanced" 
                           label="Seleccionar archivo"  invalidFileMessage="Solo se permiten archivos PDF" 
                           dragDropSupport="true"  uploadLabel="Aceptar" cancelLabel="Cancelar"  
-                          allowTypes="/(\.|\/)(pdf)$/"  update="mensaje" fileUploadListener="#{registroPlandeEstudioController.seleccionarArchivo}"/>
+                          allowTypes="/(\.|\/)(pdf)$/"  update="msg" fileUploadListener="#{registroPlandeEstudioController.seleccionarArchivoActualizacion}"/>
 
-            <p:growl id="mensaje" showDetail="true" />
+            <!--<p:growl id="mensaje" showDetail="true" />-->
         </h:form>
 
+        <h:form id="formArchivoSelecionadoActualizarPlanEstudio">
+            <p:panelGrid styleClass="panelgrid" rendered="#{registroPlandeEstudioController.exitoSubirArchivo}">                
 
-        <h:form id="formArchivoSelecionadoPlanEstudio">
-            <p:panelGrid styleClass="panelgrid" 
-                         rendered="#{registroPlandeEstudioController.exitoSubirArchivo}">
                 <p:row>
                     <p:column colspan="4">
                         <p:outputLabel style="font-weight: bold; color: #000000" value="Nombre del archivo seleccionado: "/>
                         <p:outputLabel style="font-weight: bold; color: blue" value="#{registroPlandeEstudioController.nombreArchivo}  "/>
-                        <p:commandButton value="Cambiar archivo"  action="#{registroPlandeEstudioController.cambiarArchivo}"/>
+                        <p:commandButton value="Cambiar archivo"  action="#{registroPlandeEstudioController.cambiarArchivoActualizacion}"/>
                     </p:column>
                 </p:row>
             </p:panelGrid>
         </h:form>
-
-
-
-        <h:form id="formMetadatosPlanEstudio">
+        <h:form id="formActualizarMetadatosPlanEstudio">
             <p:growl id="msg" showDetail="true" life="4000"/>
-            <p:panelGrid styleClass="panelgrid" id="panelMetadadosPlanEstudio"
-                         rendered="#{registroPlandeEstudioController.exitoSubirArchivo}">  
-
+            <p:panelGrid styleClass="panelgrid" id="panelMetadadosPlanEstudio" rendered="#{registroPlandeEstudioController.exitoSubirArchivo}">  
+                <!--rendered="{registroPlandeEstudioController.exitoSubirArchivo}"-->
                 <p:row>
                     <p:column colspan="2">
                         <p:outputLabel style="font-weight: bold; color: #000000" 
@@ -133,18 +127,12 @@ and open the template in the editor.
                 </p:row>
                 <p:row>
                     <p:column colspan="2">
-                        <p:commandButton value="Agregar" action="#{registroPlandeEstudioController.aceptarRegistroPlanEstudio()}" update="msg,:formPlanesdeEstudio:lstPlanesEstudio" style="width: 80px;height:25px" onstart="PF('cargando').show()" onsuccess="PF('cargando').hide()"/>
+                        <p:commandButton value="Actualizar" action="#{registroPlandeEstudioController.editarPlanEstudio()}" update="msg,:formPlanesdeEstudio:lstPlanesEstudio" style="width: 80px;height:25px" onstart="PF('cargando').show()" onsuccess="PF('cargando').hide()"/>
                         <p:spacer width="30%" height="10"/>                                                                      
                     </p:column>
                 </p:row>
             </p:panelGrid>
         </h:form>
+
     </p:dialog>
-<!--    <p:dialog header="Información" widgetVar="mensajeInformacionPlanEstudio" modal="true" position="center" closable="false">
-        <h:outputLabel style="font-size: 15px;"  value="Plan de estudio registrado exitosamente"/>
-        <h:form>
-            <p:commandButton  value="Aceptar" style="font-weight: normal;"
-                              onclick="PF('mensajeInformacionPlanEstudio').hide()" />
-        </h:form>
-    </p:dialog>-->
 </html>
