@@ -8,7 +8,7 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <p:dialog resizable="false" widgetVar="dlgRegistroOfertaAcedemica" modal="true" width="900" height="500"  position="260,50"  
-              closable="false" header="Registro de oferta académica"> 
+               header="Registro de oferta académica"> 
 
         <h:form id="formMetadatosOfertaAcademica">
             <p:panelGrid styleClass="panelgrid" >
@@ -88,14 +88,14 @@
                                         <p:inputText id="numEstudiantes" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.numeroEstudiantes}">
                                             <f:validator validatorId="ValidarCampoNumerico"/>
-                                            <p:ajax event="keyup" update="msgEstudiantes numEstudiantes"/>
+                                            <p:ajax event="keyup" update="msgEstudiantes"/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
                                         <p:inputText id="solicitados" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposSolicitados}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
-                                            <p:ajax event="keyup" update="msgSolicitados solicitados"/>
+                                            <p:ajax event="keyup" update="msgSolicitados"/>
                                         </p:inputText>
                                     </p:column>
                                 </p:row>
@@ -146,28 +146,28 @@
                                         <p:inputText id="cancelados" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposCancelados}">
                                             <f:validator validatorId="ValidarCampoNumerico"/>
-                                            <p:ajax event="keyup" update="msgCancelados cancelados"/>
+                                            <p:ajax event="keyup" update="msgCancelados "/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
                                         <p:inputText id="ofertados" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposOfertados}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
-                                            <p:ajax event="keyup" update="msgOfertados ofertados"/>
+                                            <p:ajax event="keyup" update="msgOfertados "/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
                                         <p:inputText id="fusionados" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposFusionados}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
-                                            <p:ajax event="keyup" update="msgFusionados fusionados"/>
+                                            <p:ajax event="keyup" update="msgFusionados "/>
                                         </p:inputText>
                                     </p:column>
                                     <p:column>
                                         <p:inputText id="nuevos" required="true" requiredMessage="Campo obligatorio"
                                                      value="#{materia.gruposNuevos}" >
                                             <f:validator validatorId="ValidarCampoNumerico"/>
-                                            <p:ajax event="keyup" update="msgNuevos nuevos"/>
+                                            <p:ajax event="keyup" update="msgNuevos"/>
                                         </p:inputText>
                                     </p:column>
                                 </p:row>
@@ -197,7 +197,10 @@
 
             <p:separator/>
             <p:toolbar id="tb">                
-                <f:facet name="left"><center>
+                <f:facet name="left">
+                        <span class="ui-separator">
+                            <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                        </span>
                         <p:commandButton value="Registrar información" 
                                          update=":formListaDocumentos:datalist" 
                                          action="#{registroOfertaAcademicaController.aceptarRegistroDeOferta()}" 
@@ -206,8 +209,8 @@
                         <span class="ui-separator">
                             <span class="ui-icon ui-icon-grip-dotted-vertical" />
                         </span>
-                        <p:commandButton value="Cancelar registro" onclick="PF('dlgRegistroOfertaAcedemica').hide()" oncomplete="#{registroOfertaAcademicaController.cancelarRegistroDeOferta()}"/>
-                    </center>
+                        
+                    
                 </f:facet>
             </p:toolbar>
         </h:form>

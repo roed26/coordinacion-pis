@@ -2,27 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/OfertaAcademica/registrarOfertaAcademica.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/curso/Create.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/WEB-INF/glassfish-resources.xml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/src/java/com/unicauca/coordinacionpis/managedbean/RegistroOfertaAcademicaController.java</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/src/java/com/unicauca/coordinacionpis/classMetadatos/MetadatosOfertaAcademica.java</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/src/java/com/unicauca/coordinacionpis/managedbean/CursoController.java</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/OfertaAcademica/ofertaAcademicaTelematica.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/OfertaAcademica/ofertaAcademicaHumanidades.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/src/java/com/unicauca/coordinacionpis/managedbean/CargarFormularioController.java</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/departamento/List.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/OfertaAcademica/ofertasAcademicas.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/src/java/com/unicauca/coordinacionpis/managedbean/RegistrarCursoDepartamentoController.java</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/curso/Edit.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/OfertaAcademica/ofertaAcademicaEduFisica.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/OfertaAcademica/ofertaAcademicaContables.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/src/java/com/unicauca/coodinacionpis/entidades/Curso.java</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/sesionCoordinador/menu.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/OfertaAcademica/ofertaAcademicaDeptoFisica.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/OfertaAcademica/ofertaAcademicaDerecho.xhtml</file>
-            <file>file:/D:/trabajos%20netbens/GDCoordinacionPIS/web/coordinador/curso/List.xhtml</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
