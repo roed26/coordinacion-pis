@@ -38,7 +38,9 @@ import com.openkm.sdk4j.exception.VirusDetectedException;
 import com.openkm.sdk4j.exception.WebserviceException;
 import com.unicauca.coordinacionpis.entidades.Materia;
 import com.unicauca.coordinacionpis.entidades.Departamento;
+import com.unicauca.coordinacionpis.entidades.Usuario;
 import com.unicauca.coordinacionpis.sessionbean.DepartamentoFacade;
+import com.unicauca.coordinacionpis.sessionbean.UsuarioFacade;
 import com.unicauca.coordinacionpis.utilidades.ConexionOpenKM;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -58,6 +60,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -71,6 +74,8 @@ public class RegistroOfertaAcademicaController implements Serializable {
 
     @EJB
     private DepartamentoFacade ejbDepartamento;
+    @EJB
+    private UsuarioFacade ejbUsuario;
 
     private boolean exitoSubirArchivo = true;
     private String nombreArchivo;
@@ -284,14 +289,25 @@ public class RegistroOfertaAcademicaController implements Serializable {
             boolean existeFolder = false;
             boolean existeCategoria = false;
             boolean existeFolderPeriodo = false;
+            boolean existeFolderCoordinacion = false;
 
             for (Folder fld : okm.getFolderChildren("/okm:root")) {
-                if (fld.getPath().equalsIgnoreCase("/okm:root/Oferta academica")) {
-                    existeFolder = true;
+                if (fld.getPath().equalsIgnoreCase("/okm:root/Coordinacion")) {
+                    existeFolderCoordinacion = true;
                 }
             }
+            if (existeFolderCoordinacion) {
+                for (Folder fld : okm.getFolderChildren("/okm:root")) {
+                    if (fld.getPath().equalsIgnoreCase("/okm:root/Coordinacion/Oferta academica")) {
+                        existeFolder = true;
+                    }
+                }
+            }else{
+               okm.createFolderSimple("/okm:root/Coordinacion");
+            }
+
             for (Folder folder : okm.getFolderChildren("/okm:categories")) {
-                if (folder.getPath().equalsIgnoreCase("/okm:categories/Oferta academica")) {
+                if (folder.getPath().equalsIgnoreCase("/okm:categories/Coordinacion/Oferta academica")) {
                     existeCategoria = true;
                 }
             }
@@ -300,15 +316,17 @@ public class RegistroOfertaAcademicaController implements Serializable {
                 generarPDFPre();
                 File initialFile = new File("D:\\" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-pre.pdf");
                 InputStream targetStream = new FileInputStream(initialFile);
+
                 if (!existeFolder) {
-                    okm.createFolderSimple("/okm:root/Oferta academica");
+                    okm.createFolderSimple("/okm:root/Coordinacion/Oferta academica");
                 } else {
-                    for (Folder fld : okm.getFolderChildren("/okm:root/Oferta academica")) {
-                        if (fld.getPath().equalsIgnoreCase("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica)) {
+                    for (Folder fld : okm.getFolderChildren("/okm:root/Coordinacion/Oferta academica")) {
+                        if (fld.getPath().equalsIgnoreCase("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica)) {
                             existeFolderPeriodo = true;
                         }
                     }
                 }
+
                 /*if (!existeCategoria) {
                     okm.createFolderSimple("/okm:categories/Oferta academica");
                     okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", "/okm:categories/Oferta academica");
@@ -316,16 +334,16 @@ public class RegistroOfertaAcademicaController implements Serializable {
                     okm.addCategory("/okm:root/Oferta academica/" + periodoOfertaAcademica + "-pre.pdf", "/okm:categories/Oferta academica");
                 }*/
                 if (!existeFolderPeriodo) {
-                    okm.createFolderSimple("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica);
+                    okm.createFolderSimple("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica);
 
-                    if (!comprobarDocumento("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf")) {
-                        okm.createDocumentSimple("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf", targetStream);
+                    if (!comprobarDocumento("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf")) {
+                        okm.createDocumentSimple("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf", targetStream);
                     } else {
                         existeDocumento = true;
                     }
 
-                } else if (!comprobarDocumento("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf")) {
-                    okm.createDocumentSimple("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf", targetStream);
+                } else if (!comprobarDocumento("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf")) {
+                    okm.createDocumentSimple("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf", targetStream);
                 } else {
                     existeDocumento = true;
                 }
@@ -335,26 +353,26 @@ public class RegistroOfertaAcademicaController implements Serializable {
                 File initialFile = new File("D:\\" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-pos.pdf");
                 InputStream targetStream = new FileInputStream(initialFile);
                 if (!existeFolder) {
-                    okm.createFolderSimple("/okm:root/Oferta academica");
+                    okm.createFolderSimple("/okm:root/Coordinacion/Oferta academica");
                 } else {
-                    for (Folder fld : okm.getFolderChildren("/okm:root/Oferta academica")) {
-                        if (fld.getPath().equalsIgnoreCase("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica)) {
+                    for (Folder fld : okm.getFolderChildren("/okm:root/Coordinacion/Oferta academica")) {
+                        if (fld.getPath().equalsIgnoreCase("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica)) {
                             existeFolderPeriodo = true;
                         }
                     }
                 }
 
                 if (!existeFolderPeriodo) {
-                    okm.createFolderSimple("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica);
+                    okm.createFolderSimple("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica);
 
-                    if (!comprobarDocumento("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-posmatricula.pdf")) {
-                        okm.createDocumentSimple("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-posmatricula.pdf", targetStream);
+                    if (!comprobarDocumento("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-posmatricula.pdf")) {
+                        okm.createDocumentSimple("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-posmatricula.pdf", targetStream);
                     } else {
                         existeDocumento = true;
                     }
 
-                } else if (!comprobarDocumento("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-posmatricula.pdf")) {
-                    okm.createDocumentSimple("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-posmatricula.pdf", targetStream);
+                } else if (!comprobarDocumento("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-posmatricula.pdf")) {
+                    okm.createDocumentSimple("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-posmatricula.pdf", targetStream);
                 } else {
                     existeDocumento = true;
                 }
@@ -423,7 +441,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
     public boolean comprobarDocumento(String path) {
         boolean existeDocumento = false;
         try {
-            for (com.openkm.sdk4j.bean.Document doc : okm.getDocumentChildren("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica)) {
+            for (com.openkm.sdk4j.bean.Document doc : okm.getDocumentChildren("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica)) {
                 if (doc.getPath().equalsIgnoreCase(path)) {
                     existeDocumento = true;
                 }
@@ -490,12 +508,12 @@ public class RegistroOfertaAcademicaController implements Serializable {
         try {
             writer = PdfWriter.getInstance(document, new FileOutputStream("D:\\" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-pre.pdf"));
             // add meta-data to pdf
-            document.addAuthor("Memorynotfound");
+            document.addAuthor(usuarioDeLaSesion().getUsunombres() + " " + usuarioDeLaSesion().getUsuapellidos());
             document.addCreationDate();
-            document.addCreator("Memorynotfound.com");
-            document.addTitle("Add meta data to PDF");
-            document.addSubject("how to add meta data to pdf using itext");
+            document.addCreator("Coordinacion");
+            document.addTitle("Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula");
             document.addKeywords(periodoOfertaAcademica);
+            document.addHeader("type", "tutorial, example");
             document.addHeader("type", "tutorial, example");
 
             // add xmp meta data
@@ -771,7 +789,7 @@ public class RegistroOfertaAcademicaController implements Serializable {
             }
 
             RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.update("form:visualizacionPdf");
+            requestContext.update(":visualizacion");
             requestContext.execute("PF('visualizarPDF').show()");
         } catch (Exception e) {
             e.printStackTrace();
@@ -895,30 +913,37 @@ public class RegistroOfertaAcademicaController implements Serializable {
     }
 
     public void validarCambioPeriodo() {
+        boolean existeFolderCoordinacion = false;
         boolean existeFolder = false;
         boolean existeFolderPeriodo = false;
         try {
             for (Folder fld : okm.getFolderChildren("/okm:root")) {
-                if (fld.getPath().equalsIgnoreCase("/okm:root/Oferta academica")) {
-                    existeFolder = true;
+                if (fld.getPath().equalsIgnoreCase("/okm:root/Coordinacion")) {
+                    existeFolderCoordinacion = true;
                 }
             }
-            if (existeFolder) {
-                for (Folder fld : okm.getFolderChildren("/okm:root/Oferta academica")) {
-                    if (fld.getPath().equalsIgnoreCase("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica)) {
-                        existeFolderPeriodo = true;
+            if (existeFolderCoordinacion) {
+                for (Folder fld : okm.getFolderChildren("/okm:root")) {
+                    if (fld.getPath().equalsIgnoreCase("/okm:root/Coordinacion/Oferta academica")) {
+                        existeFolder = true;
                     }
                 }
+                if (existeFolder) {
+                    for (Folder fld : okm.getFolderChildren("/okm:root/Coordinacion/Oferta academica")) {
+                        if (fld.getPath().equalsIgnoreCase("/okm:root/Coordinacion/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica)) {
+                            existeFolderPeriodo = true;
+                        }
+                    }
 
-                if (existeFolderPeriodo) {
-                    if (comprobarDocumento("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf")) {
+                    if (existeFolderPeriodo) {
+                        if (comprobarDocumento("/okm:root/Oferta academica/Periodo-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "/Oferta académica-" + anioOfertaAcademica + "-" + periodoOfertaAcademica + "-prematricula.pdf")) {
                             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "El documento para este periodo ya se encuntra registrado."));
+                        }
                     }
-                }
-                                
 
-            } 
-            
+                }
+            }
+
         } catch (PathNotFoundException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RepositoryException ex) {
@@ -933,4 +958,13 @@ public class RegistroOfertaAcademicaController implements Serializable {
 
     }
 
+    private Usuario usuarioDeLaSesion() {
+        Usuario usuario = new Usuario();
+        FacesContext fc = FacesContext.getCurrentInstance();
+        HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
+        if (req.getUserPrincipal() != null) {
+            usuario = this.ejbUsuario.buscarUsuarioPorNombreDeUsuario(req.getUserPrincipal().getName());
+        }
+        return usuario;
+    }
 }

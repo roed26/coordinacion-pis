@@ -8,7 +8,7 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <p:dialog resizable="false" widgetVar="dlgRegistroOfertaAcedemica" modal="true" width="900" height="500"  position="260,50"  
-              closable="false" header="Registro de oferta académica"> 
+              closable="true" header="Registro de oferta académica"> 
         
         <h:form id="formMetadatosOfertaAcademica">
             <p:panelGrid styleClass="panelgrid" >
@@ -206,7 +206,6 @@
                         <span class="ui-separator">
                             <span class="ui-icon ui-icon-grip-dotted-vertical" />
                         </span>
-                        <p:commandButton value="Cancelar registro" onclick="PF('dlgRegistroOfertaAcedemica').hide()" oncomplete="#{registroOfertaAcademicaController.cancelarRegistroDeOferta()}"/>
                     </center>
                 </f:facet>
             </p:toolbar>

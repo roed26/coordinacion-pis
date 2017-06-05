@@ -6,97 +6,88 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 
-    <ui:composition template="/template.xhtml">
+    <h:body>
 
+        <h:form>
+            <p:commandButton id="createButton"  value="Registrar usuario" 
+                             onclick="PF('UsuarioCreateDialog').show()"/>
+        </h:form>
+        <p:separator/>
+        <h:form id="UsuarioListForm">
+            <p:panelGrid columns="2" styleClass="panelgrid">
+                <p:outputLabel style="font-weight: bold;" value="Buscar usuario:" />
+                        <p:inputText  placeholder="Digite nombres, apellidos, nombre de usuario o email" 
+                                      style="width: 350px;"  value="#{usuarioController.datoBusqueda}" >
+                            <p:ajax event="keyup" update="datalist" listener="#{usuarioController.buscarUsuario()}" />                                
+                        </p:inputText>                          
+                    </p:panelGrid>
+            <p:dataTable id="datalist" value="#{usuarioController.items}" var="item"
+                         paginator="true" widgetVar="tablaUsuarios"
+                         rows="10"
+                         rowsPerPageTemplate="10,20"
+                         >
+                <f:facet name="header">
+                    
+                </f:facet>
 
-        <ui:define name="title">
-            <h:outputText value="#{bundleAdmin.ListUsuarioTitle}"></h:outputText>
-        </ui:define>
+                <p:column >
+                    <f:facet name="header">
+                        <h:outputText value="Nombres"/>
+                    </f:facet>
+                    <h:outputText value="#{item.usunombres}"/>
+                </p:column>
+                <p:column >
+                    <f:facet name="header">
+                        <h:outputText value="Apellidos"/>
+                    </f:facet>
+                    <h:outputText value="#{item.usuapellidos}"/>
+                </p:column>
+                <p:column >
+                    <f:facet name="header">
+                        <h:outputText value="Nombre  de usuario"/>
+                    </f:facet>
+                    <h:outputText value="#{item.usunombreusuario}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Email"/>
+                    </f:facet>
+                    <h:outputText value="#{item.usuemail}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Cargo"/>
+                    </f:facet>
+                    <h:outputText value="#{item.carid.carnombre}"/>
+                </p:column>
+                <p:column width="70" style="text-align: center">
+                    <f:facet name="header">
+                        <h:outputText value="Foto" />
+                    </f:facet>
+                    <p:graphicImage id="imgUsuario" value="#{usuarioController.imagenFlujo}" width="50"  height="50" >
+                        <f:param name="id" value="#{item.usuid}" />
+                    </p:graphicImage>                            
 
-        <ui:define name="body">
-            <h:form id="UsuarioListForm">
-                <p:panel header="#{bundleAdmin.ListUsuarioTitle}">
-                    <p:dataTable id="datalist" value="#{usuarioController.items}" var="item"
-                                 selectionMode="single" selection="#{usuarioController.selected}"
-                                 paginator="true"
-                                 rowKey="#{item.usuid}"
-                                 rows="10"
-                                 rowsPerPageTemplate="10,20,30,40,50"
-                                 >
+                </p:column> 
+                <p:column style="width: 90px">
+                    <f:facet name="header">
+                        <p:outputLabel value="Acciones"/>
+                    </f:facet>
+                    <p:commandButton id="viewButton" icon="ui-icon-search" action="#{usuarioController.seleccionarUsuarioVer(item)}" update=":UsuarioViewForm, :formfotoView" oncomplete="PF('UsuarioViewDialog').show()" />
+                    <p:commandButton id="editButton" icon="ui-icon-pencil" action="#{usuarioController.seleccionarUsuarioEditar(item)}"  update=":UsuarioEditForm, :formEditarfoto" oncomplete="PF('UsuarioEditDialog').show()" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
-
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleAdmin.ListUsuarioTitle_usuid}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.usuid}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleAdmin.ListUsuarioTitle_usufechanacimiento}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.usufechanacimiento}">
-                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleAdmin.ListUsuarioTitle_usunombres}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.usunombres}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleAdmin.ListUsuarioTitle_usuapellidos}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.usuapellidos}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleAdmin.ListUsuarioTitle_usugenero}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.usugenero}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleAdmin.ListUsuarioTitle_usunombreusuario}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.usunombreusuario}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleAdmin.ListUsuarioTitle_usucontrasena}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.usucontrasena}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleAdmin.ListUsuarioTitle_usuemail}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.usuemail}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleAdmin.ListUsuarioTitle_carid}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.carid}"/>
-                        </p:column>
-                        <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundleAdmin.Create}" actionListener="#{usuarioController.prepareCreate}" update=":UsuarioCreateForm" oncomplete="PF('UsuarioCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundleAdmin.View}" update=":UsuarioViewForm" oncomplete="PF('UsuarioViewDialog').show()" disabled="#{empty usuarioController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundleAdmin.Edit}" update=":UsuarioEditForm" oncomplete="PF('UsuarioEditDialog').show()" disabled="#{empty usuarioController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundleAdmin.Delete}" actionListener="#{usuarioController.destroy}" update=":growl,datalist" disabled="#{empty usuarioController.selected}"/>
-                        </f:facet>
-                    </p:dataTable>
-                </p:panel>
+        <ui:include src="RegistrarUsuario.xhtml"/>
+        <ui:include src="EditarUsuario.xhtml"/>
+        <ui:include src="VerInfoUsuario.xhtml"/>
+        <p:dialog header="Información" modal="true" position="center" widgetVar="mensajeRegistroExitoso" closable="false">
+            <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
+            <h:form>
+                <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                                  onclick="PF('mensajeRegistroExitoso').hide()"/>
             </h:form>
-
-            <ui:include src="RegistrarUsuario.xhtml"/>
-            <ui:include src="EditarUsuario.xhtml"/>
-            <ui:include src="VerInfoUsuario.xhtml"/>
-        </ui:define>
-    </ui:composition>
-
+        </p:dialog>
+    </h:body>
 </html>

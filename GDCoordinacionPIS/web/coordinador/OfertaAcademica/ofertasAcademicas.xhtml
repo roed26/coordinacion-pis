@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        
+
     </h:head>
     <h:body>
         <br rendered="#{!registroOfertaAcademicaController.comprobarConexionOpenKM}"/>
@@ -50,7 +50,9 @@
                     <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" value="Descargar" icon="ui-icon-arrowthickstop-1-s" title="Descargar" >
                         <p:fileDownload value="#{registroOfertaAcademicaController.descargarDocumento(ofertaAcademica)}" />
                     </p:commandButton>
-                    <p:commandButton value="Ver" action="#{registroOfertaAcademicaController.visualizarDocumento(ofertaAcademica)}" icon="ui-icon-search" title="Ver"/>
+                    <p:commandButton value="Ver" update=":visualizacion" onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()" 
+                                     action="#{registroOfertaAcademicaController.visualizarDocumento(ofertaAcademica)}" 
+                                     icon="ui-icon-search" title="Ver"/>
                 </p:column>
             </p:dataTable>
         </h:form>
@@ -58,11 +60,10 @@
         <ui:include src="registrarOfertaAcademica.xhtml"/> 
         <p:dialog widgetVar="visualizarPDF" modal="true">
             <h:form id="visualizacion">
-               <h3>PDF</h3>
-            <p:media value="#{registroOfertaAcademicaController.streamedContent}" width="750" height="560" player="pdf" />
+                <p:media value="#{registroOfertaAcademicaController.streamedContent}" width="750" height="560" player="pdf" />
             </h:form>
 
-            
+
         </p:dialog>
 
         <script type="text/javascript">

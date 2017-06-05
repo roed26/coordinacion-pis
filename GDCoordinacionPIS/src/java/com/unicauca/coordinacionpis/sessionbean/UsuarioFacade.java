@@ -30,7 +30,7 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
     public UsuarioFacade() {
         super(Usuario.class);
     }
-    
+
     public Usuario buscarUsuarioPorNombreDeUsuario(String nombreUsuario) {
 
         Query query = getEntityManager().createNamedQuery("Usuario.findByUsunombreusuario");
@@ -42,12 +42,41 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
             return null;
         }
     }
-    
+    public boolean buscarUsuarioPorNombreDeUsuarioBool(String nombreUsuario) {
+
+        Query query = getEntityManager().createNamedQuery("Usuario.findByUsunombreusuario");
+        query.setParameter("usunombreusuario", nombreUsuario);
+        List<Usuario> resultList = query.getResultList();
+        if (resultList.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<Usuario> buscarPorIdUsuario(Long usuid) {
         Query query = getEntityManager().createNamedQuery("Usuario.findByUsuid");
         query.setParameter("usuid", usuid);
         List<Usuario> resultList = query.getResultList();
         return resultList;
     }
+
+    public boolean buscarPorEmail(String email) {
+        Query query = getEntityManager().createNamedQuery("Usuario.findByUsuemail");
+        query.setParameter("usuemail", email);
+        List<Usuario> resultList = query.getResultList();
+        if (resultList.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
+    public List<Usuario> buscarUsuarioEjb(String datoBusqueda) {
+        Query query = getEntityManager().createNamedQuery("Usuario.findByBusquedaUsuarios");
+        query.setParameter("busqueda", "%" + datoBusqueda + "%");
+        List<Usuario> resultList = query.getResultList();
+        return resultList;
+    }
+
 }

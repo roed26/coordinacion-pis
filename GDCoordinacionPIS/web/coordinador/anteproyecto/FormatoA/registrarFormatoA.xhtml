@@ -4,16 +4,16 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <p:dialog widgetVar="dlgRegistroFormatoA" modal="true" width="800"  position="300,50"  
-              closable="false" header="Registro FormatoA"> 
-
+    <p:dialog widgetVar="dlgRegistroFormatoA" modal="true" resizable="false" width="830"  position="300,50"  
+              closable="true" header="Registro FormatoA"> 
+        <p:ajax event="close" listener="#{registroFormatoAController.cancelarFormatoA()}"/>
         <h:form id="formSeleccionarArchivoFormatoA">
             <p:outputLabel rendered="#{!registroFormatoAController.exitoSubirArchivo}" 
                            value="Seleccione el archivo pdf del formatoA" 
                            style="font-weight: bold; color: #000000"/>
             <p:fileUpload rendered="#{!registroFormatoAController.exitoSubirArchivo}" mode="advanced" 
                           label="Seleccionar archivo"  invalidFileMessage="Solo se permiten archivos PDF" 
-                          dragDropSupport="true" update="messages" uploadLabel="Aceptar" cancelLabel="Cancelar"  
+                          dragDropSupport="true" update="messages" uploadLabel="Subir documento" cancelLabel="Cancelar"  
                           allowTypes="/(\.|\/)(pdf)$/"  fileUploadListener="#{registroFormatoAController.seleccionarArchivo}"/>
 
             <p:growl id="messages" showDetail="true" />
@@ -35,23 +35,12 @@
         <h:form id="formMetadatosFormatoA">
             <p:panelGrid styleClass="panelgrid" id="panelMetadatos"
                          rendered="#{registroFormatoAController.exitoSubirArchivo}">
-                <p:row>
-                    <p:column colspan="4">
-                        <p:outputLabel style="font-weight: bold; color: #000000" value="Nombre del archivo seleccionado: "/>
-                        <p:outputLabel style="font-weight: bold; color: #ff5252" value="#{registroFormatoAController.nombreArchivo}  "/>
-                        <p:commandButton value="Cambiar archivo"  action="#{registroFormatoAController.cambiarArchivo}"/>
-                    </p:column>
-                </p:row>
+
                 <p:row>
                     <p:column colspan="4">
                         <p:outputLabel style="font-weight: bold; color: #000000" value="Por favor diligencie el siguiente formulario tenga en cuenta los campos obligatorios ("/>
                         <p:outputLabel value="*" style="color: #ff5252"/>
                         <p:outputLabel style="font-weight: bold; color: #000000" value=")"/>
-                    </p:column>
-                </p:row>
-                <p:row>
-                    <p:column colspan="4">
-
                     </p:column>
                 </p:row>
                 <p:row>
@@ -61,20 +50,24 @@
                 </p:row>
                 <p:row>
                     <p:column>
-                        <p:outputLabel value="Nombre del docente " style="font-weight: bold; color: #000000"/>
+                        <p:outputLabel value="Docente " style="font-weight: bold; color: #000000"/>
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>
-                        <p:inputText id="docente" required="true" requiredMessage="Campo obligatorio"
-                                     value="#{registroFormatoAController.metadatosAnteproyectos.profesor}" />
+                        <p:selectOneMenu id="docente" filter="true" value="#{registroFormatoAController.metadatosAnteproyectos.profesor}">
+                            <f:selectItem  itemLabel="--Seleccione un docente--"/>
+                            <f:selectItems value="#{registroFormatoAController.listaDocentes}" var="profesor" 
+                                           itemLabel="#{profesor.nombres} #{profesor.apellidos}" itemValue="#{profesor.nombres} #{profesor.apellidos}"/>
+                        </p:selectOneMenu>
                     </p:column>
                     <p:column>
-                        <p:outputLabel value="Título " style="font-weight: bold; color: #000000"/>
+                        <p:outputLabel value="Título del anteproyecto" style="font-weight: bold; color: #000000"/>
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
                     <p:column>
                         <p:inputText id="titulo" required="true" requiredMessage="Campo obligatorio"
                                      value="#{registroFormatoAController.metadatosAnteproyectos.titulo}" >
+                            <p:ajax update="msgTitulo" event="keyup"/>
                         </p:inputText>
                     </p:column>
                 </p:row>
@@ -83,13 +76,13 @@
 
                     </p:column>
                     <p:column>
-                        <p:message for="docente"/>
+                        <p:message for="docente" id="msgDocente"/>
                     </p:column>
                     <p:column>
 
                     </p:column>
                     <p:column>
-                        <p:message for="titulo"/>
+                        <p:message for="titulo" id="msgTitulo"/>
                     </p:column>
 
                 </p:row>
@@ -98,7 +91,7 @@
                         <p:outputLabel value="Fecha" style="font-weight: bold; color: #000000"/>
                         <p:outputLabel value="*" style="color: #ff5252"/>
                     </p:column>
-                    <p:column>
+                    <p:column style="width: 220px">
                         <p:calendar placeholder="dd/mm/aaaa" id="fecha" yearRange="c-80:c" navigator="true" pattern="MM-dd-yyyy" requiredMessage="Campo obligatorio"
                                     value="#{registroFormatoAController.metadatosAnteproyectos.fecha}" showOn="button" />
                     </p:column>
@@ -132,17 +125,17 @@
 
                 <p:row>
                     <p:column>
-                        
-                        <p:outputLabel value="Nombre del primer estudiante:" style="font-weight: bold; color: #000000"/>                      
+
+                        <p:outputLabel value="Nombres y apellidos del primer estudiante:" style="font-weight: bold; color: #000000"/>                      
                     </p:column>
                     <p:column>
                         <p:inputText id="nomEstudiante1"
                                      value="#{registroFormatoAController.metadatosAnteproyectos.nombreEstudiante1}">
                         </p:inputText>
-                        
+
                     </p:column>
                     <p:column>
-                           <p:outputLabel value="Nombre del segundo estudiante" style="font-weight: bold; color: #000000"/>
+                        <p:outputLabel value="Nombres y apellidos del segundo estudiante" style="font-weight: bold; color: #000000"/>
                     </p:column>
                     <p:column>
                         <p:inputText id="nomEstudiante2"
@@ -151,30 +144,28 @@
 
                     </p:column>
                 </p:row>
-                
-                 <p:row>
+
+                <p:row>
                     <p:column>
                         <p:outputLabel value="Acta de aprobación" style="font-weight: bold; color: #000000"/>
                     </p:column>
                     <p:column>
                         <p:selectOneMenu id="actaAprobacion" value="#{registroFormatoAController.metadatosAnteproyectos.actaAprobacion}" >
-                                         <f:selectItem itemLabel="--Seleccione una opción--" itemValue="default"/>
-                                         <f:selectItem itemLabel="Acta-0001" itemValue="ac-0001"/>
-                                         <f:selectItem itemLabel="Acta-0002" itemValue="ac-0002"/>
-                                         <f:selectItem itemLabel="Acta-0003" itemValue="ac-0003"/>
-                                         <f:selectItem itemLabel="Acta-0004" itemValue="ac-0004" />
+                            <f:selectItem itemLabel="--Seleccione una opción--" itemValue="default"/>
+                            <f:selectItem itemLabel="Acta-0001" itemValue="ac-0001"/>
+                            <f:selectItem itemLabel="Acta-0002" itemValue="ac-0002"/>
+                            <f:selectItem itemLabel="Acta-0003" itemValue="ac-0003"/>
+                            <f:selectItem itemLabel="Acta-0004" itemValue="ac-0004" />
                         </p:selectOneMenu>
-                                                       
+
                     </p:column>
                 </p:row>
 
-
-
                 <p:row>
                     <p:column colspan="2">
-
-                        <p:commandButton value="Guardar" update="panelMetadatos" action="#{registroFormatoAController.aceptarFormatoA()}" />
-                        <p:commandButton value="Cancelar" action="#{registroFormatoAController.cancelarFormatoA()}"/>
+                        <p:commandButton value="Guardar" update="panelMetadatos, :formListaAnteproyectos:datalist"
+                                         action="#{registroFormatoAController.aceptarFormatoA()}" 
+                                         onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()" />
                     </p:column>
                 </p:row>
 
@@ -182,8 +173,6 @@
             <p:growl id="messagesGuardar" showDetail="true" />
         </h:form>
     </p:dialog>
-    
-    
 
 </html>
 

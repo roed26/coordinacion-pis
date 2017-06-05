@@ -8,37 +8,226 @@
 
     <ui:composition>
 
-        <p:dialog id="UsuarioEditDlg" widgetVar="UsuarioEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleAdmin.EditUsuarioTitle}">
+        <p:dialog id="UsuarioEditDlg" widgetVar="UsuarioEditDialog" modal="true" resizable="false"
+                  appendTo="@(body)" header="Editar información de usuario">
+            <p:ajax event="close" listener="#{usuarioController.cancelarRegistroUsuario()}" update="formEditarfoto UsuarioEditForm"/>
+
+            <h:outputStylesheet library="css" name="uploadFile.css"/>
+            <h:form id="formEditarfoto" enctype="multipart/form-data">
+                <p:panelGrid styleClass="panelgrid" id="panel">
+                    <p:row>
+                        <p:column  rendered="#{usuarioController.campoFoto}">                                
+                            <p:graphicImage value="#{usuarioController.imagenFlujoEditar}" >
+                                <f:param name="idUsu" value="#{usuarioController.selected.usuid}" />
+                            </p:graphicImage>
+                        </p:column>
+                        <p:column rendered="#{usuarioController.campoFoto}">
+                            <p:commandLink style="color: blue;" action="#{usuarioController.mostraSubirFoto()}" 
+                                           value="Cambiar foto de perfil"/>                                                                 
+                        </p:column>
+                        <p:column  rendered="#{!usuarioController.campoFoto}">
+                            <p:fileUpload fileUploadListener="#{usuarioController.actualizarFoto}" mode="advanced"
+                                          label="Seleccionar" uploadLabel="Aceptar" update="panel :UsuarioListForm:datalist "
+                                          auto="false" allowTypes="/(\.|\/)(jpe?g)$/" 
+                                          />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
             <h:form id="UsuarioEditForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{usuarioController.selected != null}">
-                        <p:outputLabel value="#{bundleAdmin.EditUsuarioLabel_usuid}" for="usuid" />
-                        <p:inputText id="usuid" value="#{usuarioController.selected.usuid}" title="#{bundleAdmin.EditUsuarioTitle_usuid}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usuid}"/>
-                        <p:outputLabel value="#{bundleAdmin.EditUsuarioLabel_usufechanacimiento}" for="usufechanacimiento" />
-                        <p:calendar id="usufechanacimiento" pattern="MM/dd/yyyy HH:mm:ss" value="#{usuarioController.selected.usufechanacimiento}" title="#{bundleAdmin.EditUsuarioTitle_usufechanacimiento}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usufechanacimiento}" showOn="button"/>
-                        <p:outputLabel value="#{bundleAdmin.EditUsuarioLabel_usunombres}" for="usunombres" />
-                        <p:inputText id="usunombres" value="#{usuarioController.selected.usunombres}" title="#{bundleAdmin.EditUsuarioTitle_usunombres}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usunombres}"/>
-                        <p:outputLabel value="#{bundleAdmin.EditUsuarioLabel_usuapellidos}" for="usuapellidos" />
-                        <p:inputText id="usuapellidos" value="#{usuarioController.selected.usuapellidos}" title="#{bundleAdmin.EditUsuarioTitle_usuapellidos}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usuapellidos}"/>
-                        <p:outputLabel value="#{bundleAdmin.EditUsuarioLabel_usugenero}" for="usugenero" />
-                        <p:inputText id="usugenero" value="#{usuarioController.selected.usugenero}" title="#{bundleAdmin.EditUsuarioTitle_usugenero}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usugenero}"/>
-                        <p:outputLabel value="#{bundleAdmin.EditUsuarioLabel_usunombreusuario}" for="usunombreusuario" />
-                        <p:inputText id="usunombreusuario" value="#{usuarioController.selected.usunombreusuario}" title="#{bundleAdmin.EditUsuarioTitle_usunombreusuario}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usunombreusuario}"/>
-                        <p:outputLabel value="#{bundleAdmin.EditUsuarioLabel_usucontrasena}" for="usucontrasena" />
-                        <p:inputText id="usucontrasena" value="#{usuarioController.selected.usucontrasena}" title="#{bundleAdmin.EditUsuarioTitle_usucontrasena}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usucontrasena}"/>
-                        <p:outputLabel value="#{bundleAdmin.EditUsuarioLabel_usuemail}" for="usuemail" />
-                        <p:inputText id="usuemail" value="#{usuarioController.selected.usuemail}" title="#{bundleAdmin.EditUsuarioTitle_usuemail}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usuemail}"/>
-                        <p:outputLabel value="#{bundleAdmin.EditUsuarioLabel_carid}" for="carid" />
-                        <p:selectOneMenu id="carid" value="#{usuarioController.selected.carid}" >
-                            <f:selectItem itemLabel="#{bundleAdmin.SelectOneMessage}"/>
-                            <f:selectItems value="#{cargoController.itemsAvailableSelectOne}"
-                                           var="caridItem"
-                                           itemValue="#{caridItem}"/>
-                        </p:selectOneMenu>
-                    </p:panelGrid>
-                    <p:commandButton actionListener="#{usuarioController.update}" value="#{bundleAdmin.Save}" update="display,:UsuarioListForm:datalist,:growl" oncomplete="handleSubmit(args, 'UsuarioEditDialog');"/>
-                    <p:commandButton value="#{bundleAdmin.Cancel}" onclick="UsuarioEditDialog.hide()"/>
-                </h:panelGroup>
+                <p:panelGrid styleClass="panelgrid" id="panel">
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Nombres" />
+
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="usunombres" value="#{usuarioController.selected.usunombres}"
+                                         title="#{bundleAdmin.CreateUsuarioTitle_usunombres}" required="true" 
+                                         requiredMessage="Campo obligatorio">
+                                <f:validator validatorId="ValidarCampo75Caracteres"/>
+                                <p:ajax event="keyup" update="msgCaracteresNombre"/>
+                            </p:inputText>
+
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Apellidos" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="usuapellidos" value="#{usuarioController.selected.usuapellidos}"
+                                         title="#{bundleAdmin.CreateUsuarioTitle_usuapellidos}" required="true" 
+                                         requiredMessage="Campo obligatorio">
+                                <f:validator validatorId="ValidarCampo75Caracteres"/>
+                                <p:ajax event="keyup" update="msgCaracteresApellido"/>
+                            </p:inputText>                                        
+                        </p:column>
+                    </p:row>
+                    <p:row> 
+                        <p:column>
+
+                        </p:column>
+                        <p:column>
+                            <p:message id="msgCaracteresNombre" for="usunombres"/>
+                        </p:column>
+                        <p:column>
+
+                        </p:column>
+                        <p:column>
+                            <p:message id="msgCaracteresApellido" for="usuapellidos"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+
+                        <p:column>
+                            <p:outputLabel value="Genero"  />
+
+                        </p:column>
+                        <p:column>
+                            <p:selectOneRadio value="#{usuarioController.selected.usugenero}">
+                                <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                <f:selectItem itemLabel="Femenino" itemValue="F" />                                    
+                            </p:selectOneRadio>
+
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Fecha de nacimiento" />
+
+                        </p:column>
+                        <p:column>
+                            <p:calendar style="width: 165px" id="usufechanacimiento" placeholder="mm/dd/aaaa" pattern="MM/dd/yyyy" value="#{usuarioController.selected.usufechanacimiento}" title="#{bundleAdmin.EditUsuarioTitle_usufechanacimiento}" required="true" requiredMessage="#{bundleAdmin.EditUsuarioRequiredMessage_usufechanacimiento}" showOn="button"/>
+                        </p:column>
+
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Email" />
+
+                        </p:column>
+                        <p:column>
+                            <p:inputText disabled="true" id="usuemail" value="#{usuarioController.selected.usuemail}"
+                                         title="#{bundleAdmin.CreateUsuarioTitle_usuemail}" 
+                                         required="true" requiredMessage="Campo obligatorio">
+                                <f:validator validatorId="ValidarCampoCorreoElectronico"/>
+                                <p:ajax event="keyup" update="msgCaracteresEMail"/>
+                            </p:inputText>
+
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Cargo" />
+
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu style="width: 176px" id="carid" value="#{usuarioController.cargo.carid}" >
+                                <f:selectItem itemLabel="Seleccione..." itemValue="0"/>
+                                <f:selectItems value="#{cargoController.itemsAvailableSelectOne}"
+                                               var="caridItem"
+                                               itemValue="#{caridItem.carid}"
+                                               itemLabel="#{caridItem.carnombre}"
+                                               />
+                                <f:validator validatorId="ValidarCamposSeleccionar"/>
+                            </p:selectOneMenu>
+                        </p:column>
+
+                    </p:row>
+                    <p:row> 
+                        <p:column>
+
+                        </p:column>
+                        <p:column>
+                            <p:message id="msgCaracteresEMail" for="usuemail"/>
+                        </p:column>
+                        <p:column>
+
+                        </p:column>
+                        <p:column>
+                            <p:message for="carid"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Tipo de usuario" />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu style="width: 176px" id="grupoId" value="#{usuarioController.grupo.gruid}" >
+                                <f:selectItem itemLabel="Seleccione..." itemValue="0"/>
+                                <f:selectItems value="#{grupoController.itemsAvailableSelectOne}"
+                                               var="grupo"
+                                               itemValue="#{grupo.gruid}"
+                                               itemLabel="#{grupo.grudescripcion}"
+                                               />
+                                <f:validator validatorId="ValidarCamposSeleccionar"/>
+                            </p:selectOneMenu>
+                        </p:column>
+
+                    </p:row>
+                    <p:row> 
+                        <p:column>
+
+                        </p:column>
+                        <p:column>
+                            <p:message  for="grupoId"/>
+                        </p:column>
+
+                    </p:row>
+                    <p:row >
+                        <p:column>
+                            <p:outputLabel value="Nombre de usuario" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText disabled="true" id="usunombreusuario" value="#{usuarioController.selected.usunombreusuario}" 
+                                         title="#{bundleAdmin.CreateUsuarioTitle_usunombreusuario}" required="true" 
+                                         requiredMessage="Campo obligatorio">
+                                <f:validator validatorId="ValidarCampoNombreUsuario"/>
+                                <p:ajax event="keyup" update="msgCaracteresNombreUsuario"/>
+
+                            </p:inputText>
+
+
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Contraseña" />
+
+                        </p:column>
+                        <p:column rendered="#{!usuarioController.campoContrasena}">
+                            <p:password id="usucontrasena" value="#{usuarioController.contrasena}"
+                                        title="#{bundleAdmin.CreateUsuarioTitle_usucontrasena}" 
+                                        />        
+                        </p:column>
+                        <p:column rendered="#{usuarioController.campoContrasena}" style="background: #eff5fa">
+                            <p:outputLabel value="***********"/>
+                        </p:column>
+
+                        <p:column rendered="#{usuarioController.campoContrasena}" style="background: #eff5fa" colspan="2">
+                            <p:commandLink style="color: blue;" value="Modificar" action="#{usuarioController.mostrarModificarContrasena()}"/>
+                        </p:column>
+                        <p:column rendered="#{!usuarioController.campoContrasena}" style="background: #eff5fa" colspan="2">
+                            <p:commandLink style="color: blue;" value="Aceptar" action="#{usuarioController.actualizarContrasena()}"
+                                           onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()"/>
+                            <p:commandLink style="margin-left: 10px;color: blue;" value="Cancelar" 
+                                           action="#{usuarioController.cancelarActualizarContrasena()}"
+                                           onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()"/>
+                        </p:column>
+                    </p:row>
+                    <p:row> 
+                        <p:column>
+
+                        </p:column>
+                        <p:column>
+                            <p:message id="msgCaracteresNombreUsuario" for="usunombreusuario"/>
+                        </p:column>
+                        <p:column>
+
+                        </p:column>
+                        <p:column>
+                            <p:message for="usucontrasena"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+
+                <p:commandButton action="#{usuarioController.editarUsuario()}" value="Guardar cambios" 
+                                 update="panel,:UsuarioListForm:datalist"/>
+
+
             </h:form>
         </p:dialog>
 

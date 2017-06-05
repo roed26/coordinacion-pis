@@ -45,7 +45,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByUsugenero", query = "SELECT u FROM Usuario u WHERE u.usugenero = :usugenero"),
     @NamedQuery(name = "Usuario.findByUsunombreusuario", query = "SELECT u FROM Usuario u WHERE u.usunombreusuario = :usunombreusuario"),
     @NamedQuery(name = "Usuario.findByUsucontrasena", query = "SELECT u FROM Usuario u WHERE u.usucontrasena = :usucontrasena"),
-    @NamedQuery(name = "Usuario.findByUsuemail", query = "SELECT u FROM Usuario u WHERE u.usuemail = :usuemail")})
+    @NamedQuery(name = "Usuario.findByUsuemail", query = "SELECT u FROM Usuario u WHERE u.usuemail = :usuemail"),
+    @NamedQuery(name = "Usuario.findByBusquedaUsuarios", query = "SELECT u FROM Usuario u WHERE LOWER(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(u.usunombres,' '), u.usuapellidos),' ') ,u.usuemail), ' '),u.usunombreusuario)) LIKE :busqueda")
+})
 public class Usuario implements Serializable {
 
     @Lob
@@ -229,5 +231,5 @@ public class Usuario implements Serializable {
     public void setUsufoto(byte[] usufoto) {
         this.usufoto = usufoto;
     }
-    
+
 }

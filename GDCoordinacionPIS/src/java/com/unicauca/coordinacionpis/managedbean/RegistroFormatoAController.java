@@ -37,18 +37,33 @@ import com.openkm.sdk4j.exception.UnsupportedMimeTypeException;
 import com.openkm.sdk4j.exception.UserQuotaExceededException;
 import com.openkm.sdk4j.exception.VirusDetectedException;
 import com.openkm.sdk4j.exception.WebserviceException;
+import com.unicauca.coordinacionpis.classMetadatos.Docente;
 
 import com.unicauca.coordinacionpis.classMetadatos.MetadatosAntepoyecto;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.primefaces.json.JSONArray;
+import org.primefaces.json.JSONException;
+import org.primefaces.json.JSONObject;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -63,8 +78,11 @@ public class RegistroFormatoAController implements Serializable {
     private boolean exitoSubirArchivo;
     private String nombreArchivo;
     private UploadedFile archivOferta;
-    private List<QueryResult> documentosFormatoA;
-    String url = "http://localhost:8080/OpenKM";
+    private StreamedContent streamedContent;
+    private String datos;
+    private List<com.openkm.sdk4j.bean.Document> listadoDocsAnteproecto;
+    private com.openkm.sdk4j.bean.Document documento;
+    String url = "http://wmyserver.sytes.net:8083/OpenKM";
     String user = "okmAdmin";
     String pass = "admin";
     OKMWebservices okm = OKMWebservicesFactory.newInstance(url, user, pass);
@@ -74,11 +92,24 @@ public class RegistroFormatoAController implements Serializable {
         this.formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
         metadatosAnteproyectos = new MetadatosAntepoyecto();
         metadatosAnteproyectos.setViabilidad("Si");
+        listadoDocsAnteproecto = new ArrayList<>();
     }
 
     @PostConstruct
     public void init() {
+        metadatosAnteproyectos.setViabilidad("Si");
+        
+        try {
 
+            InputStream in = okm.getContent(documento.getPath());
+            streamedContent = new DefaultStreamedContent(in, "application/pdf");
+            Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            byte[] b = (byte[]) session.get("reportBytes");
+            if (b != null) {
+                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+            }
+        } catch (Exception e) {
+        }
     }
 
     public MetadatosAntepoyecto getMetadatosAnteproyectos() {
@@ -88,9 +119,6 @@ public class RegistroFormatoAController implements Serializable {
     public void setMetadatosAnteproyectos(MetadatosAntepoyecto metadatosAnteproyectos) {
         this.metadatosAnteproyectos = metadatosAnteproyectos;
     }
-
-    
-  
 
     public boolean isExitoSubirArchivo() {
         return exitoSubirArchivo;
@@ -116,13 +144,28 @@ public class RegistroFormatoAController implements Serializable {
         this.formatoFecha = formatoFecha;
     }
 
-    public List getListaDocs() {
+    public StreamedContent getStreamedContent() {
+        return streamedContent;
+    }
+
+    public void setStreamedContent(StreamedContent streamedContent) {
+        this.streamedContent = streamedContent;
+    }
+
+    public List<com.openkm.sdk4j.bean.Document> getListadoAnteproecto() {
+        listadoDocsAnteproecto.clear();
         try {
-            documentosFormatoA = okm.findByName("");
-        } catch (IOException ex) {
-            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+            List<QueryResult> lista = okm.findByName(datos);
+            for (int i = 0; i < lista.size(); i++) {
+                String[] pathDividido = lista.get(i).getDocument().getPath().split("/");
+                String path = "/" + pathDividido[1] + "/" + pathDividido[2];
+                if (path.equalsIgnoreCase("/okm:root/FormatoA")) {
+                    listadoDocsAnteproecto.add(lista.get(i).getDocument());
+                }
+            }
+            /*listadoDocsOfertasAcademicas
+                    = okm.getDocumentChildren("/okm:root/Oferta academica");*/
+
         } catch (RepositoryException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DatabaseException ex) {
@@ -131,8 +174,12 @@ public class RegistroFormatoAController implements Serializable {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (WebserviceException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return documentosFormatoA;
+        return listadoDocsAnteproecto;
     }
 
     public void seleccionarArchivo(FileUploadEvent event) {
@@ -173,17 +220,11 @@ public class RegistroFormatoAController implements Serializable {
         Document okmDocument = new Document();
         try {
             for (Folder fld : okm.getFolderChildren("/okm:root")) {
-                System.out.println("Fodler -> " + fld.getPath());
-                if(fld.getPath().equalsIgnoreCase("okm:root/FormatoA")){
-                
+                if (fld.getPath().equalsIgnoreCase("/okm:root/FormatoA")) {
+
                     existe = true;
                 }
             }
-            //okm.createFolderSimple("/okm:root/ofertaAcademica");
-
-//            okm.createDocumentSimple("/okm:root/ofertaAcademica/"+archivOferta.getFileName(),archivOferta.getInputstream());
-            //if (!okm.isValidFolder("/okm:root/Oferta academica")) {
-            //okm.createFolderSimple("/okm:personal/okmAdmin/oferta acedemica");
             if (!existe) {
                 okm.createFolderSimple("/okm:root/FormatoA");
                 okm.createDocumentSimple("/okm:root/FormatoA/" + archivOferta.getFileName(), archivOferta.getInputstream());
@@ -220,6 +261,15 @@ public class RegistroFormatoAController implements Serializable {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
         }
         agregarMetadatos();
+        exitoSubirArchivo = false;
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.update("formSeleccionarArchivoFormatoA");
+        requestContext.update("formMetadatosFormatoA");
+        requestContext.update("formArchivoSelecionadoFormatoA");
+        requestContext.execute("PF('dlgRegistroFormatoA').hide()");
+        metadatosAnteproyectos = new MetadatosAntepoyecto();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "La información se registro con exito."));
+        requestContext.execute("PF('mensajeRegistroExitoso').show()");
     }
 
     public void agregarMetadatos() {
@@ -234,7 +284,7 @@ public class RegistroFormatoAController implements Serializable {
             document.addCreator("Memorynotfound.com");
             document.addTitle("Add meta data to PDF");
             document.addSubject("how to add meta data to pdf using itext");
-            document.addKeywords(metadatosAnteproyectos.getTitulo()+ "," + metadatosAnteproyectos.getProfesor());
+            document.addKeywords(metadatosAnteproyectos.getTitulo() + "," + metadatosAnteproyectos.getProfesor());
             document.addLanguage(Locale.ENGLISH.getLanguage());
             document.addHeader("type", "tutorial, example");
 
@@ -252,6 +302,73 @@ public class RegistroFormatoAController implements Serializable {
 
     }
 
+    public List<Docente> getListaDocentes() {
+
+        List<Docente> listaDocentes = new ArrayList<>();
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        HttpGet httpget = new HttpGet("http://wmyserver.sytes.net:8080/JefaturaPIS/webresources/docente");
+        httpget.setHeader("Content-type", "application/json");
+        String strResultado = "NaN";
+        try {
+            //ejecuta
+            HttpResponse response = httpclient.execute(httpget);
+            //Obtiene la respuesta del servidor
+            String jsonResult = inputStreamToString(response.getEntity().getContent()).toString();
+            JSONArray array = new JSONArray(jsonResult);
+            //JSONObject object = new JSONObject(jsonResult);
+            //obtiene el status
+            // String status = object.getString("status");
+            //200 -> todo esta bien
+            //if( status.equals("200") )
+            //{
+            strResultado = "";
+            //extrae los registros
+            //JSONArray array = new JSONArray(object.getString("Registros"));
+            for (int i = 0; i < array.length(); i++) {
+                //recorre cada registro y concatena el resultado
+                JSONObject row = array.getJSONObject(i);
+                Docente docente = new Docente();
+                String nombres = row.getString("nombres");
+                docente.setNombres(nombres);
+                String apellidos = row.getString("apellidos");
+                docente.setApellidos(apellidos);
+                String documento = row.getString("documento");
+                docente.setDocumento(documento);
+                //String estId = row.getString("estId");
+                //String apellidos = row.getString("apellidos");
+                //System.out.println("PLC_TU "+ (i+1) +"\n\n"+"Nombres: "+ nombres + "\n"+"Apellidos: "+ apellidos + "\n\n"+ "\n"+"Estudios: "+ estId + "\n\n");
+                listaDocentes.add(docente);
+            }
+
+            // }
+        } catch (ClientProtocolException e) {
+            strResultado = e.getMessage();
+            e.printStackTrace();
+        } catch (IOException e) {
+            strResultado = e.getMessage();
+            e.printStackTrace();
+        } catch (JSONException e) {
+            strResultado = e.getMessage();
+            e.printStackTrace();
+        }
+        return listaDocentes;
+    }
+
+    private StringBuilder inputStreamToString(InputStream is) {
+        String line = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+        try {
+            while ((line = rd.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return stringBuilder;
+    }
+
     public String nombreDelArchivo(String path) {
 
         String partesPath[] = path.split("/");
@@ -260,5 +377,54 @@ public class RegistroFormatoAController implements Serializable {
 
     public String fecha(Calendar fecha) {
         return formatoFecha.format(fecha.getTime());
+    }
+    
+    public StreamedContent descargarDocumento(com.openkm.sdk4j.bean.Document queryResult) {
+        StreamedContent file = null;
+        com.openkm.sdk4j.bean.Document doc = queryResult;
+        try {
+            InputStream is = okm.getContent(doc.getPath());
+            file = new DefaultStreamedContent(is, "application/pdf", nombreDelArchivo(doc.getPath()));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RepositoryException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PathNotFoundException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AccessDeniedException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DatabaseException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknowException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WebserviceException ex) {
+            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return file;
+    }
+
+    public void visualizarDocumento(com.openkm.sdk4j.bean.Document documento) {
+
+        try {
+            this.documento = documento;
+            InputStream in = okm.getContent(documento.getPath());
+            streamedContent = new DefaultStreamedContent(in, "application/pdf");
+            //-------
+            Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            byte[] b = (byte[]) session.get("reportBytes");
+            if (b != null) {
+                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+            }
+
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.update(":visualizacion");
+            requestContext.execute("PF('visualizarPDF').show()");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
