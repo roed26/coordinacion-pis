@@ -59,7 +59,7 @@
 
         <ui:include src="registrarOfertaAcademica.xhtml"/> 
         <p:dialog widgetVar="visualizarPDF" modal="true">
-            <h:form id="visualizacion">
+            <h:form id="visualizacion" >
                 <p:media value="#{registroOfertaAcademicaController.streamedContent}" width="750" height="560" player="pdf" />
             </h:form>
 

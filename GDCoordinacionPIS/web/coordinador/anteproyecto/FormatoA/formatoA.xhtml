@@ -12,7 +12,12 @@
         <h:form>
             <p:commandButton value="Agregar formatoA" onclick="PF('dlgRegistroFormatoA').show()"/>
         </h:form>
-        <h:form id="formListaAnteproyectos">            
+        <h:form id="formListaAnteproyectos">    
+            <p:outputLabel value="Buscar documento: " style="font-weight: bold; color: #000000"/>
+
+            <p:inputText   style="width: 300px" placeholder="Nombre del documento" value="#{registroFormatoAController.datos}">
+                <p:ajax update="datalist"  event="keyup" />
+            </p:inputText>  
             <p:dataTable value="#{registroFormatoAController.listadoAnteproecto}" 
                          id="datalist" paginator="true"
                          rowKey="#{item.id}"
@@ -31,7 +36,7 @@
                     </f:facet>
                     <p:outputLabel value="#{registroFormatoAController.fecha(formatoA.getCreated())}"/>
                 </p:column>
-                <p:column style="text-align: center; background: #C8CDD6; width: 140px">
+                <p:column style="text-align: center; background: #C8CDD6; width: 290px">
                     <f:facet name="header">
                         Acciones
                     </f:facet>
@@ -41,16 +46,33 @@
                     <p:commandButton value="Ver" update=":visualizacion" onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()" 
                                      action="#{registroFormatoAController.visualizarDocumento(formatoA)}" 
                                      icon="ui-icon-search" title="Ver"/>
+                    <p:commandButton value="Editar"  onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()" 
+                                     action="#{registroFormatoAController.cargarDatosEdicion(formatoA)}" 
+                                     icon="ui-icon-pencil" title="Editar"/>
+                    <p:commandButton value="Eliminar" update=":visualizacion" onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()" 
+                                     action="#{registroFormatoAController.confirmarEliminacion(formatoA)}" 
+                                     icon="ui-icon-trash" title="Eliminar"/>
+                    
                 </p:column>
             </p:dataTable>
         </h:form>
 
         <ui:include src="registrarFormatoA.xhtml"/> 
-        <p:dialog header="Información" modal="true" position="center" widgetVar="mensajeRegistroExitoso" closable="false">
+        <ui:include src="editarInfoFormatoA.xhtml"/> 
+         <p:dialog header="Información" modal="true" position="center" widgetVar="mensajeRegistroExitoso" closable="false">
             <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
             <h:form>
                 <p:commandButton  value="Aceptar" style="font-weight: normal;"
                                   onclick="PF('mensajeRegistroExitoso').hide()"/>
+            </h:form>
+        </p:dialog>
+        <p:dialog header="Información" modal="true" position="center" widgetVar="Confirmacion" closable="false">
+            <p:messages  style="font-size: 15px;"  showDetail="true" autoUpdate="true"/>
+            <h:form>
+                <p:commandButton  value="Aceptar" style="font-weight: normal;"
+                                  action="#{registroFormatoAController.deleteDocument()}"  />
+                <p:commandButton  value="Cancelar" style="font-weight: normal;"
+                                  onclick="PF('Confirmacion').hide()"/>
             </h:form>
         </p:dialog>
         <p:dialog widgetVar="visualizarPDF" modal="true">
