@@ -101,7 +101,7 @@ and open the template in the editor.
                     <p:column>
                         <p:inputText id="acPlanEstudio" maxlength="30" value="#{registroPlandeEstudioController.metadatosPlandeEstudio.acuerdo}" required="true" requiredMessage="Campo Acuerdo Plan de Estudio obligatorio" validatorMessage="Longitud m&#237;n: 5 caracteres, m&#225;x 30 caracteres. ">
                             <!--Validar el tamaño del dato ingresado en el campo, cada ves que se presione una tecla-->
-                            <p:watermark for="acPlanEstudio" value="Acuerdo 062 de 2008 / CA" id="watermark" />
+                            <!--<p:watermark for="acPlanEstudio" value="Acuerdo" id="watermark" />-->
                             <f:ajax event="keyup" render="msgAcPlan"/>
                             <f:validateLength minimum="5"/>
                         </p:inputText>

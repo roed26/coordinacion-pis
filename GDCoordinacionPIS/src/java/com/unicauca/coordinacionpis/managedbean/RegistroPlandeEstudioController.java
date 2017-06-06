@@ -92,7 +92,7 @@ public class RegistroPlandeEstudioController implements Serializable {
         this.conexionOpenKM = new ConexionOpenKM();
         this.okm = conexionOpenKM.getOkm();
         this.documentoAnterior = "";
-        this.rutaPlanesDeEstudio = "/okm:root/Planes de Estudio";
+        this.rutaPlanesDeEstudio = "/okm:root/Coordinacion/Planes de Estudio";
         auxNumeroPlan = 1;
         auxAcuerdoPlan = "";
         auxFechaPlan = null;
@@ -124,6 +124,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     }
 
     public List<Document> getDocumentosPlanEstudio() {
+       
         return documentosPlanEstudio;
     }
 
@@ -140,7 +141,11 @@ public class RegistroPlandeEstudioController implements Serializable {
     }
 
     public StreamedContent getStreamedContent() {
-        return streamedContent;
+        if (FacesContext.getCurrentInstance().getRenderResponse()) {
+            return new DefaultStreamedContent();
+        } else {
+            return streamedContent;
+        }
     }
 
     public void setStreamedContent(StreamedContent streamedContent) {
@@ -206,8 +211,8 @@ public class RegistroPlandeEstudioController implements Serializable {
             existeFolder = existeCarpeta();
 
             if (existeFolder) {//Si existe la carpeta, busca el documento
-                for (com.openkm.sdk4j.bean.Document doc : okm.getDocumentChildren("/okm:root/Planes de Estudio")) {
-                    if (doc.getPath().equalsIgnoreCase("/okm:root/Planes de Estudio/" + nombreArchivo)) {//Buscar en openkm si existe el archivo a guardar
+                for (com.openkm.sdk4j.bean.Document doc : okm.getDocumentChildren("/okm:root/Coordinacion/Planes de Estudio")) {
+                    if (doc.getPath().equalsIgnoreCase("/okm:root/Coordinacion/Planes de Estudio/" + nombreArchivo)) {//Buscar en openkm si existe el archivo a guardar
                         existeDocumento = true;
                     }
                 }
@@ -224,6 +229,7 @@ public class RegistroPlandeEstudioController implements Serializable {
                     message = new FacesMessage("Error al registrar el archivo", nombreArchivo);
                 }
             } else {//Si la carpeta no existe, la crea y dentro de ella crea el documento.
+                System.out.println("creando carpeta");
                 okm.createFolderSimple(rutaPlanesDeEstudio);//Crear carpeta Planes de Estudio en openkm
                 okm.createDocumentSimple(rutaPlanesDeEstudio + "/" + nombreArchivo, archivoPlan.getInputstream());//Crear el documento dentro de la carpeta Planes de Estudio en openkm
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "El archivo " + nombreArchivo + " se registro con exito");
@@ -280,10 +286,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     public void cargarPlanEstudio(Document document) {
         try {
             RequestContext rc = RequestContext.getCurrentInstance();
-//            this.exitoSubirArchivo = true;
-//            rc.update("formActualizarArchivoPlanEstudio");
-//            rc.update("formArchivoSelecionadoActualizarPlanEstudio");
-//            rc.update("formActualizarMetadatosPlanEstudio");
+
             Set<String> palabras = document.getKeywords();
             for (int i = 0; i < palabras.size(); i++) {
                 if (Validador.esFecha((String) palabras.toArray()[i])) {
@@ -314,7 +317,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     public void editarPlanEstudio() {
 
         RequestContext rc = RequestContext.getCurrentInstance();
-        FacesMessage message = new FacesMessage( FacesMessage.SEVERITY_WARN ,"Advertencia", "No registraste ningún cambio");
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No registraste ningún cambio");
 
         try {
             if (!nombreArchivo.equals(documentoAnterior)) {
@@ -323,22 +326,22 @@ public class RegistroPlandeEstudioController implements Serializable {
                 okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + metadatosPlandeEstudio.getNumero());
                 okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + metadatosPlandeEstudio.getAcuerdo());
                 okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + formatoFecha.format(metadatosPlandeEstudio.getVigencia()));
-                message = new FacesMessage( FacesMessage.SEVERITY_INFO ,"Confirmación","Plan de estudio actualizado correctamente");
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Confirmación", "Plan de estudio actualizado correctamente");
             } else {
                 if (metadatosPlandeEstudio.getNumero() != auxNumeroPlan) {
                     okm.removeKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + auxNumeroPlan);
                     okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + metadatosPlandeEstudio.getNumero());
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO ,"Confirmación","Plan de estudio actualizado correctamente");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Confirmación", "Plan de estudio actualizado correctamente");
                 }
                 if (!metadatosPlandeEstudio.getAcuerdo().equalsIgnoreCase(auxAcuerdoPlan)) {
                     okm.removeKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + auxAcuerdoPlan);
                     okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + metadatosPlandeEstudio.getAcuerdo());
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO ,"Confirmación","Plan de estudio actualizado correctamente");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Confirmación", "Plan de estudio actualizado correctamente");
                 }
                 if (metadatosPlandeEstudio.getVigencia().compareTo(auxFechaPlan) != 0) {
                     okm.removeKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + formatoFecha.format(auxFechaPlan));
                     okm.addKeyword(rutaPlanesDeEstudio + "/" + nombreArchivo, "" + formatoFecha.format(metadatosPlandeEstudio.getVigencia()));
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO ,"Confirmación","Plan de estudio actualizado correctamente");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Confirmación", "Plan de estudio actualizado correctamente");
                 }
             }
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -395,64 +398,16 @@ public class RegistroPlandeEstudioController implements Serializable {
      */
     public void listaDocs() {
         try {
+
             if (existeCarpeta()) {
+                System.out.println("recuperando archivos");
                 documentosPlanEstudio.clear();
                 documentosPlanEstudio = okm.getDocumentChildren(rutaPlanesDeEstudio);//Obtener los Planes de Estudio contenidos en openkm          
             }
+
         } catch (RepositoryException ex) {
             Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DatabaseException ex) {
-            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknowException ex) {
-            Logger.getLogger(RegistroOfertaAcademicaController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (WebserviceException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (PathNotFoundException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void visualizarDocumento(Document documento) {
-
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = facesContext.getExternalContext();
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-
-        try {
-            InputStream in = okm.getContent(documento.getPath());
-            input = new BufferedInputStream(in,
-                    5000000);
-            if (response.isCommitted()) {
-                return;
-            }
-            response.reset();
-
-            response.setContentType("application/pdf");
-//            response.setHeader("Content-Type", "application/pdf");
-            response.addHeader("Content-disposition", "inline; filename=Gen.pdf");
-//            response.setHeader("Cache-Control", "no-cache");
-//            response.setHeader("Content-Length", "Nuevo");
-
-            output = new BufferedOutputStream(response.getOutputStream(),
-                    5000000);
-
-            byte[] buffer = new byte[5000000];
-            int length;
-            while ((length = input.read(buffer)) > 0) {
-                output.write(buffer, 0, length);
-            }
-            output.flush();
-
-            FacesContext.getCurrentInstance().responseComplete();
-            output.close();
-            input.close();
-        } catch (IOException ioe) {
-//            JsfUtil.addWarningMessage("Errore nell'apertura del file!");
-        } catch (RepositoryException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PathNotFoundException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (AccessDeniedException ex) {
             Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DatabaseException ex) {
             Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
@@ -460,10 +415,7 @@ public class RegistroPlandeEstudioController implements Serializable {
             Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (WebserviceException ex) {
             Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-
         }
-        facesContext.responseComplete();
     }
 
     //Método utilizado para limitar la fecha de la vigencia del plan de estudio
@@ -480,8 +432,9 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     private boolean existeCarpeta() throws PathNotFoundException, RepositoryException, DatabaseException, UnknowException, WebserviceException {
 
-        for (Folder fld : okm.getFolderChildren("/okm:root")) {
-            if (fld.getPath().equalsIgnoreCase(rutaPlanesDeEstudio)) {//Buscar en openkm si existe la carpeta Planes de Estudio
+        for (Folder fld : okm.getFolderChildren("/okm:root/Coordinacion")) {
+           
+            if (fld.getPath().equalsIgnoreCase(rutaPlanesDeEstudio)) {//Buscar en openkm si existe la carpeta Planes de Estudio                 
                 return true;
             }
         }
@@ -516,7 +469,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     }
 
     public String nombreDelArchivo(String path) {
-        String partesPath[] = path.split("/");
+        String partesPath[] = path.split("/");       
         return partesPath[partesPath.length - 1];
     }
 
@@ -524,42 +477,25 @@ public class RegistroPlandeEstudioController implements Serializable {
         return formatoFecha.format(fecha.getTime());
     }
 
-    public StreamedContent stream(Document doc) {
+    public void visualizardePlanEstudio(Document doc) {
         InputStream in = null;
-        StreamedContent str = null;
+//        StreamedContent str = null;
         try {
-
+            this.documento = doc;
             in = okm.getContent(doc.getPath());
-            str = new DefaultStreamedContent(in, "application/pdf");
+            streamedContent = new DefaultStreamedContent(in, "application/pdf");
             //-------
             Map<String, Object> session = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
             byte[] b = (byte[]) session.get("reportBytes");
             if (b != null) {
-                str = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
+                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(b), "application/pdf");
             }
-            return str;
-        } catch (RepositoryException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PathNotFoundException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (AccessDeniedException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DatabaseException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknowException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (WebserviceException ex) {
-            Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException ex) {
-                Logger.getLogger(RegistroPlandeEstudioController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.update(":visualizacionPlanPdf");
+            requestContext.execute("PF('visualizarPlanPDF').show()");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return str;
     }
 
     public void cambiarArchivo() {
