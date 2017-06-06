@@ -91,7 +91,12 @@ public class MateriaController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Materia editada con exito."));
         requestContext.execute("PF('mensajeRegistroExitoso').show()");
     }
-    
+    public void cancelarEdicion() {
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("PF('MateriaEditDialog').hide()");
+        departamento = new Departamento();
+        materia = new Materia();
+    }
     public void cancelarRegistro(){
         
         departamento = new Departamento();
