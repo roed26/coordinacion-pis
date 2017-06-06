@@ -143,6 +143,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     public StreamedContent getStreamedContent() {
         if (FacesContext.getCurrentInstance().getRenderResponse()) {
             return new DefaultStreamedContent();
+
         } else {
             return streamedContent;
         }
@@ -480,6 +481,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     public String fecha(Date fecha) {
         return formatoFecha.format(fecha.getTime());
     }
+
 
     public void visualizardePlanEstudio(Document doc) {
         InputStream in = null;
