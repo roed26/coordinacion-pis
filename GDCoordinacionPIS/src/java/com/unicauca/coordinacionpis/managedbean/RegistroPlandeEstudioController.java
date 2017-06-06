@@ -124,7 +124,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     }
 
     public List<Document> getDocumentosPlanEstudio() {
-       
+
         return documentosPlanEstudio;
     }
 
@@ -229,7 +229,7 @@ public class RegistroPlandeEstudioController implements Serializable {
                     message = new FacesMessage("Error al registrar el archivo", nombreArchivo);
                 }
             } else {//Si la carpeta no existe, la crea y dentro de ella crea el documento.
-                System.out.println("creando carpeta");
+                okm.createFolderSimple("/okm:root/Coordinacion");
                 okm.createFolderSimple(rutaPlanesDeEstudio);//Crear carpeta Planes de Estudio en openkm
                 okm.createDocumentSimple(rutaPlanesDeEstudio + "/" + nombreArchivo, archivoPlan.getInputstream());//Crear el documento dentro de la carpeta Planes de Estudio en openkm
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "El archivo " + nombreArchivo + " se registro con exito");
@@ -400,7 +400,6 @@ public class RegistroPlandeEstudioController implements Serializable {
         try {
 
             if (existeCarpeta()) {
-                System.out.println("recuperando archivos");
                 documentosPlanEstudio.clear();
                 documentosPlanEstudio = okm.getDocumentChildren(rutaPlanesDeEstudio);//Obtener los Planes de Estudio contenidos en openkm          
             }
@@ -432,10 +431,15 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     private boolean existeCarpeta() throws PathNotFoundException, RepositoryException, DatabaseException, UnknowException, WebserviceException {
 
-        for (Folder fld : okm.getFolderChildren("/okm:root/Coordinacion")) {
-           
-            if (fld.getPath().equalsIgnoreCase(rutaPlanesDeEstudio)) {//Buscar en openkm si existe la carpeta Planes de Estudio                 
-                return true;
+        for (Folder fld : okm.getFolderChildren("/okm:root")) {
+
+            if (fld.getPath().equalsIgnoreCase("/okm:root/Coordinacion")) {
+                for (Folder f : okm.getFolderChildren("/okm:root/Coordinacion")) {
+                    if (f.getPath().equalsIgnoreCase(rutaPlanesDeEstudio)) {//Buscar en openkm si existe la carpeta Planes de Estudio     
+
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -469,7 +473,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     }
 
     public String nombreDelArchivo(String path) {
-        String partesPath[] = path.split("/");       
+        String partesPath[] = path.split("/");
         return partesPath[partesPath.length - 1];
     }
 
