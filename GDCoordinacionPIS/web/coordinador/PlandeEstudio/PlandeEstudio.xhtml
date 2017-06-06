@@ -40,7 +40,7 @@ and open the template in the editor.
                         Nombre del archivo
                     </f:facet>
                     <p:outputLabel value="#{registroPlandeEstudioController.nombreDelArchivo(dato.path)}"/>
-                    
+
                 </p:column>
 
                 <p:column>
@@ -59,23 +59,25 @@ and open the template in the editor.
                         <p:fileDownload value="#{registroPlandeEstudioController.descargarDocumento(dato)}" />
                     </p:commandButton>                    
                     <!--<p:commandButton value="Ver" action="{registroPlandeEstudioController.show(dato)}" icon="ui-icon-search" title="Ver"/>-->  
-                    <p:commandLink styleClass="btn" value="ver" action="#{registroPlandeEstudioController.visualizarDocumento(dato)}" ajax="false" target="_blank" style="background-color: gainsboro;padding: 2px 15px 2px 15px; border-radius: 2px; text-decoration: none"></p:commandLink>
+                    <!--<p:commandLink styleClass="btn" value="ver" action="{registroPlandeEstudioController.visualizarDocumento(dato)}" ajax="false" target="_blank" style="background-color: gainsboro;padding: 2px 15px 2px 15px; border-radius: 2px; text-decoration: none"></p:commandLink>-->
+                    <p:commandButton value="Ver" update=":visualizacionPlanPdf" onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()" 
+                                     action="#{registroPlandeEstudioController.visualizardePlanEstudio(dato)}"
+                                     icon="ui-icon-search" title="Ver"/>
                 </p:column>
             </p:dataTable>
         </h:form>
         <ui:include src="RegistrarPlandeEstudio.xhtml"/>
         <ui:include src="ActualizarPlanEstudio.xhtml"/>
-        <!--        <p:dialog widgetVar="visualizarPDF" modal="true">
-                    <h:form id="visualizacionPlanPdf">
-                        <h3>PDF</h3>
-                        <p:media value="{registroPlandeEstudioController.streamedContent}" width="750" height="560" player="pdf" />
-                    </h:form>
-                </p:dialog>-->
+        <p:dialog widgetVar="visualizarPlanPDF" modal="true">
+            <h:form id="visualizacionPlanPdf">                
+                <p:media value="#{registroPlandeEstudioController.streamedContent}" width="750" height="560" player="pdf" />
+            </h:form>
+        </p:dialog>
         <script type="text/javascript">
             function start() {
                 PF('cargando').show();
             }
-
+            
             function stop() {
                 PF('cargando').hide();
             }
