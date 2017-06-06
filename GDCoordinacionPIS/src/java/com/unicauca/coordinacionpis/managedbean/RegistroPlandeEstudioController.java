@@ -482,7 +482,6 @@ public class RegistroPlandeEstudioController implements Serializable {
         return formatoFecha.format(fecha.getTime());
     }
 
-
     public void visualizardePlanEstudio(Document doc) {
         InputStream in = null;
 //        StreamedContent str = null;
@@ -537,6 +536,20 @@ public class RegistroPlandeEstudioController implements Serializable {
             conexion = false;
         }
         return conexion;
+    }
+
+    public void deleteDocument(Document doc) {
+        try {
+            okm.deleteDocument(doc.getPath());
+            okm.purgeTrash();
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "El archivo se elimino con exito!"));            
+            requestContext.update("formPlanesdeEstudio:mensajeEliminar");
+            listaDocs();
+            requestContext.update("lstPlanesEstudio");
+        } catch (Exception e) {
+
+        }
     }
 
 }
