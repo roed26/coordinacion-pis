@@ -63,6 +63,9 @@ import org.primefaces.model.UploadedFile;
 @SessionScoped
 public class RegistroPlandeEstudioController implements Serializable {
 
+    /**
+     * Atributos
+     */
     private MetadatosPlanEstudio metadatosPlandeEstudio;
     private String nombreArchivo;
     private boolean exitoSubirArchivo;
@@ -80,9 +83,12 @@ public class RegistroPlandeEstudioController implements Serializable {
     private int auxNumeroPlan;
     private String auxAcuerdoPlan;
     private Date auxFechaPlan;
-
     private OKMWebservices okm;
 
+    /**
+     * Constructor encargado de inicializar algunas de los atributos asignados a
+     * la clase
+     */
     public RegistroPlandeEstudioController() {
         this.formatoFecha = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -96,7 +102,6 @@ public class RegistroPlandeEstudioController implements Serializable {
         auxNumeroPlan = 1;
         auxAcuerdoPlan = "";
         auxFechaPlan = null;
-
     }
 
     public String getNombreArchivo() {
@@ -140,6 +145,12 @@ public class RegistroPlandeEstudioController implements Serializable {
         this.metadatosPlandeEstudio = metadatosPlandeEstudio;
     }
 
+    /**
+     * Metodo encargado de retornar a la vista PlanEstudio un objeto de tipo
+     * streamedContet para poder visualizar un plan de estudio.
+     *
+     * @return retorna un objeto de tipo streamedContent.
+     */
     public StreamedContent getStreamedContent() {
         if (FacesContext.getCurrentInstance().getRenderResponse()) {
             return new DefaultStreamedContent();
@@ -153,7 +164,10 @@ public class RegistroPlandeEstudioController implements Serializable {
         this.streamedContent = streamedContent;
     }
 
-//Al presionar el boton cancelar, se borran los datos ingresados en el formulario y se actualiza el formulario.
+    /**
+     * Metodo encargado de restaurar los metadatos del plan de estudio y
+     * actualizar la vista de registro de un plan.
+     */
     public void cancelarRegistroPlanEstudio() {
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
         limpiarVariables();
@@ -166,9 +180,11 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     /**
      * Recibe como parametro el archivo(Plan de estudio) que se va a guardar y
-     * se obtiene el archivo y nombre.
+     * se obtiene el archivo y nombre, acontinuacion se envia un mensaje de
+     * exito a la vista de registro y se actualiza el campo del archivo en la
+     * vista.
      *
-     * @param event
+     * @param event archivo cargado desde el computador.
      */
     public void seleccionarArchivo(FileUploadEvent event) {
         nombreArchivo = event.getFile().getFileName();
@@ -185,6 +201,13 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     }
 
+    /**
+     * Recibe como parametro el archivo cargado desde el computador, obtiene el
+     * nombre, y el archivo. A continuacion se envia un mensaje de exito a la
+     * vista de actualizacion y se actualiza el formulario.
+     *
+     * @param event archivo cargado desde el computador.
+     */
     public void seleccionarArchivoActualizacion(FileUploadEvent event) {
         nombreArchivo = event.getFile().getFileName();
         System.out.println("nombre archivo: " + nombreArchivo);
@@ -200,6 +223,18 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     }
 
+    /**
+     * Realiza un llamado al repositorio de openkm para verificar si existe el
+     * directorio donde se van a guardar los planes de estudio, una ves
+     * verificado esto, verifica si el plan de estudio a guardar existe,
+     * realizadas estas verificaciones, si la carpeta no existe la crea, si el
+     * plan de estudio existe enviar un mensaje de error a la vista, de lo
+     * contrario realiza un llamado a openkm para guardar el plan de estudio,
+     * guardado el plan le asigna los metadatos al plan de estudios creado.
+     * Terminados estos pasos envia un mensaje de exito a la vista de
+     * PlanEstudio, actualiza el formulario de registro y la vista que contiene
+     * los planes de estudio(planEstudio).
+     */
     public void aceptarRegistroPlanEstudio() {
         RequestContext rc = RequestContext.getCurrentInstance();
         FacesMessage message = null;
@@ -284,6 +319,16 @@ public class RegistroPlandeEstudioController implements Serializable {
         }
     }
 
+    /**
+     * Recibe como parametro un plan de estudio, luego de esto obtiene los
+     * metadatos del plan, los guarda en un objeto de metadatosPlanEstudio y una
+     * variables auxiliares para poder saber si al momento de actualizar un plan
+     * de estudio se han realizado cambios en los metadatos. Obtenidos los
+     * metadatos del documento se actualiza la vista de ActualizaPlanEstudio
+     * para mostrar los metadatos asociados al plan de estudio.
+     *
+     * @param document plan de estudio
+     */
     public void cargarPlanEstudio(Document document) {
         try {
             RequestContext rc = RequestContext.getCurrentInstance();
@@ -315,6 +360,13 @@ public class RegistroPlandeEstudioController implements Serializable {
         }
     }
 
+    /**
+     * Verifica si se han realizado cambios en el documento de plan de estudio y
+     * sus metadatos, si han habido cambios realiza un llamado a openkm para
+     * guardar los cambios. Realizados estos cambios, reinicia los metadatos a
+     * sus valores por defecto, actualiza y envia un mensaje de exito a la vista
+     * PlanEstudio
+     */
     public void editarPlanEstudio() {
 
         RequestContext rc = RequestContext.getCurrentInstance();
@@ -395,7 +447,7 @@ public class RegistroPlandeEstudioController implements Serializable {
     }
 
     /**
-     * Obtener los planes de estudio contenidos en openkm
+     * Recupera los planes de estudio contenidos en openkm
      */
     public void listaDocs() {
         try {
@@ -418,18 +470,38 @@ public class RegistroPlandeEstudioController implements Serializable {
         }
     }
 
-    //Método utilizado para limitar la fecha de la vigencia del plan de estudio
+    /**
+     * Limita la fecha de la vigencia del plan de estudio
+     *
+     * @return
+     */
     public Date fechaActual() {
         return new Date();
     }
 
-    public void limpiarVariables() {//Limpiar valores ingresados en el formulario
+    /**
+     * Reinicia los atributos del objeto metadatosPlanEstudio, y tambien elimina
+     * el archivo subido desde el computador.
+     */
+    public void limpiarVariables() {
         metadatosPlandeEstudio = new MetadatosPlanEstudio();
         nombreArchivo = "";
         archivoPlan = null;
         exitoSubirArchivo = false;
     }
 
+    /**
+     * Verifica en openkm si existe o no el directorio donde se van a guardar
+     * los planes de estudio. Si existe retorna true, de lo contrario retorna
+     * false.
+     *
+     * @return retorna un valor true o false. existe en openkm
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     * @throws DatabaseException
+     * @throws UnknowException
+     * @throws WebserviceException
+     */
     private boolean existeCarpeta() throws PathNotFoundException, RepositoryException, DatabaseException, UnknowException, WebserviceException {
 
         for (Folder fld : okm.getFolderChildren("/okm:root")) {
@@ -446,6 +518,14 @@ public class RegistroPlandeEstudioController implements Serializable {
         return false;
     }
 
+    /**
+     * Recibe como parametro el plan de estudios a descargar, obtiene la ruta de
+     * este plan de estudios en openkm y recupera el archivo completo. Una ves
+     * recuperado lo retorna a la vista PlanEstudio para poder ser descargado.
+     *
+     * @param document plan de estudios a descargar
+     * @return Retorna un objeto de tipo StreamedContent
+     */
     public StreamedContent descargarDocumento(Document document) {
         StreamedContent file = null;
         com.openkm.sdk4j.bean.Document doc = document;
@@ -473,18 +553,40 @@ public class RegistroPlandeEstudioController implements Serializable {
         return file;
     }
 
+    /**
+     * Recibe como parametro la ruta del plan de estudio en openkm, luego
+     * obtiene el nombre del plan de estudio de la ruta y retorna este nombre.
+     *
+     * @param path Ruta completa del plan de estudio en openkm
+     * @return nombre del plan de estudio
+     */
     public String nombreDelArchivo(String path) {
         String partesPath[] = path.split("/");
         return partesPath[partesPath.length - 1];
     }
 
+    /**
+     * Recibe como parametro la fecha de creacion de un plan de estudio, luego
+     * de esto le da el formato establecido y la retorna a la vista para ser
+     * mostrada.
+     *
+     * @param fecha fecha creacion plan de estudio
+     * @return fecha con nuevo formato
+     */
     public String fecha(Date fecha) {
         return formatoFecha.format(fecha.getTime());
     }
 
+    /**
+     * Recibe como parametro un plan de estudio. Una ves recibido realiza un
+     * llamado a openkm y le pasa la ruta completa del plan para obtener el
+     * docuemtno completo, recuperado el documeto lo envia al visor de
+     * documentos para ser mostrado.
+     *
+     * @param doc plan de estudio
+     */
     public void visualizardePlanEstudio(Document doc) {
         InputStream in = null;
-//        StreamedContent str = null;
         try {
             this.documento = doc;
             in = okm.getContent(doc.getPath());
@@ -503,6 +605,11 @@ public class RegistroPlandeEstudioController implements Serializable {
         }
     }
 
+    /**
+     * Cambia de estado a la variable exitoSubirArchivo para poder mostrar en la
+     * vista de registro de plan de estudio que no hay un archivo seleccionado,
+     * luego de esto actualiza la vista de registro.
+     */
     public void cambiarArchivo() {
         exitoSubirArchivo = false;
         RequestContext rc = RequestContext.getCurrentInstance();
@@ -512,6 +619,11 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     }
 
+    /**
+     * Cambia de estado a la variable exitoSubirArchivo para poder mostrar en la
+     * vista de actualizacion de plan de estudio que no hay un archivo
+     * seleccionado, luego de esto actualiza la vista de actualizacion.
+     */
     public void cambiarArchivoActualizacion() {
         exitoSubirArchivo = false;
         RequestContext rc = RequestContext.getCurrentInstance();
@@ -521,6 +633,13 @@ public class RegistroPlandeEstudioController implements Serializable {
 
     }
 
+    /**
+     * Realiza un llamado a openkm para verificar si hay una comunicacion con el
+     * repositorio, en caso de que haya comunicacion retorna true, de lo
+     * contrario retorna false.
+     *
+     * @return valor booleano
+     */
     public boolean getComprobarConexionOpenKM() {
         boolean conexion = true;
         try {
@@ -538,12 +657,21 @@ public class RegistroPlandeEstudioController implements Serializable {
         return conexion;
     }
 
+    /**
+     * Recibe como parametro un plan de estudio, realiza un llamado a openkm
+     * para eliminar el plan de estudio, al realizar este llamado se pasa la
+     * ruta completa del plan. Una ves eliminado el plan de estudio se realiza
+     * el llamado al metodo purgeTrash de openkm para eliminar el documento de
+     * la papelera.
+     *
+     * @param doc plan de estudio
+     */
     public void deleteDocument(Document doc) {
         try {
             okm.deleteDocument(doc.getPath());
             okm.purgeTrash();
             RequestContext requestContext = RequestContext.getCurrentInstance();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "El archivo se elimino con exito!"));            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "El archivo se elimino con exito!"));
             requestContext.update("formPlanesdeEstudio:mensajeEliminar");
             listaDocs();
             requestContext.update("lstPlanesEstudio");
