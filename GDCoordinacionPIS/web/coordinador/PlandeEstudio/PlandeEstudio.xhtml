@@ -50,7 +50,7 @@ and open the template in the editor.
                     <p:outputLabel value="#{registroPlandeEstudioController.fecha(dato.created.time)}"/>
                 </p:column>
 
-                <p:column style="text-align: center; background: #C8CDD6; width: 200px">
+                <p:column style="text-align: center; background: #C8CDD6; width: 280px">
                     <f:facet name="header">
                         Acciones
                     </f:facet>
@@ -63,8 +63,18 @@ and open the template in the editor.
                     <p:commandButton value="Ver" update=":visualizacionPlanPdf" onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()" 
                                      action="#{registroPlandeEstudioController.visualizardePlanEstudio(dato)}"
                                      icon="ui-icon-search" title="Ver"/>
+                    <p:commandButton value="Eliminar" 
+                                     action="#{registroPlandeEstudioController.deleteDocument(dato)}" 
+                                     icon="ui-icon-trash" update="lstPlanesEstudio" onstart="PF('cargando').show()"  onsuccess="PF('cargando').hide()">
+                        <p:confirm header="Confirmation" message="¿Esta seguro de eliminar este archivo?" icon="ui-icon-alert" />
+                    </p:commandButton>
                 </p:column>
             </p:dataTable>
+
+            <p:growl id="mensajeEliminar" showDetail="true" life="4000" >
+
+            </p:growl>
+
         </h:form>
         <ui:include src="RegistrarPlandeEstudio.xhtml"/>
         <ui:include src="ActualizarPlanEstudio.xhtml"/>
@@ -77,10 +87,18 @@ and open the template in the editor.
             function start() {
                 PF('cargando').show();
             }
-            
+
             function stop() {
                 PF('cargando').hide();
             }
         </script>
+        <h:form>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+
+
     </h:body>
 </html>
